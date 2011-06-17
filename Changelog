@@ -1,0 +1,33 @@
+v0.1alpha
+	* Pure hack, no own firmware.
+	* Only provides extension of the command set to support blitting
+
+Mon, 11 Apr 2011 11:55:52 +0200
+v0.11alpha
+	* Actually starting a changelog
+	* This is a full firmware replacement, but we still talk about a
+	  hack".  Once we have a fully bootable replacement, we'll reset
+	  version counting and start a new project.
+	LCD4linux (dpflib):
+	* Changed resolution query
+	* Support for orientation and backlight control
+	* Allow addressing of several frames ("Port" statement)
+	Firmware:
+	* Support for USB communication with restricted command set
+	  (kinda compatible to 0.1alpha)
+	* Support for various LCD controllers/screens (Sitronix, Orisetech,
+	  Ilitek, etc.)
+	* Locked flash access ('no-brick' mode for future upgrades)
+	* Power down mode: Full "deep sleep" with only RTC running
+	* Auto power down on low power
+	* Optional/experimental:
+		- Log ADC values to log sector on flash
+		- ADC voltage drawing over time (Menu: "Mon")
+		- Better Load/Exec support to download applets into the DPF via USB
+	* Frame specific issues:
+	    - The default orientation of the Pearl 320x240 frame was changed such
+	      that the USB connector is pointing down on normal display (i.e. we
+	      show "Portrait"). Use the pearl_landscape TYPE option for
+		  the original landscape mode.
+	    - The display rotation on the 128x128 DPFs is freely configureable
+	      using the Orientation option in the lcd4linux config file

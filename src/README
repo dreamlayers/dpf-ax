@@ -1,0 +1,115 @@
+This is rudimentary code to inject your own source into the AX206 based DPFs.
+Since this chip is very much undocumented and no information about the internal
+firmware is available, the following strategy was chosen:
+
+- Leave original firmware as intact as possible (NEVER touch sector 0)
+- Allow to manually put unit into "Developer Mode"
+- Allow to return to default state using the RESET button
+
+Note that the Developer Mode uses two sectors at the end of the internal
+flash. Therefore, DO NOT fill up the frame with images to the maximum,
+or weird things may happen.
+
+When the DPF is hacked using the scripts described below, the Developer Mode
+is simply entered by connecting the DPF to a PC via the USB cable and holding
+the MENU button for approx. 2 seconds.
+
+See more about the Developer Mode below.
+
+----------------------------------------------------------------------------
+
+The tar file contents are merely:
+
+- simple (yet unfinished and quirky) library to access the DPF flash and
+  the extended functionality when in "Developer Mode".
+- Python wrapper around the above library
+- Python scripts to patch various DPFs (listed in profiles.py) and other
+  auxiliaries
+
+Description of a few tools
+---------------------------
+
+app_detect.s, detect.py: Simple rudimentary detection for Sitronix/NXP
+                         compatible LCD controllers and SPI flash chip.
+fulldump.py:             Performs a dump of the flash according to detected
+                         flash size (often specified wrong by vendor)
+
+Developer Mode
+---------------
+
+When the unit is in Developer Mode, it registers itself as USB device with
+the same VID:PID, but not as USB storage. This allows much faster access using
+libusb and as non-root. However, the unit will still use USB storage SCSI
+commands, see dpflib for the wrapping over libusb.
+
+Specific commands are implemented using the handler for the SCSI command
+0xcd, mode 6. These commands are handled on the DPF by cmdhandler.s
+(up to v0.1alpha) and by dpflib/dpflib.c on the target.
+
+Note that the protocol may change in future, once the internal firmware
+is fully replaced by something more structured. Thus, you should implement
+extras on the dpflib level only, never access USB directly.
+
+Prerequisites
+--------------
+
+You need:
+
+- A proper Linux system with GCC, python-dev (libraries and headers to
+  compilee your own modules)
+Optionally:
+- Possibly some knowledge of the 8051, if you want to mess around
+- A working sdcc distribution including asx8051, aslink, etc.
+
+Usage
+------
+
+1. run 'make' to build the tools and patches
+2. Initiate USB connection from the DPF via the menu
+3. Wait a while and check dmesg for the /dev/sgX assignment
+4. Run 'python hackit.py /dev/sgX' as root (CAREFUL!!!) to probe for
+   known DPFs and confirm that you wish to patch the DPF according to the
+   instructions.
+
+The hackit.py script checks for a valid DPF, so you can not accidentally
+damage your hard disk. Also, it runs a crc32 check on critical modules
+for more safety. DO NOT CHANGE the existing checksums. Only *add* new
+profiles in profiles.py, don't EVER change existing ones.
+
+Before messing around, you might want to dump the entire flash using the
+fulldump.py script.
+
+For those desiring to try adding hacks for other frame models, there is
+now a short howto in the reverse/ folder.
+
+----------------------------------------------------------------------------
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+WARNING: Do not modify the script unless you REALLY know what you are doing.
+
+DISCLAIMER: There is no guarantee that you will not brick your DPF.
+The Author(s) of this code take no responsibilities. You are completely on
+your own there!
+If you bricked your DPF, check the URL below for information how to restore
+the flash image.
+
+LICENSE:
+You are allowed to modify and distribute the code, as long as you keep it
+OpenSource. We just trust you that you have a notion of fair usage :-)
+
+TODO:
+1. Windows support, fully featured lcd4linux support via generic DPF library
+   (I leave this to others. I hate Windows.)
+2. Replace flash firmware with improved opensource environment
+
+----------------------------------------------------------------------------
+
+Find updates and documentation here:
+
+http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
+
+or here:
+
+http://tech.section5.ch/news/?p=68
+
+----------------------------------------------------------------------------

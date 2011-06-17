@@ -1,0 +1,63 @@
+Usage:
+
+* Verify that you have a decent development system (GCC, development
+  libraries, subversion -- if you want to build lcd4linux) installed.
+  You might also have to install the package "pkg-config", or else the
+  configure procedure will likely fail.
+
+* Configure lcd4linux: normally, the default settings will do. If you wish
+  to use other drivers or cross compile, check build-dpf-lcd4linux.sh
+  for configure options
+
+* Note: For lcd4linux, you may want to have some development libraries
+  installed, for example:
+    libgd2-noxpm-dev  -- to display images
+
+* Build the stuff using "make all". You need an internet connection. because 
+  lcd4linux is pulled from their server.
+
+* Try it:
+  > cd lcd4linux; lcd4linux -f ../dpf.conf -F
+
+NOTE: The orientation for the Pearl type display was changed (Details, see
+Changelog) DO NOT INSTALL if you wish to keep your landscape orientation.
+Later, we'll make this configureable, if there turns out to be a good
+solution (there currently isn't).
+
+The source for this firmware is not yet included. Please don't ask
+questions when it will be released, it will happen, once we have a fully
+fool proof and working firmware including boot loader support (if you can
+help there, let us know).
+
+Also note: NO SUPPORT! NO WARRANTY! FRIENDS DON'T MAKE FRIENDS HACK THEIR
+DPF! LET ALONE NON-FRIENDS! (Bottomline: Don't ask me if I can hack your DPF).
+
+If you wish to hack your DPF, please check the sites listed below.
+
+----------------------------------------------------------------------------
+Troubleshooting
+
+If the lcd4linux build process fails, you may want to start over without
+running the entire build procedure.
+See build-dpf-lcd4linux.sh for the single steps. Right, this could also
+be in a makefile to be more fool proof..
+
+----------------------------------------------------------------------------
+Features
+
+For features of this firmware, see Changelog
+
+----------------------------------------------------------------------------
+Find updates and documentation here:
+
+http://tech.section5.ch/news/?p=68
+
+or here:
+
+http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
+
+For our german users, a very good explanation is found here:
+
+http://geekparadise.de/2011/04/digitaler-bilderrahmen-von-pearl-als-statusdisplay-fur-dockstar/
+
+(c) 4/2011, hackfin

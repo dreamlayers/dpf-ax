@@ -1,0 +1,48 @@
+-myuxi
+-Y
+-v 0xa00
+-b PSEG    = 0x0090 ; Scratch pad
+;-----------------------
+; Boot strap code
+-b GSINIT   = 0x801140 ; DO NOT CHANGE, unless changing caller (last module)
+;-----------------------
+; Resident code
+-b HOME     = 0x801040
+-b CSEG     = 0x001200
+-b HOME0    = 0x2117f0
+-b BLIT     = 0x2117f0
+;-----------------------
+; Shared data segments
+-b DATA0    = 0x4d1140
+;-----------------------
+; Bank switched:
+-b MAIN     = 0x621200
+-b SPIFLASH = 0x631200
+-b USB0A    = 0x641200
+-b USB0B    = 0x641200
+-b UHANDLER = 0x651200
+-b USBAUX   = 0x661200
+-b MENU     = 0x671200
+; -b MENU2    = 0x681200
+-b PRINTF   = 0x691200
+-b PRINTFX  = 0x691200
+-b APPLD    = 0x6a16a0
+-b LCDAUX   = 0x6b1200
+-b FLIX     = 0x6c1200
+; Note: Bank d used (4d)
+-b DEBUG    = 0x6e1200
+-b INIT     = 0x6f1200
+;-----------------------
+; Ignore XINIT segment, we initialize directly
+-b XINIT    = 0xb00000
+; Special RAM applications (experimental stuff)
+;-b RAMAPP   = 0xb01330
+; Symbols:
+-r
+; -k /usr/bin/../share/sdcc/lib/small
+; -k /usr/share/sdcc/lib/small
+; We need this when using generic pointers
+; -l libsdcc
+-k ./
+; NOTE!! Link order matters!!
+; Insert Object files here:
