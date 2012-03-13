@@ -38,5 +38,6 @@ RETCODE handle_setprop(__idata BYTE *b) __banked
 RETCODE handle_getprop(__idata BYTE *b) __banked
 {
 	// Not yet. later.
+	b;
 	return 0;
 }

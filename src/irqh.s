@@ -5,7 +5,6 @@
 	.module irqh
 ;
 	.area DSEG (ABS)
-	.area HOME (CODE)
 
 	.area BSEG(BIT)
 _g_wkup::
@@ -58,3 +57,5 @@ port_handler::
 	; Set "woken up" flag:
 	setb	_g_wkup
 	reti
+
+	.area HOME (CODE)

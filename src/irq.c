@@ -7,7 +7,7 @@
 __data BYTE g_adcount = 0;
 
 // Button queue:
-__data BYTE g_butq[2];
+__data BYTE g_butq[2] = {0, 0};
 
 volatile __bit g_alarm;
 

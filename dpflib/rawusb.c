@@ -26,6 +26,7 @@ struct known_device {
 	unsigned short pid;
 } g_known_devices[] = {
 	{ "AX206 DPF", 0x1908, 0x0102 },
+	{ "AX206 DPF (bootloader)", 0x1908, 0x3318 },
 	{ 0 , 0, 0 } /* NEVER REMOVE THIS */
 };
 
@@ -73,6 +74,7 @@ static struct usb_device *find_dev(int index)
 			}
 
 #ifdef DEBUG
+			printf("enum: %d index: %d\n", enumeration, index);
 			printf("%04x %04x\n",
 				   d->descriptor.idVendor,
 				   d->descriptor.idProduct);
@@ -150,7 +152,7 @@ int emulate_scsi(usb_dev_handle *dev, unsigned char *cmd, int cmdlen, char out,
 	return ansbuf[12];
 }
 
-usb_dev_handle *dpf_usb_open(int index)
+int dpf_usb_open(int index, usb_dev_handle **u)
 {
 	struct usb_device *d;
 	usb_dev_handle *usb_dev;
@@ -162,16 +164,33 @@ usb_dev_handle *dpf_usb_open(int index)
 	d = find_dev(index);
 	if (!d) {
 		handle_error("No matching USB device found!");
-		return NULL;
+		return -1;
 	}
 
 	usb_dev = usb_open(d);
 	if (usb_dev == NULL) {
 		handle_error("Failed to open usb device!");
-		return NULL;
+		return -1;
 	}
-	usb_claim_interface(usb_dev, 0);
-	return usb_dev;
+	if (usb_claim_interface(usb_dev, 0) < 0) {
+		handle_error("Failed to claim usb device!");
+		printf("Possibly you have to 'sudo libhid-detach-device 1908:3318'\n");
+		return -1;
+	}
+	*u = usb_dev;
+
+	if (d->descriptor.idProduct == 0x3318)
+		return MODE_USBHID;
+	else
+		return MODE_USB;
 }
 
+int usb_rawwrite(usb_dev_handle *dev, const unsigned char *buf, int len)
+{
+	return usb_interrupt_write(dev, ENDPT_OUT, (char *) buf, len, 1000);
+}
 
+int usb_rawread(usb_dev_handle *dev, unsigned char *buf, int len)
+{
+	return usb_interrupt_read(dev, ENDPT_IN, (char *) buf, len, 4000);
+}

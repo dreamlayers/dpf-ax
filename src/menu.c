@@ -24,7 +24,7 @@ void menu_clr(char i)
 	}
 }
 
-char monitor(BYTE evt)
+char hdl_monitor(BYTE evt) __reentrant
 {
 	evt;
 	if (evt == EVT_EDIT) {
@@ -35,7 +35,7 @@ char monitor(BYTE evt)
 	return S_MENU;
 }
 
-char act_debug(BYTE evt)
+char hdl_debug(BYTE evt)
 {
 	evt;
 	if (evt == EVT_EDIT) {
@@ -50,7 +50,7 @@ char act_debug(BYTE evt)
 	return S_MENU;
 }
 
-char br_handler(BYTE evt) __reentrant
+char hdl_brightness(BYTE evt) __reentrant
 {
 	evt;
 	if (g_lcd.brightness < 1) g_lcd.brightness = 1;
@@ -70,15 +70,15 @@ char hdl_off(BYTE evt) __reentrant
 	return S_RUN;
 }
 
-
+#ifdef FLIX_MODE
 char hdl_flix(BYTE evt) __reentrant
 {
-	evt;
-	flix_toggle();
+	flix_mode(evt);
 	return S_MENU;
 }
+#endif
 
-char reboot(BYTE evt) __reentrant
+char hdl_reboot(BYTE evt) __reentrant
 {
 	evt;
 	menu_clr(L_EDITOR);

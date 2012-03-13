@@ -132,18 +132,25 @@ PyObject *
 Device_eraseflash(DeviceObject *self, PyObject *args)
 {
 	int error;
-	ADDR addr;
+	char full = 0;
+	ADDR addr = 0xffffffff;
 
-	if (!PyArg_ParseTuple(args, "I", &addr))
+	if (!PyArg_ParseTuple(args, "|I", &addr))
 		return NULL;
 
-	error = flash_erase(self->dpf, addr);
+	if (addr == 0xffffffff) {
+		error = flash_erase_full(self->dpf);
+	} else {
+		error = flash_erase(self->dpf, addr);
+	}
 	if (error < 0) return HANDLE_ERROR(error, "eraseflash");
 
 	Py_INCREF(Py_None);
 	return Py_None;
 
 }
+
+
 PyObject *
 Device_writeflash(DeviceObject *self, PyObject *args)
 {
@@ -218,6 +225,7 @@ Device_setProperty(DeviceObject *self, PyObject *args)
 	return Py_None;
 }
 
+#if 0
 PyObject *
 Device_writelcd(DeviceObject *self, PyObject *args)
 {
@@ -242,6 +250,8 @@ Device_writelcd(DeviceObject *self, PyObject *args)
 	Py_INCREF(Py_None);
 	return Py_None;
 }
+
+#endif
 
 PyObject *
 Device_readmem(DeviceObject *self, PyObject *args)
@@ -270,14 +280,14 @@ Device_readmem(DeviceObject *self, PyObject *args)
 }
 
 PyObject *
-Device_writemem(DeviceObject *self, PyObject *args)
+Device_loadapp(DeviceObject *self, PyObject *args)
 {
 	int error;
 	char *name;
 	if (!PyArg_ParseTuple(args, "s", &name))
 		return NULL;
 
-	error = write_mem(self->dpf, name);
+	error = load_hexfile(self->dpf, name);
 	if (error < 0) return HANDLE_ERROR(error, "hexfile");
 
 	Py_INCREF(Py_None);
@@ -334,9 +344,9 @@ static PyMethodDef Device_methods[] =
 	{"writeFlash",   (PyCFunction) Device_writeflash,      METH_VARARGS},
 	{"patchSector",  (PyCFunction) Device_patchsector,     METH_VARARGS},
 	{"setProperty",  (PyCFunction) Device_setProperty,     METH_VARARGS},
-	{"writeLCD",     (PyCFunction) Device_writelcd,        METH_VARARGS},
+	// {"writeLCD",     (PyCFunction) Device_writelcd,        METH_VARARGS},
 	{"readMemory",   (PyCFunction) Device_readmem,         METH_VARARGS},
-	{"writeMemory",  (PyCFunction) Device_writemem,        METH_VARARGS},
+	{"loadApp",      (PyCFunction) Device_loadapp,         METH_VARARGS},
 	{"run",          (PyCFunction) Device_exec,            METH_VARARGS},
 	{"runApp",       (PyCFunction) Device_runapp,          METH_VARARGS},
 	{NULL,		NULL}		/* sentinel */

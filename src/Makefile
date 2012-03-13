@@ -6,8 +6,19 @@
 # Specify here the model you wish to compile for. See dpfmodel.h for valid
 # names.
 
+ifdef FLIX
+COMPILE_OPTIONS = -DFLIX_MODE
+LNK_OPTIONS = "-b FLIX = 0x6c1200"
+else
+LNK_OPTIONS = ";"
+endif
+
 ifndef TYPE
 TYPE = white
+endif
+
+ifndef NETPP
+NETPP = $(HOME)/src/netpp/devices/dpf-ax206
 endif
 
 DPFLIB = ../dpflib
@@ -17,12 +28,14 @@ PYDPF  = ../python
 # Even if those addresses exceed some flash sizes: Due to the mirroring
 # feature, they appear to work on smaller flashes as well.
 
-FW_ADDR      = 0x380000
+FW_ADDR      = 0x000000
+LOAD_ADDR    = 0x1140 # Target prog mem address for executable
+JMPTBL_OFFS  = 0x40   # Jump table offset           --> BootHeader.jmpt_offset
+CODE_OFFS    = 0x200  # Offset of code start sector --> BootHeader.flash_start
 # Character table location in flash:
 CHARTBL_ADDR = $(FW_ADDR) + 0x10000
-JMPTBL_ADDR  = $(FW_ADDR) + 0x70000
 
-VERSION = 0.107
+VERSION = 0.200
 STATUS  = devel
 
 # Build number file:
@@ -42,9 +55,12 @@ CFLAGS  += --opt-code-size
 # CFLAGS += --no-xinit-opt # Do not initialize XSEG
 CFLAGS  += -I../include
 
+CFLAGS  += $(COMPILE_OPTIONS)
+
 # Feel free to add stuff, but note: Order matters!
 OBJS = main.rel  # ihx file will be named after first element
 OBJS += menu.rel ovldata.rel
+# OBJS += boothdr.rel
 OBJS += bootstrap.rel lcd.rel
 OBJS += printex.rel
 OBJS += usbblit.rel 
@@ -54,7 +70,9 @@ OBJS += irqh.rel irq.rel
 OBJS += init.rel debug.rel
 OBJS += blit.rel print.rel 
 OBJS += flash.rel properties.rel
+ifdef FLIX
 OBJS += flix.rel
+endif
 # OBJS += app_test.rel
 
 LIBS = dpf.lib lcd.lib
@@ -100,8 +118,11 @@ p_%.ihx: p_%.rel
 app%.ihx: app%.rel
 	$(CC) -o $@ $<
 
+# This actually compiles the whole habash. Also creates a .bin for the
+# full firmware.
 fw_$(TYPE).ihx: main.ihx
-	python compile.py $< $@ $(FW_ADDR) > output.log
+	python compile.py $< $@ $(FW_ADDR) $(LOAD_ADDR) \
+		$(JMPTBL_OFFS) $(CODE_OFFS) > output.log
 
 current.ihx: fw_$(TYPE).ihx 
 	ln -sf $< $@
@@ -113,15 +134,15 @@ TMPLNK = tmp.lnk
 config.inc: Makefile
 	@echo "; This file is generated from the Makefile" > $@
 	@echo >> $@
-	@echo "cloned_jumptable_offset = $(JMPTBL_ADDR) + 0x88" >> $@
-	@echo "jumptable_offset = $(FW_ADDR) + 0x88" >> $@
-	@echo "load_offset = $(FW_ADDR) + 0x200" >> $@
+	@echo "jumptable_offset = $(FW_ADDR) + $(JMPTBL_OFFS)" >> $@
+	@echo "load_offset = $(FW_ADDR) + $(CODE_OFFS)" >> $@
 	
 bankswitch.rel: bankswitch.s config.inc
 	$(AS) $(ASFLAGS) $<
 
 main.ihx: $(OBJS) $(LIBS) bootstrap.lnk Makefile $(BUILDNO)
 	@cp bootstrap.lnk $(TMPLNK)
+	@echo $(LNK_OPTIONS) >> $ $(TMPLNK)
 	@echo "-g chartbl_offs = $(CHARTBL_ADDR)" >> $(TMPLNK)
 	@for i in $(OBJS); do \
 		echo $$i >> $(TMPLNK); \
@@ -162,12 +183,16 @@ hexfiles:
 install: all hexfiles
 	cp $(HEXFILES) hexfiles
 
+%.hex: %.bin
+	hexdump -C $< > $@
 
 %.inc: $(NETPP)/%.inc
 	cp $< .
 
 %.h: $(NETPP)/%.h
 	cp $< .
+
+headers: ax206.h ax206.inc ili9163.h ili9320.h otm3225.h otm3225.inc 
 
 fwclean:
 	rm -f $(OBJS)
@@ -190,6 +215,13 @@ $(PROG_BUILDNO):
 reset:
 	echo "1" > $(PROG_BUILDNO)
 
+# Put DPF into bootloader mode by pressing RESET while holding
+# the MENU button. It will then register as device with VID:PID = 1908:3318
+# (see lsusb)
+
+download:
+	sudo libhid-detach-device 1908:3318
+	sudo python restore.py fw_$(TYPE).bin -f
 
 # Make it phony, because we want to update the build version every time.
 .PHONY: printex.c

@@ -11,7 +11,7 @@ struct blit __data g_blit;
 
 struct lcd __idata g_lcd = {
 	DEFAULT_ORIENTATION,
-	15 // Brightness
+	7 // Brightness
 };
 
 static
@@ -203,7 +203,7 @@ static BYTE lcd_read(void)
  
 void fill_rect(__idata const unsigned char *b) __banked
 {
-
+	b;
 }
 
 void copy_rect(__idata const unsigned char *b) __banked

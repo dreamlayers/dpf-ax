@@ -4,7 +4,7 @@
 #include "global.h"
 #include "utils.h"
 #include "dpf.h"
-#include "flash.h"
+#include "spiflash.h"
 
 #pragma codeseg INIT
 #pragma constseg INIT
@@ -53,7 +53,7 @@ void adc_config(BYTE enable)
 			adcrate = TMREN | 1;
 			break;
 	}
-	pie &= ~(P03); // Disable P03
+	pie &= ~(P_VSENSE); // Disable P03
 	adccon |= ADCEN | 3; // Select P03 for analog in
 }
 
@@ -142,30 +142,44 @@ static void flash_wakeup(void)
 void config_ports(BYTE enable)
 {
 	if (enable) {
-		p1 = 0xff;
-		p2 = ~P26;
-		_LCD_PWR = 0;
 		// Configure Inputs:
-		p0dir = ~(P_XXX | LCD_PWR | P00); // Outputs
-		p1dir = FLA_MISO | P13; // Inputs
-		p2dir = ~(P26 | LCD_LED | LCD_CS | FLA_CS); // Those are outputs
-	} else {
+		p0 = ~(FLA_PWR | P_VCOMP); // Enable flash power, all others HIGH
+		p0up = BUT_MENU; // Pullup enable
+		p0dir = ~(P_VCOMP | FLA_PWR | LCD_PWR); // Outputs
+
+		p1 = 0xff;
+		p1up = 0x00;
+		p1dir = FLA_MISO | MIC; // Inputs
+
+		p2 = ~BUZZER;
+		p2up = LCD_CS | FLA_CS; // PU enable
+		p2dir = ~(BUZZER | LCD_LED | LCD_CS | FLA_CS); // Those are outputs
+
+		p3up = 0xff;
 		p3dir = ALL_OUTPUTS;
-		p3 = 0;
-		p0up |= (BUT_MENU | P05 | P02 | LCD_PWR | P00); // Pullup enable
-		p0dir = ALL_INPUTS & ~P00;
-		p1 = P13; // VddIo switch?
+	} else {
+		p0up |= (BUT_MENU | BUT_IRQ | TEMP_NTC | FLA_PWR | LCD_PWR);
+		p0dir = ALL_INPUTS & ~LCD_PWR;
+		p0 = FLA_PWR;
+
 		p1up = 0x00;
 		p1dir = FLA_MISO; // only input
-		p2dir = ~(P27 | P26 | LCD_LED | LCD_CS | FLA_CS ); // Outputs
+		p1 = MIC;
+
+		p2dir = ~(P27 | BUZZER | LCD_LED | LCD_CS | FLA_CS ); // Outputs
 #ifdef DPFMODEL_pink
-		p2up  = ~(      P26 | LCD_LED | LCD_CS | FLA_CS ); // PU disable
-		p2   &= ~(      P26           | LCD_CS | FLA_CS ); // ????
+		p2up  = ~(      BUZZER | LCD_LED | LCD_CS | FLA_CS ); // PU disable
+		p2   &= ~(      BUZZER           | LCD_CS | FLA_CS ); // ????
 		// Pulling FLA_CS active does not make sense
 #else
-		p2up  = ~(      P26 | LCD_LED | LCD_CS | FLA_CS ); // PU disable
+		p2up  = ~(      BUZZER | LCD_LED | LCD_CS | FLA_CS ); // PU disable
 #endif
-		p4dir = ALL_INPUTS;
+
+		p3dir = ALL_OUTPUTS;
+		p3 = 0;
+		// Enable pullup:
+		p4dir = ALL_INPUTS & ~AUDIO_EN;
+		p4 = ~AUDIO_EN;
 	}
 }
 
@@ -207,6 +221,45 @@ void logger(void)
 	config_ports(0);
 	adc_config(0);
 }
+
+void init(BYTE mode)
+{
+	if (mode == PWR_DOWN) {
+		pcon = 0x10;
+	} else {
+		pcon &= ~OSCCEN;
+	}
+	_asm nop nop nop _endasm;
+
+	// Activate watchdog to reset after ~2 seconds:
+	wdtcon = WDTPND | WDTEN | 7; // Turn on WDOG
+
+	switch (mode) {
+		case PWR_DOWN:
+			tmr3con = T3FB | T3IE | T3LP | T3ON;
+		case PWR_DEEPSLEEP:
+			pcon &= ~SELRTC;  // use 24 mhz sysclk
+			_asm nop nop nop _endasm;
+			ckcon = 0;   // Turn on ROM clock
+			config_ports(1);
+#ifdef DANGEROUS_SLEEP
+			flash_wakeup();
+#endif
+			adc_config(1);
+			lcd_init(); // Initialize LCD
+			adccon |= ADCGO; // kick on conversion
+		case PWR_SLEEP:
+			timer1_config(g_lcd.brightness);
+	}
+
+	sleep(100);
+
+	timer0_config();
+
+	ie |= WAUIE | T0IE | RAWIE;
+
+}
+
 
 void shutdown(BYTE mode) __banked
 {
@@ -264,44 +317,17 @@ void shutdown(BYTE mode) __banked
 		// We loop while we have only RTC interrupts:
 		while (!g_wkup && !g_alarm) {
 			// Log every x seconds:
-			if (g_log && (g_count[SECONDS] & 0x1f) == 0) logger();
+			// if (g_log && (g_count[SECONDS] & 0x1f) == 0) logger();
 			pcon |= STOPC;    // Stop clock again
 			_asm nop nop nop _endasm;
 		}
 	}
-
-	pcon &= ~OSCCEN;
-	_asm nop nop nop _endasm;
-
-	wdtcon |= WDTPND | WDTEN | 7; // Turn on WDOG
-
-	switch (mode) {
-		case PWR_DOWN:
-			tmr3con |= T3ON; // Enable RTC timer
-		case PWR_DEEPSLEEP:
-			pcon &= ~SELRTC;  // use 24 mhz sysclk
-			ckcon = 0;   // Turn on ROM clock
-			config_ports(1);
-#ifdef DANGEROUS_SLEEP
-			flash_wakeup();
-#endif
-			adc_config(1);
-			lcd_init(); // Initialize LCD
-			adccon |= ADCGO; // kick on conversion
-		case PWR_SLEEP:
-			timer1_config(g_lcd.brightness);
-	}
-
-	sleep(100);
-
-	timer0_config();
-
-	ie |= WAUIE | T0IE | RAWIE;
+	init(mode); // Initialize all
 }
 
-void init_ports(void) __banked
+void init_all(BYTE mode) __banked
 {
-	config_ports(1);
+	init(mode);
 }
 
 void turn_off(void) __banked

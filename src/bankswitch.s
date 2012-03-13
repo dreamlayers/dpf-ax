@@ -14,7 +14,6 @@ G_bank:
 	.ds	1
 
 	.area HOME (CODE)
-
 __sdcc_banked_call::
 	push	G_bank	; (
 	xch	a, r0	; target addr L
@@ -138,7 +137,6 @@ w1:	jnb	_SPIPND, w1
 
 	pop	dph	; }
 	pop	dpl	; }
-	; lcall	0x0fae	; Unknown
 	pop	ie	; }
 	xch	a, r0	; restore a
 	; And jump into target address:

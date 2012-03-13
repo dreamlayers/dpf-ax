@@ -6,6 +6,11 @@ import intelhex
 import struct
 import sys
 
+import crc
+
+# Set True if you want lots of output
+verbose = False
+
 # Absolute max number of banks can currently be 32
 # For more, we have to enhance bankswitch.s
 NBANKS   = 32 # max number of banks
@@ -15,8 +20,96 @@ BOOTSTRAP  = 0x00
 XDATA      = 0x10
 IGNORE     = 0x30
 
-GROUP_MASK  = 0xf0 # Group mask
-GRP_IGNORE = 0xf0
+GROUP_MASK  = 0xe0 # Group mask
+
+class BootHeader:
+	def __init__(self, sector_addr, start, size, jmpt_offset, code_offset):
+		self.xdata = 0x1040 - 0x800
+		self.start = start
+		self.jmpt_offset = jmpt_offset
+		self.flash_start = code_offset
+		self.size = size
+		self.crc = 0 # Checksum over boot code
+		self.crc2 = 0 # Checksum over header
+		self.flags = 0
+		self.key = 0xabba
+		self.sector = sector_addr
+		self.nbanks = NBANKS
+		self.table_tag = "ProcTblX" # Do not change length	
+
+	def jmpentry(self, i):
+		start, end, offset, mode = i
+		start &= 0xffff
+		end &= 0xffff
+		if mode != XDATA:
+			if start >= 0x800:
+				if start < 0x1b00:
+					start -= 0x800
+					end -= 0x800
+				else:
+					start -= 0x1a00
+					end -= 0x1a00
+					if (start - end) > 0x100:
+						raise ValueError, "XSEG too big!"
+			else:
+				print start
+				raise ValueError, "Relocation address for xram < 0x800!"
+		end += 1 # non-inclusive, we add 1
+		t = (self.sector + self.flash_start + offset, start, end)
+
+		return t
+
+	def genJumptable(self, index):
+		jumpt = self.table_tag
+
+		for i in xrange(self.nbanks):
+			try:
+				r = index[i]
+				offs, start, end = self.jmpentry(r)
+				len = end - start
+				if verbose:
+					t = (i, offs, start, len)
+					print "[%d] offset: %06x, start: %04x len 0x%04x" % t
+			except KeyError:
+				offs, start, end = (0xffffffff, 0xffff, 0xffff)
+
+			jumpt += struct.pack(">HH", start, end)
+			jumpt += struct.pack("<I", offs)
+
+		self.jumptable = jumpt
+
+	def genhdr(self):
+		a = ""
+
+		a += struct.pack(">HH", self.xdata, self.start)
+		v = self.flash_start
+		a += struct.pack("BBB", v >> 16, (v >> 8) & 0xff, v & 0xff)
+		a += struct.pack(">H", self.size)
+		a += struct.pack(">H", self.crc)
+		a += struct.pack("B", self.flags)
+		a += struct.pack(">H", self.key)
+
+		return a
+				
+	def gencrc(self, buf):
+		# Generate CRC from boot block:
+		c = crc.compute(buf[:self.size])
+		self.crc = c
+		# Now generate CRC for header:
+		hdr = self.genhdr()
+		c = crc.compute(hdr)
+		self.crc2 = c
+		
+	def dump(self, out):
+		a = self.genhdr()
+		a += struct.pack(">H", self.crc2)
+
+		a += 14 * '\0'
+		a += struct.pack(">H", 0x55aa) # Terminator magic
+
+		out.puts(0x000000, a)
+		out.puts(self.jmpt_offset - len(self.table_tag), self.jumptable)
+
 
 def overlap(x, y):
 	if (x[0] >= y[0] and x[0] <= y[1]) or (x[1] >= y[0] and x[1] <= y[1]):
@@ -79,37 +172,12 @@ def merge_segments(index):
 
 	return table
 
-def jmpentry(i):
-	start, end, offset, mode = i
-	start &= 0xffff
-	end &= 0xffff
-	if mode != XDATA:
-		if start >= 0x800:
-			if start < 0x1b00:
-				start -= 0x800
-				end -= 0x800
-			else:
-				start -= 0x1a00
-				end -= 0x1a00
-				if (start - end) > 0x100:
-					raise ValueError, "XSEG too big!"
-		else:
-			print start
-			raise ValueError, "Relocation address for xram < 0x800!"
-	end += 1 # non-inclusive, we add 1
-	t = (SECTOR_ADDR + CODE_OFFSET + offset, start, end)
-
-	return t
-
-
 I = intelhex.IntelHex(sys.argv[1])
 out = intelhex.IntelHex()
 
 min = I.minaddr()
 max = I.maxaddr()
 
-# Set True if you want lots of output
-verbose = False
 
 if verbose:
 	print "min: %x, max: %x" % (min, max)
@@ -159,6 +227,7 @@ r = index[0x80]
 start, end, d, mode = r
 print "Bootstrap:"
 print hex(start), hex(end)
+size = end - start + 1
 s = I.tobinstr(start, end)
 buf += s
 print "offset: %x" % len(buf)
@@ -178,31 +247,29 @@ print "-------"
 
 # now build jump table:
 
-SECTOR_ADDR = int(sys.argv[3], 16)
-CODE_OFFSET = 0x200
+sector_addr = int(sys.argv[3], 16)
+start = int(sys.argv[4], 16)
+jmpt = int(sys.argv[5], 16)
+code = int(sys.argv[6], 16)
 
-
-jumpt = "ProcTblX"
-
-for i in xrange(NBANKS):
-	try:
-		r = index[i]
-		offs, start, end = jmpentry(r)
-		len = end - start
-		if verbose:
-			t = (i, offs, start, len)
-			print "[%d] offset: %06x, start: %04x len 0x%04x" % t
-	except KeyError:
-		offs, start, end = (0xffffffff, 0xffff, 0xffff)
-
-	jumpt += struct.pack(">HH", start, end)
-	jumpt += struct.pack("<I", offs)
-
-		
-out.puts(0x80, jumpt)
-
-out.puts(0x200, buf)
+hdr = BootHeader(sector_addr, start, size, jmpt, code)
+hdr.gencrc(buf)
+hdr.genJumptable(index)
+hdr.dump(out)
+out.puts(hdr.flash_start, buf)
 
 out.dump()
-out.tofile(sys.argv[2], "hex")
+outhex = sys.argv[2]
+# Output HEX file:
+out.tofile(outhex, "hex")
+
+# Output BIN image:
+outbin = outhex.split(".")
+outbin = ".".join(outbin[:-1]) + ".bin"
+sys.stderr.write("Write BIN file '%s'\n" % outbin)
+fontbin = open("font4x8.bin", "r")
+chartable = fontbin.read()
+fontbin.close()
+out.puts(0x10000, chartable)
+out.tofile(outbin, "bin")
 

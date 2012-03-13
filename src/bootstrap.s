@@ -7,37 +7,43 @@
 	.globl __sdcc_banked_call
 
 	; relocation order:
-	.area HOME (CODE)
 	.area SSEG (DATA)
 __start__stack:
 	.ds	1
-	.area GSINIT (CODE)
 	.area GSINIT0 (CODE)
+bootstrap::
+	orl	p0, #0x40	; p0.6 enable
+	orl	p0up, #0x40	; p0.6 pullup enable
+	nop
+	nop
+	nop
+	nop
+	nop
+	mov	a, p0
+	anl	a, #0x40
+	jnz	s_GSINIT
+	anl	dpcon, #~IA; Use ROM IRQ handlers
+	ret
+
+	.area GSINIT (CODE)
 	.area GSFINAL (CODE)
 
-bootstrap::
-	sjmp	skip
-	.ascii "--bootstrap--"
-skip:
-	mov	sp,#__start__stack - 1
+boot:
 
-	; Fake return address:
-	mov	a, #(return_base)
-	push	acc
-	mov	a, #(return_base >> 8)
-	push	acc
-	mov	G_bank, #(return_base >> 16)
-
+	mov	sp,#__start__stack - 1 ; Set stack pointer
 	anl	dpcon, #~DPAID	; Disable autoincrement by default
-	; orl	dpcon, #IA	; Enable IRQ vectors base at 0x1000
 
 	; Load code of module 0 (IRQ handler)
 	mov dpl,	#(irq0_timer0 >> 16)
 	lcall	_bank_load
 
+	orl	dpcon, #IA	; Enable IRQ vectors base at 0x1000
+
 	; Debugging: Turn off backlight LED
 	; mov tmr1con, #0
 	; mov LCD_LED, #1
+
+	acall	ramclr; Clear Stack
 
 	mov	r0, #_umain
 	mov	r1, #(_umain >> 8)
@@ -45,13 +51,14 @@ skip:
 
 	ljmp	__sdcc_banked_call
 
+ramclr:
+	mov	r0, #__start__stack-1
+clr_loop:
+	mov	@r0, #0x00
+	dec	r0
+	mov	a, r0
+	xrl	a, #0x01
+	jnz	clr_loop
+	ret
+
 bootstrap_end::
-
-	; This bank must be a bank number which is not directly called
-	; from this module.
-	.area INIT (CODE)
-
-return_base::
-	ljmp	0x0000	; reset
-
-

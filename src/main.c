@@ -15,7 +15,9 @@ __bit g_debug = 0;
 __bit g_scope = 0;
 __bit g_log = 0;  // log, if set
 
-struct inputs __idata g_button;
+struct inputs __idata g_button = {
+	0, 0 
+};
 
 /* Note: Addressing can work different on other screens.
  *
@@ -155,30 +157,38 @@ void umain(void) __banked
 	BANK_LOAD(timer0_isr);
 	_B_EA = 1;
 
-	init_ports();
-
-	// Should go once we do a full initialization here.
-	lcd_orientation(g_lcd.orientation);
-
-	clrscreen(RGB565(0, 0, 70));
-	term_init();
-	timer1_config(g_lcd.brightness); // Init backlight
-
-	// Activate watchdog to reset after ~2 seconds:
-	
-	wdtcon &= ~WDTPSR;
-	wdtcon |= WDTPND | WDTEN | 7;
+	// Clear counters:
+	for (i = 0; i < sizeof(g_count) / sizeof(unsigned short); i++) {
+		g_count[i] = 0;
+	}
 
 	// We disable the timer interrupts for now, as we don't have
 	// proper handlers yet. Otherwise, they'll really slow us down.
 	// ie &= ~(T0IE | T1IE | T2IE );
 
-	ie |= T0IE | RAWIE;
+	g_lcd.brightness = 7;
+	// Initialize RTC, Clocks, LCD and ports:
+	init_all(PWR_DOWN);
+
+	// Should go once we do a full initialization here.
+	lcd_orientation(g_lcd.orientation);
+
+	sleep(100);
+
+	clrscreen(RGB565(0, 0, 70));
+	term_init();
+	disp_home(); print_splash();
 
 	// Load XSEG data:
 	BANK_LOAD(g_menu);
 
-	disp_home(); print_splash();
+#ifdef FLIX_MODE
+	g_refresh = 1;
+	g_debug = 1;
+	// Automatically enter FLIX menu
+	state = S_MENU;
+	state = handle_event(state, EVT_EDIT);
+#endif
 
 	if (g_button.level & P_VUSBSN) {
 		usb_init();
@@ -189,11 +199,6 @@ void umain(void) __banked
 	// Clear data buffer:
 	for (i = 0; i < sizeof(g_databuf); i++) {
 		g_databuf[i] = 0;
-	}
-
-	// Clear counters:
-	for (i = 0; i < sizeof(g_count) / sizeof(unsigned short); i++) {
-		g_count[i] = 0;
 	}
 
 	g_register[SECONDS] = 0;
@@ -228,6 +233,8 @@ void umain(void) __banked
 		// Did we just plug in USB?
 		if (evt & P_VUSBSN) {
 			usb_init();
+			pcon &= ~TMRCSEL;
+			pcon |= 2 << TMRCSEL_SHFT; // Select48 MHz
 			g_fakeled |= LED_USB;
 			g_usb_active = 1;
 		}

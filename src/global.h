@@ -20,6 +20,11 @@ struct lcd {
 } __idata g_lcd;
 
 extern
+struct flixcontext {
+	unsigned char mode;
+} __idata g_flix;
+
+extern
 __bit g_refresh;       // Refresh default screen
 
 /* USB stuff */

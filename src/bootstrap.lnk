@@ -4,7 +4,7 @@
 -b PSEG    = 0x0090 ; Scratch pad
 ;-----------------------
 ; Boot strap code
--b GSINIT   = 0x801140 ; DO NOT CHANGE, unless changing caller (last module)
+-b GSINIT0   = 0x801140 ; DO NOT CHANGE, unless changing caller (last module)
 ;-----------------------
 ; Resident code
 -b HOME     = 0x801040
@@ -14,6 +14,7 @@
 ;-----------------------
 ; Shared data segments
 -b DATA0    = 0x4d1140
+; -b DATA1    = 0x4e1140
 ;-----------------------
 ; Bank switched:
 -b MAIN     = 0x621200
@@ -28,9 +29,9 @@
 -b PRINTFX  = 0x691200
 -b APPLD    = 0x6a16a0
 -b LCDAUX   = 0x6b1200
--b FLIX     = 0x6c1200
-; Note: Bank d used (4d)
--b DEBUG    = 0x6e1200
+; -b FLIX     = 0x6c1200
+; Note: Bank d used (4d), see DATA0 segment
+-b DEBUG    = 0x701200
 -b INIT     = 0x6f1200
 ;-----------------------
 ; Ignore XINIT segment, we initialize directly

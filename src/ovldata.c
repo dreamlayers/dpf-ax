@@ -18,25 +18,33 @@
 #include "global.h"
 
 extern char hdl_off(BYTE evt) __reentrant;
-extern char br_handler(BYTE evt) __reentrant;
-extern char act_debug(BYTE evt) __reentrant;
-extern char monitor(BYTE evt) __reentrant;
+extern char hdl_brightness(BYTE evt) __reentrant;
+extern char hdl_debug(BYTE evt) __reentrant;
+extern char hdl_monitor(BYTE evt) __reentrant;
 extern char lcd4linux(BYTE evt) __reentrant;
-extern char reboot(BYTE evt) __reentrant;
+extern char hdl_reboot(BYTE evt) __reentrant;
 extern char hdl_flix(BYTE evt) __reentrant;
 
 
 const OVLAREA
 Menu g_menu[] = {
+#ifdef FLIX_MODE
+	{ " Flix ", { 0, L_MENU }, M_DIRECT_BYTE | F_ACTION,
+		&g_flix.mode, hdl_flix  }
+#else
 	// First entry is default:
 	{ " Exit ", { 1, L_MENU + 1 }, M_EXIT, 0, 0 },
-	{ " Off ", { 7, L_MENU + 1 }, M_HANDLER, 0, &hdl_off },
-	{ " Reboot ", { 12, L_MENU + 1 }, M_HANDLER, 0, &reboot },
-	{ " Debug ", { 0, L_MENU }, M_SHOW | F_ACTION, 0, &act_debug },
-	{ " Mon ", { 7, L_MENU }, M_SHOW | F_ACTION, 0, &monitor  },
+	{ " Off ", { 7, L_MENU + 1 }, M_HANDLER, 0, hdl_off },
+	{ " Reboot ", { 12, L_MENU + 1 }, M_HANDLER, 0, hdl_reboot },
+	{ " Debug ", { 0, L_MENU }, M_SHOW | F_ACTION, 0, hdl_debug },
+	{ " Mon ", { 7, L_MENU }, M_SHOW | F_ACTION, 0, hdl_monitor  },
 	{ " Backlight ", { 12, L_MENU }, M_DIRECT_BYTE | F_ACTION,
-		&g_lcd.brightness, br_handler  },
-	{ " Flix ", { 23, L_MENU }, M_EXIT, 0, hdl_flix  },
+		&g_lcd.brightness, hdl_brightness  },
+#ifdef HAVE_FLIX
+	{ " Flix ", { 23, L_MENU }, M_DIRECT_BYTE,
+		&g_flix.mode, hdl_flix  },
+#endif
+#endif
 };
 
 const OVLAREA

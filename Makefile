@@ -1,4 +1,4 @@
-DISTVERSION = 0.12devel
+DISTVERSION = 0.2devel
 
 CURDIR = $(shell pwd)
 
@@ -31,14 +31,15 @@ dist: installdist
 PYSCRIPTS += detect.py fulldump.py profiles.py hackit.py
 PYSCRIPTS += chartbl.py update.py
 
-LIBFILES += Makefile dpflib.c fwload.c rawusb.c
+LIBFILES += Makefile dpflib.c fwload.c rawusb.c scsi.c bootload.c
 LIBFILES += sglib.h dpf.h 
 
 SRCFILES = main.c menu.c ovldata.c
 SRCFILES += appload.c usbhandler.c usbaux.c lcd.c printex.c irq.c
-SRCFILES += init.c debug.c print.c flash.c properties.c flix.c
+SRCFILES += init.c debug.c print.c flash.c properties.c
 SRCFILES += ax206ex.h ax206.h config.h dpf.h global.h lcd.h
-SRCFILES += lcduser.h print.h spiflash.h usb.h utils.h
+SRCFILES += lcduser.h print.h usb.h utils.h
+SRCFILES += ili9163.h ili9320.h otm3225.h # st7637.h
 SRCFILES += bootstrap.s blit.s irqh.s usbblit.s bankswitch.s
 SRCFILES += dpf.inc ax206.inc spiflash.inc
 SRCFILES += Makefile rules.mk
@@ -47,12 +48,13 @@ SRCFILES += README README.developer
 
 FILES += fw/README unixdll.mk
 FILES += $(PYDPF)/Makefile $(PYDPF)/py_device.c
-FILES += include/usbuser.h include/flash.h
+FILES += include/usbuser.h include/spiflash.h
 FILES += $(LIBFILES:%=$(DPFLIB)/%)
+FILES += src/hack.inc src/dpf_int.inc
 FILES += $(wildcard src/p_*.s) $(wildcard src/jmptbl*.s)
 FILES += src/font4x8.bin
 FILES += src/dpf.lib src/lcd.lib
-FILES += src/bootstrap.lnk src/compile.py
+FILES += src/bootstrap.lnk src/compile.py src/crc.py
 
 FILES += $(SRCFILES:%=src/%)
 
@@ -69,7 +71,7 @@ installdist:
 	install -d $(DPFINST)/dpflib
 	install -d $(DPFINST)/python
 	install -d $(DPFINST)/fw/hexfiles
-	install -m644 include/flash.h $(DPFINST)/include
+	install -m644 include/spiflash.h $(DPFINST)/include
 	cp -r fw/hexfiles $(DPFINST)/fw
 	install -m644 fw/font4x8.bin $(DPFINST)/fw
 	install -m755 $(PYSCRIPTS:%=fw/%) $(DPFINST)/fw

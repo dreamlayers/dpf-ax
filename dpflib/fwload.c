@@ -108,7 +108,7 @@ int main(int argc, char **argv)
 	 // demo0(h);
 
 	}
-	ret = write_mem(h, argv[i]);
+	ret = load_hexfile(h, argv[i]);
 	code_go(h, 0x18a0);
 	if (ret < 0) printf("Failed.\n");
 

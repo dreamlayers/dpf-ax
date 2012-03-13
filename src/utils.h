@@ -20,8 +20,8 @@ void sleep(unsigned short ticks) __banked;
 /** Initialize LCD screen */
 void lcd_init(void) __banked;
 
-/** Initialize ports */
-void init_ports(void) __banked;
+/** Initialize all peripherals */
+void init_all(unsigned char mode) __banked;
 
 /** Initialize PWM backlight */
 void timer1_config(unsigned char brightness) __banked;
@@ -73,7 +73,7 @@ void draw_buf(unsigned char n) __banked;
 void fake_led(unsigned char which, unsigned char col) __banked;
 
 // FLIX mode
-void flix_toggle(void) __banked;
+void flix_mode(unsigned char evt) __banked;
 
 // RAM applet loading:
 void *app_load(unsigned char __idata *b) __banked;

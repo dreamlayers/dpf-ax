@@ -1,27 +1,40 @@
 This is rudimentary code to inject your own source into the AX206 based DPFs.
-Since this chip is very much undocumented and no information about the internal
-firmware is available, the following strategy was chosen:
+Update: Information about this chip is now available at openschemes.org.
+Also, the full original SDK is published on their website, look for AX206.
 
-- Leave original firmware as intact as possible (NEVER touch sector 0)
-- Allow to manually put unit into "Developer Mode"
-- Allow to return to default state using the RESET button
+NEW: 
 
-Note that the Developer Mode uses two sectors at the end of the internal
-flash. Therefore, DO NOT fill up the frame with images to the maximum,
-or weird things may happen.
+The current developer distribution no longer uses the 'developer mode'
+firmware hack. It now contains a fully featured environment to boot and
+flash a AX206 based DPF.
 
-When the DPF is hacked using the scripts described below, the Developer Mode
-is simply entered by connecting the DPF to a PC via the USB cable and holding
-the MENU button for approx. 2 seconds.
+----------------------------------------------------------------------------
+DPF modes
 
-See more about the Developer Mode below.
+You can run the DPF firmware in various modes and options:
+
+- Boot Loader Mode: The DPF will be in this mode when you bricked the flash
+  or when you press RESET while holding MENU. This is the preferred mode
+  when flashing new firmware.
+  In Boot loader mode, you can also download small binaries into RAM and run
+  them without touching the flash. This is useful for development. See
+  dpflib/bfload executable to download a RAM binary and run it.
+- Developer Mode: hacked original firmware of a number of supported DPFs
+  to support some extra features and lcd4linux
+- New alternative firmware: Completely replaces internal firmware. This
+  is for advanced users who have identified their LCD brand and know how
+  to access it.
+
+
+Before modifying any firmware, it is VERY recommended to make a backup of
+the original flash content using the fulldump.py script.
 
 ----------------------------------------------------------------------------
 
 The tar file contents are merely:
 
-- simple (yet unfinished and quirky) library to access the DPF flash and
-  the extended functionality when in "Developer Mode".
+- libdpf: A library to access the DPF in various modes (Boot mode, SCSI,
+  developer mode)
 - Python wrapper around the above library
 - Python scripts to patch various DPFs (listed in profiles.py) and other
   auxiliaries
@@ -49,6 +62,21 @@ Specific commands are implemented using the handler for the SCSI command
 Note that the protocol may change in future, once the internal firmware
 is fully replaced by something more structured. Thus, you should implement
 extras on the dpflib level only, never access USB directly.
+
+Alternative firmware mode
+--------------------------
+
+This is for advanced users who wish to implement extra features for their
+DPF. The source distribution starting from 0.2 only supports the
+alternative firmware by default.
+
+To build your firmware, configure your Makefile for the correct DPF
+type and run "make". Then you can simply flash your DPF by putting it into
+boot mode and run
+
+restore.py fw_<your DPF type>.bin -f
+
+You might have to press RESET to boot into your new firmware.
 
 Prerequisites
 --------------
@@ -90,12 +118,14 @@ WARNING: Do not modify the script unless you REALLY know what you are doing.
 DISCLAIMER: There is no guarantee that you will not brick your DPF.
 The Author(s) of this code take no responsibilities. You are completely on
 your own there!
-If you bricked your DPF, check the URL below for information how to restore
-the flash image.
+If you bricked your DPF: No worries, you can restore the old image using
+the restore.py script (experimental) or the ProgSPI.exe Windows tool
+found at openschemes.org.
 
 LICENSE:
 You are allowed to modify and distribute the code, as long as you keep it
 OpenSource. We just trust you that you have a notion of fair usage :-)
+You MAY NOT use this code commercially.
 
 TODO:
 1. Windows support, fully featured lcd4linux support via generic DPF library
@@ -106,10 +136,11 @@ TODO:
 
 Find updates and documentation here:
 
-http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
+http://tech.section5.ch/news/?p=77
+(most up to date)
 
 or here:
 
-http://tech.section5.ch/news/?p=68
+http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
 
 ----------------------------------------------------------------------------
