@@ -29,7 +29,7 @@ dist: installdist
 
 
 PYSCRIPTS += detect.py fulldump.py profiles.py hackit.py
-PYSCRIPTS += chartbl.py update.py
+PYSCRIPTS += chartbl.py update.py restore.py
 
 LIBFILES += Makefile dpflib.c fwload.c rawusb.c scsi.c bootload.c
 LIBFILES += sglib.h dpf.h 
