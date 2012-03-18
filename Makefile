@@ -9,7 +9,7 @@ PYDPF = python
 FILES = Makefile lcd4linux-svn1142-dpf.patch README Changelog
 
 ifndef DESTDIR
-DESTDIR = /tmp
+DESTDIR = $(HOME)/src/
 endif
 
 default: $(DPFLIB)/libdpf.a
@@ -35,7 +35,7 @@ LIBFILES += Makefile dpflib.c fwload.c rawusb.c scsi.c bootload.c
 LIBFILES += sglib.h dpf.h 
 
 SRCFILES = main.c menu.c ovldata.c
-SRCFILES += appload.c usbhandler.c usbaux.c lcd.c printex.c irq.c
+SRCFILES += appload.c usbhandler.c usbaux.c usb_ep1.c lcd.c printex.c irq.c
 SRCFILES += init.c debug.c print.c flash.c properties.c
 SRCFILES += ax206ex.h ax206.h config.h dpf.h global.h lcd.h
 SRCFILES += lcduser.h print.h usb.h utils.h
@@ -50,8 +50,9 @@ FILES += fw/README unixdll.mk
 FILES += $(PYDPF)/Makefile $(PYDPF)/py_device.c
 FILES += include/usbuser.h include/spiflash.h
 FILES += $(LIBFILES:%=$(DPFLIB)/%)
-FILES += src/hack.inc src/dpf_int.inc
-FILES += $(wildcard src/p_*.s) $(wildcard src/jmptbl*.s)
+# No longer copy "hack" files
+# FILES += src/hack.inc src/dpf_int.inc
+# FILES += $(wildcard src/p_*.s) $(wildcard src/jmptbl*.s)
 FILES += src/font4x8.bin
 FILES += src/dpf.lib src/lcd.lib
 FILES += src/bootstrap.lnk src/compile.py src/crc.py

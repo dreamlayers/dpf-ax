@@ -28,7 +28,7 @@
 #	define LCD_320x240
 #	define LCD_CONTROLLER_OTM3225
 #	define LCD_ORIENTATION_RGB RGB_UP
-#	define DEFAULT_ORIENTATION ROT_LEFT
+#	define DEFAULT_ORIENTATION ROT_LEFT // USB is left
 #elif defined (DPFMODEL_focal)
 #	define LCD_320x240
 #	define LCD_CONTROLLER_ILI9325
@@ -39,4 +39,6 @@
 #	define LCD_CONTROLLER_ILI9325
 #	define LCD_ORIENTATION_RGB RGB_UP
 #	define DEFAULT_ORIENTATION ROT_LEFT
+#else
+#error	"Unrecognized DPF TYPE specification"
 #endif

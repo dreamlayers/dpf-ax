@@ -1,3 +1,26 @@
+----------------------------------------------------------------------------
+DPF remote display software distribution (dpf-ax)
+----------------------------------------------------------------------------
+
+This is a free software package to:
+
+* Patch or reprogram digital picture frames (DPFs) based on the AX206 CPU
+* Make them display system information using lcd4linux
+
+This is a chaotically growing README. You'll have to gather some information
+from here and there and probably use google, too. Sorry!
+
+
+----------------------------------------------------------------------------
+AX206 DPF firmware (also referred to as BSOH - blue screen of hack)
+----------------------------------------------------------------------------
+
+Read all the firmware details in src/README or src/README.developer
+
+
+----------------------------------------------------------------------------
+LCD4linux display notes
+----------------------------------------------------------------------------
 Usage:
 
 * Verify that you have a decent development system (GCC, development
@@ -24,15 +47,35 @@ Changelog) DO NOT INSTALL if you wish to keep your landscape orientation.
 Later, we'll make this configureable, if there turns out to be a good
 solution (there currently isn't).
 
-The source for this firmware is not yet included. Please don't ask
-questions when it will be released, it will happen, once we have a fully
-fool proof and working firmware including boot loader support (if you can
-help there, let us know).
-
 Also note: NO SUPPORT! NO WARRANTY! FRIENDS DON'T MAKE FRIENDS HACK THEIR
 DPF! LET ALONE NON-FRIENDS! (Bottomline: Don't ask me if I can hack your DPF).
 
 If you wish to hack your DPF, please check the sites listed below.
+
+----------------------------------------------------------------------------
+Notes about the lcd4linux patch:
+
+The 128x128 DPFs all support an 'Orientation' property, like in the example
+section from a lcd4linux config file:
+
+Display dpf {
+    Driver     'DPF'
+    Port       'usb0'
+    Font       '6x8'
+    Foreground 'ffffff'
+    Background '000000'
+    Basecolor  '000000'
+	Orientation 0          # Orientation value from 0-3
+	Backlight  backlight   # Backlight variable control
+}
+
+On the 320x240 frames, this Orientation field is not supported, unless you
+wish to mirror your image for some reason. Currently, it can not be switched
+at runtime. You'll need to recompile the firmware if you want to change
+the default orientation.
+
+Another implemented option as you can see, is the Backlight variable.
+You can use values from 0-7, 0 turns it off, 7 is maximum brightness.
 
 ----------------------------------------------------------------------------
 Troubleshooting
@@ -55,9 +98,10 @@ http://tech.section5.ch/news/?p=77
 or here:
 
 http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
+(might be outdated)
 
 For our german users, a very good explanation is found here:
 
 http://geekparadise.de/2011/04/digitaler-bilderrahmen-von-pearl-als-statusdisplay-fur-dockstar/
 
-(c) 9/2011, hackfin
+(c) 3/2012, hackfin

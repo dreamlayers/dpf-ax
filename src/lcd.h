@@ -42,8 +42,8 @@ unsigned char g_rgborder;
 #	define LCD_WIDTH  128
 #	define LCD_HEIGHT 128
 #elif defined (LCD_320x240)
-#	define LCD_WIDTH  240
-#	define LCD_HEIGHT 320
+#	define LCD_WIDTH  240L
+#	define LCD_HEIGHT 320L
 #endif
 
 #ifdef LCD_CONTROLLER_ILI9163B
@@ -92,7 +92,7 @@ unsigned char g_rgborder;
 // This rotation is defined by the typical application. Up means: default.
 // Note: the USB connector location may vary.
 // This is the logical rotation of the screen. The *physical* rotation
-// is just the opposite.
+// (see RGB order) might be just reverted.
 
 #define ROT_UP       0   // USB connector left
 #define ROT_LEFT     1   // USB connector up
@@ -131,8 +131,19 @@ unsigned char g_rgborder;
 #define CONCAT(x, y) x##_##y
 #define MANGLE(x, y) CONCAT(x, y)
 
+#define CONCAT2(x, y, z) x##_##y##_##z
+#define MANGLE2(x, y, z) CONCAT2(x, y, z)
+
 // API
-#define disp_blit     MANGLE(_INTERNAL_TAG, blit)
+#if LCD_WIDTH != LCD_HEIGHT
+#	if (DEFAULT_ORIENTATION == ROT_RIGHT) || (DEFAULT_ORIENTATION == ROT_LEFT)
+#		define disp_blit     MANGLE2(_INTERNAL_TAG, landscape, blit)
+#	else
+#		define disp_blit     MANGLE2(_INTERNAL_TAG, portrait, blit)
+#	endif
+#else
+#	define disp_blit     MANGLE(_INTERNAL_TAG, blit)
+#endif
 #define init_sequence MANGLE(_INTERNAL_TAG, initseq)
 
 void disp_blit(void);
@@ -148,3 +159,7 @@ void lcd_ili_setorientation(unsigned char which);
 #define END_OFFSET_Y (LCD_OFFSET_Y - 1)
 #endif
 
+
+// Low level functions to write to LCD:
+void write_cmd(unsigned short w);
+void write_data(unsigned short w);

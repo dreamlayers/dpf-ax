@@ -141,7 +141,6 @@ BYTE strlen(__code char *str)
 
 void umain(void) __banked
 {
-	// set_orientation(ROT_DOWN);
 	static PwrState pstate = S_GOOD;
 	static MainState prevstate = S_RUN, state = S_RUN;
 	BYTE evt;
@@ -167,11 +166,9 @@ void umain(void) __banked
 	// ie &= ~(T0IE | T1IE | T2IE );
 
 	g_lcd.brightness = 7;
+	g_lcd.orientation = DEFAULT_ORIENTATION;
 	// Initialize RTC, Clocks, LCD and ports:
 	init_all(PWR_DOWN);
-
-	// Should go once we do a full initialization here.
-	lcd_orientation(g_lcd.orientation);
 
 	sleep(100);
 

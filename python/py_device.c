@@ -132,7 +132,6 @@ PyObject *
 Device_eraseflash(DeviceObject *self, PyObject *args)
 {
 	int error;
-	char full = 0;
 	ADDR addr = 0xffffffff;
 
 	if (!PyArg_ParseTuple(args, "|I", &addr))

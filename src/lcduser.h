@@ -24,6 +24,6 @@
 #define WCMD(x) CMD_SEQCMD | 2, 0x00, _concat(R_LCD_, x)
 #define DATA(n) CMD_SEQDATA | n
 #define WDATA(x) CMD_SEQDATA | 2, \
-	((((unsigned short) (x)) >> 8) & 0xff), ((x) & 0xff)
+	((( (unsigned short) (x)) >> 8) & 0xff), ((x) & 0xff)
 #define DELAY(n) CMD_MDELAY, (n)
 

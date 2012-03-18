@@ -9,7 +9,6 @@ v0.2develop
 	* Added bootloader mode downloading and flashing options to dpflib
 	* Bootstrapping code
 	* Bootblock and jump table generation to compile.py
-	  version counting and start a new project.
 
 Mon, 11 Apr 2011 11:55:52 +0200
 v0.11alpha

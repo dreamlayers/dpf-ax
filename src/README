@@ -1,4 +1,6 @@
 This is rudimentary code to inject your own source into the AX206 based DPFs.
+It is fully Linux based for now.
+
 Update: Information about this chip is now available at openschemes.org.
 Also, the full original SDK is published on their website, look for AX206.
 
@@ -8,6 +10,10 @@ The current developer distribution no longer uses the 'developer mode'
 firmware hack. It now contains a fully featured environment to boot and
 flash a AX206 based DPF.
 
+The original developer distribution is obtained via SVN from
+
+https://sourceforge.net/projects/dpf-ax/
+
 ----------------------------------------------------------------------------
 DPF modes
 
@@ -15,7 +21,10 @@ You can run the DPF firmware in various modes and options:
 
 - Boot Loader Mode: The DPF will be in this mode when you bricked the flash
   or when you press RESET while holding MENU. This is the preferred mode
-  when flashing new firmware.
+  when flashing new firmware. You can also get into bootloader mode by
+  executing 'Reboot' from a hacked frame's menu and holding the MENU button.
+  The screen will then stay dark and the device will register as HID type
+  with PID 3318.
   In Boot loader mode, you can also download small binaries into RAM and run
   them without touching the flash. This is useful for development. See
   dpflib/bfload executable to download a RAM binary and run it.
@@ -23,8 +32,18 @@ You can run the DPF firmware in various modes and options:
   to support some extra features and lcd4linux
 - New alternative firmware: Completely replaces internal firmware. This
   is for advanced users who have identified their LCD brand and know how
-  to access it.
+  to initialize it.
 
+Typically, all firmware manipulation of the DPF is done by python scripts.
+These are found in the fw/ folder of the distribution. Most of them work
+in all modes, you just have to specify different parameters for the USB
+connection, once it's made:
+
+'usb0': Device in bootloader or 'Developer mode' (Blue screen of Hack)
+'/dev/sg1' or '/dev/sr1': Device in original CDROM mode
+
+The numbers may vary, typically your /dev/sg0 is your hard disk, /dev/sr1
+your existing CDROM.
 
 Before modifying any firmware, it is VERY recommended to make a backup of
 the original flash content using the fulldump.py script.
@@ -43,9 +62,15 @@ Description of a few tools
 ---------------------------
 
 app_detect.s, detect.py: Simple rudimentary detection for Sitronix/NXP
-                         compatible LCD controllers and SPI flash chip.
+                         compatible LCD controllers and SPI flash chip. Does
+                         not work in bootloader (BL) mode.
 fulldump.py:             Performs a dump of the flash according to detected
-                         flash size (often specified wrong by vendor)
+                         flash size (often specified wrong by vendor).
+                         Works in all modes, but is very slow in BL mode
+restore.py:              Program full flash image from sector 0 to DPF.
+                         Use this in BL mode. Otherwise it may leave
+                         sector 0 incomplete and crash.
+update.py:               Example to patch single sector with a .ihx file
 
 Developer Mode
 ---------------
@@ -111,7 +136,6 @@ For those desiring to try adding hacks for other frame models, there is
 now a short howto in the reverse/ folder.
 
 ----------------------------------------------------------------------------
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 WARNING: Do not modify the script unless you REALLY know what you are doing.
 
@@ -122,25 +146,53 @@ If you bricked your DPF: No worries, you can restore the old image using
 the restore.py script (experimental) or the ProgSPI.exe Windows tool
 found at openschemes.org.
 
+----------------------------------------------------------------------------
+
 LICENSE:
 You are allowed to modify and distribute the code, as long as you keep it
 OpenSource. We just trust you that you have a notion of fair usage :-)
 You MAY NOT use this code commercially.
 
+One exception: You may note that the source of some included libraries
+is not disclosed, due some copyright restrictions on parts of the code.
+Once it's rewritten, it can be opensourced later on.
+
 TODO:
 1. Windows support, fully featured lcd4linux support via generic DPF library
    (I leave this to others. I hate Windows.)
 2. Replace flash firmware with improved opensource environment
+   [partially done]
+3. Rewrite lcd library
+
+----------------------------------------------------------------------------
+Notes about the lcd4linux patch:
+
+The 128x128 DPFs all support an 'Orientation' property, like in the example
+section from a lcd4linux config file:
+
+Display dpf {
+    Driver     'DPF'
+    Port       'usb0'
+    Font       '6x8'
+    Foreground 'ffffff'
+    Background '000000'
+    Basecolor  '000000'
+	Orientation 0          # Orientation value from 0-3
+	Backlight  backlight   # Backlight variable control
+}
+
+On the 320x240 frames, this Orientation field is not supported, unless you
+wish to mirror your image for some reason. Currently, it can not be switched
+at runtime. You'll need to recompile the firmware if you want to change
+the default orientation.
+
+Another implemented option as you can see, is the Backlight variable.
+You can use values from 0-7, 0 turns it off, 7 is maximum brightness.
 
 ----------------------------------------------------------------------------
 
 Find updates and documentation here:
 
 http://tech.section5.ch/news/?p=77
-(most up to date)
-
-or here:
-
-http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
 
 ----------------------------------------------------------------------------

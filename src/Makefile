@@ -35,7 +35,7 @@ CODE_OFFS    = 0x200  # Offset of code start sector --> BootHeader.flash_start
 # Character table location in flash:
 CHARTBL_ADDR = $(FW_ADDR) + 0x10000
 
-VERSION = 0.200
+VERSION = 0.201
 STATUS  = devel
 
 # Build number file:
@@ -65,7 +65,7 @@ OBJS += bootstrap.rel lcd.rel
 OBJS += printex.rel
 OBJS += usbblit.rel 
 OBJS += appload.rel
-OBJS += usbhandler.rel usbaux.rel
+OBJS += usbaux.rel usb_ep1.rel
 OBJS += irqh.rel irq.rel
 OBJS += init.rel debug.rel
 OBJS += blit.rel print.rel 
@@ -99,7 +99,7 @@ TARGET += $(PATCHES:%.s=%.ihx) $(APPLETS:%.s=%.ihx)
 
 HEADERS += config.inc
 
-all: $(PROG_BUILDNO) $(HEADERS) fwload Debug/dpf.so $(DUTIES) current.ihx
+all: $(PROG_BUILDNO) $(HEADERS) fwload Debug/dpf.so $(DUTIES) current.bin
 
 include rules.mk
 
@@ -125,6 +125,12 @@ fw_$(TYPE).ihx: main.ihx
 		$(JMPTBL_OFFS) $(CODE_OFFS) > output.log
 
 current.ihx: fw_$(TYPE).ihx 
+	ln -sf $< $@
+
+fw_$(TYPE).bin: fw_$(TYPE).ihx
+	@touch $@ # Hack to update current.bin link
+
+current.bin: fw_$(TYPE).bin
 	ln -sf $< $@
 
 app: app_test.ihx
@@ -201,12 +207,13 @@ fwclean:
 libclean::
 
 clean: libclean
-	$(MAKE) -C $(DPFLIB) clean
-	$(MAKE) -C $(PYDPF) clean
+	# $(MAKE) -C $(DPFLIB) clean
+	# $(MAKE) -C $(PYDPF) clean
 	rm -f fwload *.a *.d
 	rm -fr *.ihx *.rel *.o *.asm
 	rm -f *.mem *.sym *.map *.lst *.rst
 	rm -f *.raw
+	rm -f current.bin
 	-rm config.inc
 
 $(PROG_BUILDNO):
@@ -221,7 +228,7 @@ reset:
 
 download:
 	sudo libhid-detach-device 1908:3318
-	sudo python restore.py fw_$(TYPE).bin -f
+	sudo python restore.py current.bin -f
 
 # Make it phony, because we want to update the build version every time.
 .PHONY: printex.c

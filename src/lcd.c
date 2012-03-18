@@ -187,7 +187,7 @@ void draw_buf(BYTE n) __banked
 	}
 }
 
-#define UDELAY() _asm nop nop nop nop _endasm
+#ifdef EXPERIMENTAL
 
 static BYTE lcd_read(void)
 {
@@ -199,23 +199,4 @@ static BYTE lcd_read(void)
 	return v;
 }
 
-/* Attention: These are just stubs for now */
- 
-void fill_rect(__idata const unsigned char *b) __banked
-{
-	b;
-}
-
-void copy_rect(__idata const unsigned char *b) __banked
-{
-	unsigned short nlines;
-	char dx, dy;
-
-	g_blit.x0 = b[7] | (b[8] << 8);
-	g_blit.y0 = b[9] | (b[10] << 8);
-	g_blit.x1 = b[11] | (b[12] << 8);
-	nlines = b[11] | (b[12] << 8);
-	dx = b[13];
-	dy = b[14];
-}
-
+#endif
