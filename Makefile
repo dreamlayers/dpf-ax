@@ -9,7 +9,7 @@ PYDPF = python
 FILES = Makefile lcd4linux-svn1142-dpf.patch README Changelog
 
 ifndef DESTDIR
-DESTDIR = $(HOME)/src/
+DESTDIR = $(HOME)/src
 endif
 
 default: $(DPFLIB)/libdpf.a
@@ -85,7 +85,6 @@ installdist:
 	cd $(DPFINST)/fw; ln -sf ../Debug .
 
 clean:
-	-rm -fr $(DPFINST)
 	$(MAKE) -C $(DPFLIB) clean
 	$(MAKE) -C $(PYDPF) clean
 	-[ -e lcd4linux/Makefile ] && (cd lcd4linux; make distclean)
