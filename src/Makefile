@@ -2,6 +2,9 @@
 #
 # 12/2010, <hackfin@section5.ch>
 #
+# 0.202devel 2012/04/01 by superelchi
+#	Added support for ProgSPI flashing
+#
 
 # Specify here the model you wish to compile for. See dpfmodel.h for valid
 # names.
@@ -30,12 +33,12 @@ PYDPF  = ../python
 
 FW_ADDR      = 0x000000
 LOAD_ADDR    = 0x1140 # Target prog mem address for executable
-JMPTBL_OFFS  = 0x40   # Jump table offset           --> BootHeader.jmpt_offset
-CODE_OFFS    = 0x200  # Offset of code start sector --> BootHeader.flash_start
+JMPTBL_OFFS  = 0x248   # Jump table offset           --> BootHeader.jmpt_offset
+CODE_OFFS    = 0x400  # Offset of code start sector --> BootHeader.flash_start
 # Character table location in flash:
 CHARTBL_ADDR = $(FW_ADDR) + 0x10000
 
-VERSION = 0.201
+VERSION = 0.202
 STATUS  = devel
 
 # Build number file:
@@ -60,6 +63,7 @@ CFLAGS  += $(COMPILE_OPTIONS)
 # Feel free to add stuff, but note: Order matters!
 OBJS = main.rel  # ihx file will be named after first element
 OBJS += menu.rel ovldata.rel
+OBJS += bankswitch.rel
 # OBJS += boothdr.rel
 OBJS += bootstrap.rel lcd.rel
 OBJS += printex.rel
@@ -228,7 +232,7 @@ reset:
 
 download:
 	sudo libhid-detach-device 1908:3318
-	sudo python restore.py current.bin -f
+	cd ../fw ; sudo python restore.py ../src/current.bin -f
 
 # Make it phony, because we want to update the build version every time.
 .PHONY: printex.c

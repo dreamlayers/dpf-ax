@@ -1,6 +1,9 @@
 # Compiles banked executable into flash image
 # (c) 2010-2011, <hackfin@section5.ch>
 #
+# 0.202devel 2012/04/01 by superelchi
+#	Added support for ProgSPI flashing
+#
 
 import intelhex
 import struct
@@ -106,6 +109,44 @@ class BootHeader:
 
 		a += 14 * '\0'
 		a += struct.pack(">H", 0x55aa) # Terminator magic
+
+		# Following stuff only to keep ProgSPI happy
+		#
+		# If you dont need flash support by ProgSPI.exe
+		# you can delete everything up to the ##END## Marker
+		# Than change the following two defines in Makefile to:
+		#
+		#JMPTBL_OFFS  = 0x40
+		#CODE_OFFS    = 0x200
+		#
+
+		a += struct.pack("BBB", 0, 0, 0x07)	#Flash-Adr of PhotoList (for DPFMate?)
+		a += struct.pack(">H", 128)			# LCD Width
+		a += struct.pack(">H", 128)			# LCD Height
+		a += '\xD8'							# Erase 64K Conmmand
+		a += '\0'							# Byte prg flag
+		a += '\02'							# Word prg flag
+		a += '\0'							# Enable write status register
+		a += struct.pack("BBB", 0, 0, 0x20)	#Flash capacity
+
+		a += 4 * '\0'
+		a += 14 * '\xFF'
+		a += "DPFv1.0hackfin\xFF\xFF"
+		a += "20120101\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+		a += "Jan 01 2012\xFF\xFF\xFF\xFF\xFF"
+		a += "12:00:00\0\0\x55\x4F\xEF\x51\x06\x5E"
+
+		a += "ProcTbl5"
+		v = 0x1200
+		for i in range(53):
+			a += struct.pack(">H", 0x0b30)
+			a += struct.pack(">H", 0x0c30)
+			a += struct.pack("BBB", v >> 16, (v >> 8) & 0xff, v & 0xff)
+			a += '\0'
+			v += 0x100
+		a += "-EndTbl-\xff\xff\xff\xff\xff\xff\xff\xff"
+
+		# ##END## ProgSPI stuff
 
 		out.puts(0x000000, a)
 		out.puts(self.jmpt_offset - len(self.table_tag), self.jumptable)

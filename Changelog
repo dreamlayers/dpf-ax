@@ -3,6 +3,10 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Sun, 01 Apr 2012 14:51:00 +0200
+v0.202devel by superelchi
+	* Added support for ProgSPI flashing
+
 Tue, 13 Mar 2012 17:53:53 +0100
 v0.2develop
 	Standalone firmware that requires no hack. Added:
