@@ -3,6 +3,14 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Tue, 17 Apr 2012
+v0.203devel by superelchi
+	* Added hiddetach (crude 
+	* Added identify.py (new kind of dpf detection).
+	* Added a more pragmatic approach for integrating new LCD models.
+	* New supported model:
+	  - linkdelight
+	  
 Sun, 01 Apr 2012 14:51:00 +0200
 v0.202devel by superelchi
 	* Added support for ProgSPI flashing

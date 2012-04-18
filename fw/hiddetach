@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# hiddetach
+#
+# Simple HID detach code for AX206 based DPF hardware in bootloader mode
+#
+# 2012/04/02 superelchi
+#   First version   
+#
+#
+if [ `id -u` -ne 0 ]; then
+        echo "$0: You must be root to do this.">&2
+        exit 1
+fi
+
+dirlist=$(find -L /sys/bus/usb/devices -maxdepth 1 -type d)
+for d in $dirlist ; do
+    if [ -e ${d}/product ] ; then
+        grep -q BL206 ${d}/product
+        if [ $? -eq 0 ] ; then
+            id=${d##*/}:1.0
+            if [ -e /sys/bus/usb/drivers/usbhid/${id} ] ; then
+                echo -n "Detaching dpf at ${id}..."
+                echo -n $id > /sys/bus/usb/drivers/usbhid/unbind
+                echo " done."
+            else
+                echo "$0: info - dpf at ${id} is already detached."
+            fi    
+            exit 0
+        fi
+    fi
+done            
+echo "$0: warning - no dpf in bootloader mode found."
+

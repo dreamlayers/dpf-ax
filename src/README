@@ -71,7 +71,10 @@ restore.py:              Program full flash image from sector 0 to DPF.
                          Use this in BL mode. Otherwise it may leave
                          sector 0 incomplete and crash.
 update.py:               Example to patch single sector with a .ihx file
-
+identify.py:             Tries to identify a flash dump.
+hiddetach:               A simple shell script replacment for libhid-detach-device.
+                         Use it to "unbind" the device in bootloader mode for libhid.
+                         
 Developer Mode
 ---------------
 

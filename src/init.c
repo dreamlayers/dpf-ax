@@ -112,8 +112,10 @@ void lcd_orientation(BYTE which) __banked
 	lcd_ot_setorientation(which);
 #elif defined(LCD_CMDSET_ILI)
 	lcd_ili_setorientation(which);
-#else
+#elif defined(LCD_CMDSET_ST)
 	lcd_st_setrotation(c); // this wants the "rotcode"
+#else
+	lcd_custom_setorientation(which);
 #endif
 	g_rgborder = RGBORDER(c);
 }

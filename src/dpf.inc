@@ -20,4 +20,10 @@ SPI_CS	= _P20
 ; FUNCTIONS in OTP
 otp_lcd_write         = 0x0f25 ; The display write function
 
+; Offsets in struct blit
+; DO NOT CHANGE unless you update struct blit and the LCD library and this accordingly
+x0  =	0
+x1  =	2
+y0  =	4
+y1  =	6
 

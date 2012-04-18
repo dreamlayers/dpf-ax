@@ -4,10 +4,23 @@
 #
 # 0.202devel 2012/04/01 by superelchi
 #	Added support for ProgSPI flashing
+# 0.203devel 2012/04/17 by superelchi
+#	Added new model
 #
 
 # Specify here the model you wish to compile for. See dpfmodel.h for valid
 # names.
+
+ifndef TYPE
+TYPE = white
+endif
+
+#
+# Set custom flag
+#
+ifeq ($(TYPE),linkdelight)
+LCD_CUSTOM = 1
+endif
 
 ifdef FLIX
 COMPILE_OPTIONS = -DFLIX_MODE
@@ -16,9 +29,6 @@ else
 LNK_OPTIONS = ";"
 endif
 
-ifndef TYPE
-TYPE = white
-endif
 
 ifndef NETPP
 NETPP = $(HOME)/src/netpp/devices/dpf-ax206
@@ -38,7 +48,7 @@ CODE_OFFS    = 0x400  # Offset of code start sector --> BootHeader.flash_start
 # Character table location in flash:
 CHARTBL_ADDR = $(FW_ADDR) + 0x10000
 
-VERSION = 0.202
+VERSION = 0.203
 STATUS  = devel
 
 # Build number file:
@@ -66,6 +76,9 @@ OBJS += menu.rel ovldata.rel
 OBJS += bankswitch.rel
 # OBJS += boothdr.rel
 OBJS += bootstrap.rel lcd.rel
+ifdef LCD_CUSTOM
+OBJS += lcdblit_$(TYPE).rel lcdinit_$(TYPE).rel lcdseto_$(TYPE).rel
+endif
 OBJS += printex.rel
 OBJS += usbblit.rel 
 OBJS += appload.rel
@@ -79,7 +92,10 @@ OBJS += flix.rel
 endif
 # OBJS += app_test.rel
 
-LIBS = dpf.lib lcd.lib
+LIBS = dpf.lib
+ifndef LCD_CUSTOM
+LIBS += lcd.lib
+endif
 
 CFLAGS += -DDPFMODEL_$(TYPE)
 ifeq ($(STATUS),devel)
@@ -231,8 +247,8 @@ reset:
 # (see lsusb)
 
 download:
-	sudo libhid-detach-device 1908:3318
-	cd ../fw ; sudo python restore.py ../src/current.bin -f
+#	sudo libhid-detach-device 1908:3318
+	cd ../fw ; sudo ./hiddetach ; sudo python restore.py ../src/current.bin -f
 
 # Make it phony, because we want to update the build version every time.
 .PHONY: printex.c

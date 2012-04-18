@@ -6,7 +6,8 @@
 
 #include "config.h"
 
-// DO NOT CHANGE unless you update the LCD library accordingly
+// DO NOT CHANGE THIS STRUCT!
+// All *_blit.s depend on position & length of its members!
 /** Blit structure for display access */
 struct blit {
 	unsigned short x0;  ///< left X value of rectangle
@@ -89,6 +90,12 @@ unsigned char g_rgborder;
 #	define LCD_CMDSET_OT
 #endif
 
+#ifdef LCD_CONTROLLER_CUSTOM
+#	define _INTERNAL_TAG custom
+#	define LCD_CMDSET_CUSTOM
+#endif
+
+
 // This rotation is defined by the typical application. Up means: default.
 // Note: the USB connector location may vary.
 // This is the logical rotation of the screen. The *physical* rotation
@@ -153,6 +160,7 @@ void lcd_orientation(unsigned char which) __banked;
 void lcd_st_setrotation(unsigned char rotcode);
 void lcd_ot_setorientation(unsigned char which);
 void lcd_ili_setorientation(unsigned char which);
+void lcd_custom_setorientation(unsigned char which);
 
 #ifdef END_INCLUSIVE
 #define END_OFFSET_X (LCD_OFFSET_X - 1)
@@ -161,5 +169,5 @@ void lcd_ili_setorientation(unsigned char which);
 
 
 // Low level functions to write to LCD:
-void write_cmd(unsigned short w);
-void write_data(unsigned short w);
+//void write_cmd(unsigned short w);
+//void write_data(unsigned short w);

@@ -39,6 +39,15 @@
 #	define LCD_CONTROLLER_ILI9325
 #	define LCD_ORIENTATION_RGB RGB_UP
 #	define DEFAULT_ORIENTATION ROT_LEFT
+#elif defined (DPFMODEL_linkdelight)
+#	define LCD_320x240
+#	define LCD_CONTROLLER_CUSTOM
+#	define LCD_ORIENTATION_RGB RGB_UP
+#	define DEFAULT_ORIENTATION ROT_LEFT
+#	define LCD_OFFSET_X   0
+#	define LCD_OFFSET_Y   0
+//#	define END_INCLUSIVE
+// <<<< INSERT NEW DPFS BEFORE THIS LINE <<<<
 #else
 #error	"Unrecognized DPF TYPE specification"
 #endif
