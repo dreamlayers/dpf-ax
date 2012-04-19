@@ -54,6 +54,16 @@ def isBuildwinFw(buf):
 
 val = lambda x: ord(x)
 
+scan_locate_lcdinit = [
+0x75, 0xEC, 0x00, 0x53, 0xEA, 0xE8,
+]
+scan_locate_stdlcdinit = [
+0x75, 0xEC, 0x00, 0x53, 0xEA, 0xE8, 0x53, 0xEB, 0xFD, 0x53, 0xA0, 0xFD,
+0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val,
+0x53, 0x90, 0xFE,
+0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val,
+0x43, 0x90, 0x01, 0x7F
+]
 scan_locate_initbl = [
 0x70, 0x01, 0x22, 0x90, val, val, 0xC0, 0xF0, 0xF5, 0xF0, 0xE4, 0x93, 0xC3, 0x25, 0x82, 0xC5, 0x82
 ]
@@ -73,18 +83,18 @@ class Scanner:
 		n = 0
 		while p < len(self.data):
 			if type(self.scansequence[n]) == type(val):
-				args.append(val(self.data[p]))
+				self.args.append(val(self.data[p]))
 				n += 1
 			elif chr(self.scansequence[n]) == self.data[p]:
 				n += 1
 			else:
 				n = 0
-				args = []
+				self.args = []
 
 			if n == len(self.scansequence):
-				cb(context, args, p)
+				cb(context, self.args, p - len(self.scansequence) + 1)
 				n = 0
-				args = []
+				self.args = []
 
 			p += 1
 
@@ -96,21 +106,47 @@ def add_offs(context, args, p):
 		off = args[i*2] << 8 | args[i*2 + 1]
 		e.append(off)
 
+lcdinit_found = False
 
 def find_initbl(buf, module):
+	global lcdinit_found
 	start, end, flashaddr = get_module(buf, module)
 	l = end - start
 	start += 0x800
 	data = buf[flashaddr : flashaddr + l]
+
+	if dev_mode > 1:
+		initbloffs = []
+		scanner = Scanner(data, scan_locate_stdlcdinit)
+		scanner.scan((initbloffs, start), add_offs)
+		if len(initbloffs) > 0:
+			p = initbloffs[0]
+			print
+			print "Module %d:" % module
+			print "LcdInit (Tbl)   at 0x%04x (0x%06x)" % (p + start, p + flashaddr)
+			lcdinit_found = True
+		else:
+			initbloffs = []
+			scanner = Scanner(data, scan_locate_lcdinit)
+			scanner.scan((initbloffs, start), add_offs)
+			if len(initbloffs) > 0:
+				p = initbloffs[0]
+				print
+				print "Module %d:" % module
+				print "LcdInit !NOTBL! at 0x%04x (0x%06x)" % (p + start, p + flashaddr)
+				lcdinit_found = True
+		
 	initbloffs = []
 	c = 0
 	scanner = Scanner(data, scan_locate_initbl)
 	scanner.scan((initbloffs, start), add_offs)
 	if len(initbloffs) == 2:
+	    try:
 		p = initbloffs[1] - start
 		i = struct.unpack("B", data[p])[0]
 		if dev_mode:
-			print
+			if not lcdinit_found:
+				print
 			print "Module %d:" % module
 			print "LcdScheduleTbl  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
 		p += i + 1
@@ -124,22 +160,27 @@ def find_initbl(buf, module):
 		p += i + 1
 		i = struct.unpack("B", data[p])[0]
 		if dev_mode:
-			print "LcdBacklightTbl at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+			  print "LcdBacklightTbl at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
 		p += i + 1
 		l = struct.unpack("<H", data[p : p+2])[0]
 		p += 2
-		lcdinitbl = data[p:p+l]
-		if dev_mode:
+		if (p + l) < len(data):
+		    lcdinitbl = data[p:p+l]
+		    if dev_mode:
 			print "LcdIniTbl       at 0x%04x (0x%06x), len 0x%02x," % (p + start, p + flashaddr, l),
-		if dev_mode > 1:
-			outf = open("lcdinitbl_tmp.bin", "wb")
-			outf.write(lcdinitbl)
-			outf.close()
-		c = binascii.crc32(lcdinitbl) & 0xffffffff
+		        if dev_mode > 1:
+				outf = open("lcdinitbl_tmp.bin", "wb")
+			        outf.write(lcdinitbl)
+			        outf.close()
+		    c = binascii.crc32(lcdinitbl) & 0xffffffff
+		    if dev_mode:
+				print "CRC = 0x%x" % c
+			        if dev_mode > 1:
+				    print "Written to lcdinitbl_tmp.bin."
+	    except:
 		if dev_mode:
-			print "CRC = 0x%x" % c
-			if dev_mode > 1:
-				print "Written to lcdinitbl_tmp.bin."
+			print "Invalid LcdIniTbl!"
+
 	return c
 
 def find_openwin(buf):
