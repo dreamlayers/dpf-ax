@@ -42,7 +42,7 @@ void print_padded(__code char *b)
 	while ( (c = *b++) && n--) {
 		rawputc(c);
 	}
-	while (n--) {
+	while (n-- > 0) {
 		rawputc(p);
 	};
 }

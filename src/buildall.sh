@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MODELS="blue white pink pearl pearl_landscape focal focal_landscape linkdelight"
+MODELS="blue white pink pearl pearl_landscape focal focal_landscape linkdelight agk_violet focalprice144"
 
 for i in $MODELS; do
 	echo --------------------------------------

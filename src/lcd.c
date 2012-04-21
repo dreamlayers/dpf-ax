@@ -72,11 +72,18 @@ void clrscreen(unsigned short col) __banked
 
 void lcd_init(void) __banked
 {
+#if defined(LCD_CONTROLLER_CUSTOM)
+	lcd_custom_init();
+#else
+	lcd_init_by_table(init_sequence);
+#endif
+	lcd_orientation(g_lcd.orientation);
+}
+
+void lcd_init_by_table(__code unsigned char *p)
+{
 	BYTE n;
 	BYTE c;
-	__code BYTE *p;
-
-	p = init_sequence;
 
 	while ((c = *p++) != CMD_END) {
 		switch (c & MASK_CMD) {
@@ -105,7 +112,6 @@ void lcd_init(void) __banked
 			break;
 		}
 	}
-	lcd_orientation(g_lcd.orientation);
 }
 
 #if 0

@@ -6,6 +6,8 @@
 #	Added support for ProgSPI flashing
 # 0.203devel 2012/04/17 by superelchi
 #	Added new model
+# 0.204devel 2012/04/20 by superelchi
+#	Changed detection of custom models
 #
 
 # Specify here the model you wish to compile for. See dpfmodel.h for valid
@@ -16,11 +18,9 @@ TYPE = white
 endif
 
 #
-# Set custom flag
+# Set controller type
 #
-ifeq ($(TYPE),linkdelight)
-LCD_CUSTOM = 1
-endif
+LCD_CONTROLLER=$(shell grep -EA4 $(TYPE)\\W config.h | grep -Eo LCD_CONTROLLER_\\w+)
 
 ifdef FLIX
 COMPILE_OPTIONS = -DFLIX_MODE
@@ -48,7 +48,7 @@ CODE_OFFS    = 0x400  # Offset of code start sector --> BootHeader.flash_start
 # Character table location in flash:
 CHARTBL_ADDR = $(FW_ADDR) + 0x10000
 
-VERSION = 0.203
+VERSION = 0.204
 STATUS  = devel
 
 # Build number file:
@@ -57,6 +57,8 @@ PROG_BUILDNO = .buildno
 BUILDNO = $(shell cat $(PROG_BUILDNO))
 
 MEMMODEL = small
+
+SDCC_INCLUDE := $(shell pwd) 
 
 CC = sdcc
 AS = asx8051
@@ -70,14 +72,15 @@ CFLAGS  += -I../include
 
 CFLAGS  += $(COMPILE_OPTIONS)
 
+
 # Feel free to add stuff, but note: Order matters!
 OBJS = main.rel  # ihx file will be named after first element
 OBJS += menu.rel ovldata.rel
 OBJS += bankswitch.rel
 # OBJS += boothdr.rel
 OBJS += bootstrap.rel lcd.rel
-ifdef LCD_CUSTOM
-OBJS += lcdblit_$(TYPE).rel lcdinit_$(TYPE).rel lcdseto_$(TYPE).rel
+ifeq ($(LCD_CONTROLLER), LCD_CONTROLLER_CUSTOM)
+OBJS += lcd/$(TYPE)/lcdblit.rel lcd/$(TYPE)/lcdinit.rel lcd/$(TYPE)/lcdsetor.rel
 endif
 OBJS += printex.rel
 OBJS += usbblit.rel 
@@ -92,10 +95,7 @@ OBJS += flix.rel
 endif
 # OBJS += app_test.rel
 
-LIBS = dpf.lib
-ifndef LCD_CUSTOM
-LIBS += lcd.lib
-endif
+LIBS = dpf.lib lcd.lib
 
 CFLAGS += -DDPFMODEL_$(TYPE)
 ifeq ($(STATUS),devel)
@@ -220,9 +220,15 @@ install: all hexfiles
 
 headers: ax206.h ax206.inc ili9163.h ili9320.h otm3225.h otm3225.inc 
 
+distclean: fwclean clean
+	rm -f $(PROG_BUILDNO)
+	rm -f output.log
+	rm -f tmp.lnk
+
 fwclean:
 	rm -f $(OBJS)
 	rm -f fw_*.ihx
+	rm -f fw_*.bin
 
 libclean::
 
@@ -232,6 +238,7 @@ clean: libclean
 	rm -f fwload *.a *.d
 	rm -fr *.ihx *.rel *.o *.asm
 	rm -f *.mem *.sym *.map *.lst *.rst
+	rm -fr lcd/**/*.sym lcd/**/*.lst lcd/**/*.rst lcd/**/*.rel
 	rm -f *.raw
 	rm -f current.bin
 	-rm config.inc

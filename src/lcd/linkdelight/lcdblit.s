@@ -42,12 +42,3 @@ _custom_landscape_blit::
 	lcall	otp_lcd_write
 	setb	LCD_A0
 	ret	
-;
-	setb	LCD_A0
-X12d6:	lcall	otp_lcd_write
-	mov	a,r0
-	ljmp	otp_lcd_write
-;
-	clr	LCD_A0
-	sjmp	X12d6
-

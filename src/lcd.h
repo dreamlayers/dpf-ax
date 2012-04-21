@@ -42,6 +42,9 @@ unsigned char g_rgborder;
 #if defined(LCD_128x128)
 #	define LCD_WIDTH  128
 #	define LCD_HEIGHT 128
+#elif defined (LCD_128x144)
+#	define LCD_WIDTH  128L
+#	define LCD_HEIGHT 144L
 #elif defined (LCD_320x240)
 #	define LCD_WIDTH  240L
 #	define LCD_HEIGHT 320L
@@ -160,7 +163,9 @@ void lcd_orientation(unsigned char which) __banked;
 void lcd_st_setrotation(unsigned char rotcode);
 void lcd_ot_setorientation(unsigned char which);
 void lcd_ili_setorientation(unsigned char which);
+void lcd_init_by_table(__code unsigned char *table);
 void lcd_custom_setorientation(unsigned char which);
+void lcd_custom_init(void);
 
 #ifdef END_INCLUSIVE
 #define END_OFFSET_X (LCD_OFFSET_X - 1)

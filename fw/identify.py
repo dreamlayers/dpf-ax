@@ -11,7 +11,6 @@ dev_mode = 0
 
 JUMPTABLE_OFFSET = 0x80
 
-
 ############################################################################
 
 bswap = lambda x: ( (x >> 8) & 0xff ) | ((x << 8) & 0xff00)
@@ -54,6 +53,12 @@ def isBuildwinFw(buf):
 
 val = lambda x: ord(x)
 
+scan_locate_displaysize = [
+0xE4, 0xF5, val, 0xF5, val, 0xF5, val, 0xF5, val,
+0x75, val, val, 0x75, val, val, 0x75, val, val, 0x75, val, val, 
+0x12, val, val,
+0xE4, 0xFB, 0xFC, 0xE4, 0xFD, 0xFE, 0xE5
+]
 scan_locate_lcdinit = [
 0x75, 0xEC, 0x00, 0x53, 0xEA, 0xE8,
 ]
@@ -106,6 +111,13 @@ def add_offs(context, args, p):
 		off = args[i*2] << 8 | args[i*2 + 1]
 		e.append(off)
 
+def add_vals(context, args, p):
+	e, offset = context
+	e.append(p)
+	for i in range(len(args)):
+		e.append(args[i])
+
+lcdinitbl_number = 4
 lcdinit_found = False
 
 def find_initbl(buf, module):
@@ -162,6 +174,12 @@ def find_initbl(buf, module):
 		if dev_mode:
 			  print "LcdBacklightTbl at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
 		p += i + 1
+		if lcdinitbl_number > 4:
+			i = struct.unpack("B", data[p])[0]
+			if dev_mode:
+				print "LcdUnknownTbl#5 at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+			p += i + 1
+			
 		l = struct.unpack("<H", data[p : p+2])[0]
 		p += 2
 		if (p + l) < len(data):
@@ -220,14 +238,14 @@ def find_openwin(buf):
 	return c
 
 def match_crc(crc, checksums):
-	if crc != 0:
-		j = 0
-		try:
-			j = checksums.index(crc)
-		except ValueError:
-			j = -1
-		if j != -1:
-			return True
+	#if crc != 0:
+	j = 0
+	try:
+		j = checksums.index(crc)
+	except ValueError:
+		j = -1
+	if j != -1:
+		return True
 	return False
 
 def recognize_dpf(dump):
@@ -237,7 +255,8 @@ def recognize_dpf(dump):
 	print "Looking for buildwin firmware....:",
 	num_modules = isBuildwinFw(dump)
 	if num_modules > 0:
-		print "Found."
+		w, h = struct.unpack("<HH", dump[0x23:0x27])
+		print "Found (%dx%d px)." % (w, h)
 	else:
 		print "Not found."
 		print
@@ -309,8 +328,18 @@ def recognize_dpf(dump):
 #
 # MAIN
 
-if len(sys.argv) != 2:
-	print "Usage: %s [dumpfile]" % sys.argv[0]
+if len(sys.argv) < 2:
+	print "Usage: %s [dumpfile] [LcdIniTbl#]" % sys.argv[0]
+	sys.exit(-1)
+
+if len(sys.argv) == 3:
+	try:
+		lcdinitbl_number = int(sys.argv[2])
+	except ValueError:
+		lcdinitbl_number = 0
+		
+if lcdinitbl_number < 4 or lcdinitbl_number > 5:
+	print "LcdIniTbl# must be 4 or 5"
 	sys.exit(-1)
 
 f = open(sys.argv[1], "r")

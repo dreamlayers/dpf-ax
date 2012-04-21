@@ -3,9 +3,16 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Sat, 21 Apr 2012
+v0.204devel by superelchi
+	* Integration of new models rewritten
+	* New models:
+	  - agk_violet
+	  - focalprice144
+	  
 Tue, 17 Apr 2012
 v0.203devel by superelchi
-	* Added hiddetach (crude 
+	* Added hiddetach (crude replacement for libhid-detach-device).
 	* Added identify.py (new kind of dpf detection).
 	* Added a more pragmatic approach for integrating new LCD models.
 	* New supported model:

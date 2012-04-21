@@ -44,9 +44,16 @@
 #	define LCD_CONTROLLER_CUSTOM
 #	define LCD_ORIENTATION_RGB RGB_UP
 #	define DEFAULT_ORIENTATION ROT_LEFT
-#	define LCD_OFFSET_X   0
-#	define LCD_OFFSET_Y   0
-//#	define END_INCLUSIVE
+#elif defined (DPFMODEL_agk_violet)
+#	define LCD_128x128
+#	define LCD_CONTROLLER_CUSTOM
+#	define LCD_ORIENTATION_RGB RGB_UP
+#	define DEFAULT_ORIENTATION ROT_LEFT
+#elif defined (DPFMODEL_focalprice144)
+#	define LCD_128x144
+#	define LCD_CONTROLLER_CUSTOM
+#	define LCD_ORIENTATION_RGB RGB_UP
+#	define DEFAULT_ORIENTATION ROT_UP
 // <<<< INSERT NEW DPFS BEFORE THIS LINE <<<<
 #else
 #error	"Unrecognized DPF TYPE specification"
