@@ -54,6 +54,11 @@
 #	define LCD_CONTROLLER_CUSTOM
 #	define LCD_ORIENTATION_RGB RGB_UP
 #	define DEFAULT_ORIENTATION ROT_UP
+#elif defined (DPFMODEL_delightdigi_black)
+#	define LCD_128x128
+#	define LCD_CONTROLLER_CUSTOM
+#	define LCD_ORIENTATION_RGB RGB_DOWN
+#	define DEFAULT_ORIENTATION ROT_UP
 // <<<< INSERT NEW DPFS BEFORE THIS LINE <<<<
 #else
 #error	"Unrecognized DPF TYPE specification"

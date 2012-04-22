@@ -26,6 +26,12 @@ KNOWN_DPFS = [
 		"",
 	 	([ 0x54cc8527 ], [ 0xd5efd5d9 ]),
 	],
+# 2012-04-22 by rotidude
+	[       () ,
+		"delightdigi_black",
+		"black from ebay seller delight-digi",
+	 	([ 0xda6ee4c3 ], [ 0xdda9c297 ]),
+	],
 ##################### 128 x 144 #############################
 	[       () ,
 		"focalprice144",
