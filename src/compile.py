@@ -26,12 +26,14 @@ IGNORE     = 0x30
 GROUP_MASK  = 0xe0 # Group mask
 
 class BootHeader:
-	def __init__(self, sector_addr, start, size, jmpt_offset, code_offset):
+	def __init__(self, sector_addr, start, size, jmpt_offset, code_offset, resx, resy):
 		self.xdata = 0x1040 - 0x800
 		self.start = start
 		self.jmpt_offset = jmpt_offset
 		self.flash_start = code_offset
 		self.size = size
+		self.resx = resx
+		self.resy = resy
 		self.crc = 0 # Checksum over boot code
 		self.crc2 = 0 # Checksum over header
 		self.flags = 0
@@ -121,8 +123,8 @@ class BootHeader:
 		#
 
 		a += struct.pack("BBB", 0, 0, 0x07)	#Flash-Adr of PhotoList (for DPFMate?)
-		a += struct.pack(">H", 128)			# LCD Width
-		a += struct.pack(">H", 128)			# LCD Height
+		a += struct.pack("<H", self.resx)	# LCD Width
+		a += struct.pack("<H", self.resy)	# LCD Height
 		a += '\xD8'							# Erase 64K Conmmand
 		a += '\0'							# Byte prg flag
 		a += '\02'							# Word prg flag
@@ -292,8 +294,10 @@ sector_addr = int(sys.argv[3], 16)
 start = int(sys.argv[4], 16)
 jmpt = int(sys.argv[5], 16)
 code = int(sys.argv[6], 16)
+resx = int(sys.argv[7])
+resy = int(sys.argv[8])
 
-hdr = BootHeader(sector_addr, start, size, jmpt, code)
+hdr = BootHeader(sector_addr, start, size, jmpt, code, resx, resy)
 hdr.gencrc(buf)
 hdr.genJumptable(index)
 hdr.dump(out)

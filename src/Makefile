@@ -21,7 +21,9 @@ endif
 # Set controller type
 #
 LCD_CONTROLLER=$(shell grep -EA4 $(TYPE)\\W config.h | grep -Eo LCD_CONTROLLER_\\w+)
-
+RES=$(shell grep -EA4 $(TYPE)\\W config.h | grep -Eo LCD_[0-9]+x[0-9]+)
+RESX=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\1/")
+RESY=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\2/")
 ifdef FLIX
 COMPILE_OPTIONS = -DFLIX_MODE
 LNK_OPTIONS = "-b FLIX = 0x6c1200"
@@ -48,7 +50,7 @@ CODE_OFFS    = 0x400  # Offset of code start sector --> BootHeader.flash_start
 # Character table location in flash:
 CHARTBL_ADDR = $(FW_ADDR) + 0x10000
 
-VERSION = 0.204
+VERSION = 0.205
 STATUS  = devel
 
 # Build number file:
@@ -142,7 +144,7 @@ app%.ihx: app%.rel
 # full firmware.
 fw_$(TYPE).ihx: main.ihx
 	python compile.py $< $@ $(FW_ADDR) $(LOAD_ADDR) \
-		$(JMPTBL_OFFS) $(CODE_OFFS) > output.log
+		$(JMPTBL_OFFS) $(CODE_OFFS) $(RESX) $(RESY)> output.log
 
 current.ihx: fw_$(TYPE).ihx 
 	ln -sf $< $@

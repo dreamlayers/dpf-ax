@@ -3,6 +3,10 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Mon, 23 Apr 2012
+v0.205devel by superelchi
+	* Fixed fw compatibility issue with 0.1alpha dpflib (segfault)
+
 Sat, 21 Apr 2012
 v0.204devel by superelchi
 	* Integration of new models rewritten
