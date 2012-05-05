@@ -1,13 +1,19 @@
 import struct
+import struct
 import sys
 import time
 import binascii
+
+# Nedded for fulldump
+sys.path.append("./Debug")
+import dpf
+import detect
 
 # DPF profiles
 import knowndpfs
 
 # Set this to 1 to get additional infos
-dev_mode = 0
+dev_mode = 2
 
 JUMPTABLE_OFFSET = 0x80
 
@@ -35,7 +41,6 @@ def get_module(buf, n):
 	return start, end, flashaddr
 
 def isBuildwinFw(buf):
-	
 	version = (buf[0x50:0x58], buf[0x60: 0x70], buf[0x80:0x88])
 	if version[0] == "20120101":
 		return -1
@@ -44,6 +49,7 @@ def isBuildwinFw(buf):
 			if version[2].startswith("ProcTbl"):
 				i = 1
 				p = JUMPTABLE_OFFSET + 8
+
 				while buf[p:p+8] != "-EndTbl-" and i < 60:
 					p += 8
 					i += 1
@@ -117,11 +123,27 @@ def add_vals(context, args, p):
 	for i in range(len(args)):
 		e.append(args[i])
 
-lcdinitbl_number = 4
+def dump_tables(tbls):
+	outf = open("lcdinitbl_tmp.txt", "w")
+	for tbl in tbls:
+		outf.write(tbl[0])
+		outf.write("::")
+		for  i in range(0, len(tbl[1])):
+			if (i % 10) == 0:
+				outf.write("\n  .db  ")
+			else:
+				outf.write(", ")
+			outf.write("0x%02x" % struct.unpack("B", tbl[1][i])[0])
+		outf.write("\n%s_len::  .db  %d" % (tbl[0], len(tbl[1])))
+		outf.write("\n\n")
+	outf.close()
+
+
 lcdinit_found = False
 
 def find_initbl(buf, module):
 	global lcdinit_found
+	tbls = []
 	start, end, flashaddr = get_module(buf, module)
 	l = end - start
 	start += 0x800
@@ -153,7 +175,7 @@ def find_initbl(buf, module):
 	scanner = Scanner(data, scan_locate_initbl)
 	scanner.scan((initbloffs, start), add_offs)
 	if len(initbloffs) == 2:
-	    try:
+	    #try:
 		p = initbloffs[1] - start
 		i = struct.unpack("B", data[p])[0]
 		if dev_mode:
@@ -161,43 +183,49 @@ def find_initbl(buf, module):
 				print
 			print "Module %d:" % module
 			print "LcdScheduleTbl  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+			#tbls.append(["_custom_scheduletbl", data[p+1:p+i+1]])
 		p += i + 1
 		i = struct.unpack("B", data[p])[0]
 		if dev_mode:
 			print "LcdContrastTbl  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+			tbls.append(["_custom_lcdcontrasttbl", data[p+1:p+i+1]])
 		p += i + 1
 		i = struct.unpack("B", data[p])[0]
 		if dev_mode:
-			print "LcdContrastTbl  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+			print "LcdContrastTb2  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+			tbls.append(["_custom_contrasttbl2", data[p+1:p+i+1]])
 		p += i + 1
 		i = struct.unpack("B", data[p])[0]
 		if dev_mode:
 			  print "LcdBacklightTbl at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+			  tbls.append(["_custom_backlighttbl", data[p+1:p+i+1]])
 		p += i + 1
-		if lcdinitbl_number > 4:
-			i = struct.unpack("B", data[p])[0]
+		j = i
+		i = struct.unpack("B", data[p])[0]
+		if (i == j):   		# seems to have two LcdBackLightTbls...
 			if dev_mode:
-				print "LcdUnknownTbl#5 at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+				print "LcdBacklightTb2 at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
+				tbls.append(["_custom_backlighttbl2", data[p+1:p+i+1]])
 			p += i + 1
-			
+		else:
+			tbls.append(["_custom_backlighttbl2", ""])
+
 		l = struct.unpack("<H", data[p : p+2])[0]
 		p += 2
 		if (p + l) < len(data):
 		    lcdinitbl = data[p:p+l]
 		    if dev_mode:
 			print "LcdIniTbl       at 0x%04x (0x%06x), len 0x%02x," % (p + start, p + flashaddr, l),
-		        if dev_mode > 1:
-				outf = open("lcdinitbl_tmp.bin", "wb")
-			        outf.write(lcdinitbl)
-			        outf.close()
+			tbls.append(["_custom_initseq", data[p:p+l] + "\xFF"])
 		    c = binascii.crc32(lcdinitbl) & 0xffffffff
 		    if dev_mode:
 				print "CRC = 0x%x" % c
 			        if dev_mode > 1:
-				    print "Written to lcdinitbl_tmp.bin."
-	    except:
-		if dev_mode:
-			print "Invalid LcdIniTbl!"
+				    dump_tables(tbls)
+				    print "Written to lcdinitbl_tmp.txt."
+	    #except:
+		#if dev_mode:
+			#print "Invalid LcdIniTbl!"
 
 	return c
 
@@ -264,14 +292,14 @@ def recognize_dpf(dump):
 			print "This is already a custom firmware!"
 		else:
 			print "This in no buildwin firmware!"
-		return None
+		return None, partial_match
 
 	# Look for display known by their fw and build-date (old way)
 	print "Looking for known version info...:",
 	dpf = find_dpf_by_version_string(dump)
 	if dpf:
 		print "Found."
-		return dpf
+		return dpf, partial_match
 	print "None."
 
 	# Try to find OpenWin and LcdIniTbl
@@ -328,25 +356,33 @@ def recognize_dpf(dump):
 #
 # MAIN
 
-if len(sys.argv) < 2:
-	print "Usage: %s [dumpfile] [LcdIniTbl#]" % sys.argv[0]
+if len(sys.argv) != 2:
+	print "Usage: python %s dumpfile|dpf-devicenode" % sys.argv[0]
 	sys.exit(-1)
 
-if len(sys.argv) == 3:
-	try:
-		lcdinitbl_number = int(sys.argv[2])
-	except ValueError:
-		lcdinitbl_number = 0
-		
-if lcdinitbl_number < 4 or lcdinitbl_number > 5:
-	print "LcdIniTbl# must be 4 or 5"
-	sys.exit(-1)
-
-f = open(sys.argv[1], "r")
+dumpfile = sys.argv[1]
+if dumpfile.startswith("/dev/"):
+#
+# copy of fulldump.py
+#
+	print "Detecting & reading dpf flash..."
+	d = dpf.open(sys.argv[1])
+	size = detect.detect_flash(d)
+	# Offset, size
+	print "Reading %x bytes..." % size
+	buf = d.readFlash(0x00, size)
+	f = open("full.bin", "wb")
+	f.write(buf)
+	f.close()
+	d.close()
+	print "Flash written to file 'full.bin'."
+	print
+	dumpfile = "full.bin"
+	
+f = open(dumpfile, "rb")
 data = f.read()
 f.close()
 dpf, pm = recognize_dpf(data)
-
 
 print
     
