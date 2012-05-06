@@ -13,7 +13,7 @@ import detect
 import knowndpfs
 
 # Set this to 1 to get additional infos
-dev_mode = 2
+dev_mode = 0
 
 JUMPTABLE_OFFSET = 0x80
 
@@ -341,14 +341,14 @@ def recognize_dpf(dump):
 				if not dev_mode:
 					print "Found."
 				return i, None
-			if has_initbl:
-				partial_match.append(i[1])
+			if has_initbl and i[1][1] == "yes":
+				partial_match.append(i[1][0])
 				if dev_mode:
-					print "LcdIniTbl: match at model %s" % i[1]
-			if has_openwin:
-				partial_match.append(i[1])
+					print "LcdIniTbl: match at model %s" % i[1][0]
+			if has_openwin and i[1][1] == "yes":
+				partial_match.append(i[1][0])
 				if dev_mode:
-					print "OpenWin:   match at model %s" % i[1]
+					print "OpenWin:   match at model %s" % i[1][0]
 	print "None."
 	return None, partial_match
 	
@@ -387,11 +387,18 @@ dpf, pm = recognize_dpf(data)
 print
     
 if dpf:
-	print "Your dpf seems to be compatible with model %s." % dpf[1]
+	if dpf[1][1] == "yes":
+		print "Your dpf seems to be compatible with model %s." % dpf[1][0]
+	elif dpf[1][1] == "no":
+		print "Your dpf seems to be compatible with unsupported model %s." % dpf[1][0]
+		print "Sorry, this dpf in NOT supported by dpf-ax."
+	elif dpf[1][1] == "wip":
+		print "Your dpf seems to be compatible with currently unsupported model %s." % dpf[1][0]
+		print "Sorry, this dpf in NOT supported by dpf-ax at the moment."
+		print "Work in progress. Check back later."
 else:
 	print "Sorry, no matching dpf found."
 	if len(pm) > 0:
 		print "But following models have a partial signature match:",
 		print pm
-
 print
