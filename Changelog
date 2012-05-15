@@ -3,6 +3,12 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Mon, 14 May 2012
+        by superelchi
+        * Modified identify.py for detection of coby firmware (thx donashe).
+	* New model:
+	  - coby_dp51_white.
+
 Mon, 23 Apr 2012
 v0.205devel by superelchi
 	* Fixed fw compatibility issue with 0.1alpha dpflib (segfault)

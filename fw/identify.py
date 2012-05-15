@@ -15,14 +15,17 @@ import knowndpfs
 # Set this to 1 to get additional infos
 dev_mode = 0
 
-JUMPTABLE_OFFSET = 0x80
+JUMPTABLE_OFFSET_BUILDWIN = 0x80
+JUMPTABLE_OFFSET_COBY = 0x180
+
+jumptable_offset = 0
 
 ############################################################################
 
 bswap = lambda x: ( (x >> 8) & 0xff ) | ((x << 8) & 0xff00)
 
 def find_dpf_by_version_string(buf):
-	version = (buf[0x50:0x58], buf[0x60: 0x70], buf[0x80:0x88])
+	version = (buf[0x50:0x58], buf[0x60: 0x70], buf[jumptable_offset:jumptable_offset+8])
 	for i in knowndpfs.KNOWN_DPFS:
 		if len(i[0]) > 0:
 			v = i[0]
@@ -31,8 +34,9 @@ def find_dpf_by_version_string(buf):
 	return None
 
 def get_module(buf, n):
+	global jumptable_offset
 	n *= 8
-	n += JUMPTABLE_OFFSET
+	n += jumptable_offset
 	start, end, flashaddr = struct.unpack("<HHI", buf[n:n+8])
 
 	start = bswap(start)
@@ -41,14 +45,19 @@ def get_module(buf, n):
 	return start, end, flashaddr
 
 def isBuildwinFw(buf):
-	version = (buf[0x50:0x58], buf[0x60: 0x70], buf[0x80:0x88])
+	global jumptable_offset
+	version = (buf[0x50:0x58], buf[0x60: 0x70], buf[JUMPTABLE_OFFSET_BUILDWIN:JUMPTABLE_OFFSET_BUILDWIN+8], buf[JUMPTABLE_OFFSET_COBY:JUMPTABLE_OFFSET_COBY+8])
 	if version[0] == "20120101":
 		return -1
 	if version[0].isdigit():
 		if version[1][3] == " " and version[1][6] == " " and version[1][7:10].isdigit():
 			if version[2].startswith("ProcTbl"):
+				jumptable_offset = JUMPTABLE_OFFSET_BUILDWIN
+			elif version[3].startswith("ProcTbl"):
+				jumptable_offset = JUMPTABLE_OFFSET_COBY
+			if jumptable_offset != 0:
 				i = 1
-				p = JUMPTABLE_OFFSET + 8
+				p = jumptable_offset + 8
 
 				while buf[p:p+8] != "-EndTbl-" and i < 60:
 					p += 8
@@ -175,7 +184,7 @@ def find_initbl(buf, module):
 	scanner = Scanner(data, scan_locate_initbl)
 	scanner.scan((initbloffs, start), add_offs)
 	if len(initbloffs) == 2:
-	    #try:
+	    try:
 		p = initbloffs[1] - start
 		i = struct.unpack("B", data[p])[0]
 		if dev_mode:
@@ -223,9 +232,9 @@ def find_initbl(buf, module):
 			        if dev_mode > 1:
 				    dump_tables(tbls)
 				    print "Written to lcdinitbl_tmp.txt."
-	    #except:
-		#if dev_mode:
-			#print "Invalid LcdIniTbl!"
+	    except:
+		if dev_mode:
+			print "Invalid LcdIniTbl!"
 
 	return c
 
@@ -277,21 +286,25 @@ def match_crc(crc, checksums):
 	return False
 
 def recognize_dpf(dump):
+	global jumptable_offset
 	partial_match = []
 
 	# Check if its a buildwin fw
-	print "Looking for buildwin firmware....:",
+	print "Looking for firmware.............:",
 	num_modules = isBuildwinFw(dump)
 	if num_modules > 0:
 		w, h = struct.unpack("<HH", dump[0x23:0x27])
-		print "Found (%dx%d px)." % (w, h)
+		mfg = "buildwin"
+		if jumptable_offset == JUMPTABLE_OFFSET_COBY:
+			mfg = "coby"
+		print "Found (%s, %dx%d px)." % (mfg, w, h)
 	else:
 		print "Not found."
 		print
 		if num_modules == -1:
 			print "This is already a custom firmware!"
 		else:
-			print "This in no buildwin firmware!"
+			print "This in no known firmware!"
 		return None, partial_match
 
 	# Look for display known by their fw and build-date (old way)
@@ -341,7 +354,7 @@ def recognize_dpf(dump):
 				if not dev_mode:
 					print "Found."
 				return i, None
-			if has_initbl and i[1][1] == "yes":
+			if has_initbl and record[0][0] != 0 and i[1][1] == "yes":
 				partial_match.append(i[1][0])
 				if dev_mode:
 					print "LcdIniTbl: match at model %s" % i[1][0]

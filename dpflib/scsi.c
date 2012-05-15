@@ -79,7 +79,8 @@ unsigned char g_excmd[16] = {
 
 /* device wrapper */
 
-const char idstring[] = "buildwin Photo Frame    1.01";
+const char idstring1[] = "buildwin Photo Frame    1.01";
+const char idstring2[] = "   COBY  Photo Viewer   1.01";
 
 #define INQ_REPLY_LEN 96
 
@@ -103,7 +104,8 @@ int sgdev_open(const char *portname, int *fd)
 		fprintf(stderr, "SCSI inquiry failed\n");
 		close(*fd); error = DEVERR_OPEN;
 	} else 
-	if (memcmp(idstring, &inqbuf[8], sizeof(idstring) - 1) != 0) {
+	if (memcmp(idstring1, &inqbuf[8], sizeof(idstring1) - 1) != 0 &&
+	    memcmp(idstring2, &inqbuf[8], sizeof(idstring2) - 1) != 0) {
 		close(*fd); error = DEVERR_OPEN;
 		fprintf(stderr, "Not a photo frame. Refuse to open device.\n");
 	}

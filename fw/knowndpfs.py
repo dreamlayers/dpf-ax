@@ -34,6 +34,12 @@ KNOWN_DPFS = [
 		"black from ebay seller delight-digi",
 	 	([ 0xda6ee4c3 ], [ 0xdda9c297 ]),
 	],
+# 2012-05-14 by donashe
+	[       () ,
+		("coby_dp151_white", "yes"),
+		"http://www.frys.com/product/5439059",
+	 	([ 0 ], [ 0xd455d959 ]),
+	],
 ##################### 128 x 144 #############################
 	[       () ,
 		("focalprice144", "yes"),

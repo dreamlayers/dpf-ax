@@ -20,8 +20,8 @@ endif
 #
 # Set controller type
 #
-LCD_CONTROLLER=$(shell grep -EA4 $(TYPE)\\W config.h | grep -Eo LCD_CONTROLLER_\\w+)
-RES=$(shell grep -EA4 $(TYPE)\\W config.h | grep -Eo LCD_[0-9]+x[0-9]+)
+LCD_CONTROLLER=$(shell grep -EA4 DPFMODEL_$(TYPE)\\W config.h | grep -Eo LCD_CONTROLLER_\\w+)
+RES=$(shell grep -EA4 DPFMODEL_$(TYPE)\\W config.h | grep -Eo LCD_[0-9]+x[0-9]+)
 RESX=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\1/")
 RESY=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\2/")
 ifdef FLIX
@@ -144,7 +144,7 @@ app%.ihx: app%.rel
 # full firmware.
 fw_$(TYPE).ihx: main.ihx
 	python compile.py $< $@ $(FW_ADDR) $(LOAD_ADDR) \
-		$(JMPTBL_OFFS) $(CODE_OFFS) $(RESX) $(RESY)> output.log
+		$(JMPTBL_OFFS) $(CODE_OFFS) $(RESX) $(RESY) > output.log
 
 current.ihx: fw_$(TYPE).ihx 
 	ln -sf $< $@
