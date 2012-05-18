@@ -20,27 +20,26 @@ DPF modes
 You can run the DPF firmware in various modes and options:
 
 - Boot Loader Mode: The DPF will be in this mode when you bricked the flash
-  or when you press RESET while holding MENU. This is the preferred mode
-  when flashing new firmware. You can also get into bootloader mode by
-  executing 'Reboot' from a hacked frame's menu and holding the MENU button.
-  The screen will then stay dark and the device will register as HID type
-  with PID 3318.
+  or when you press RESET while holding MENU. You have to use this mode
+  when flashing new firmware. The screen will then stay dark and the device
+  will register as HID type with PID 3318.
   In Boot loader mode, you can also download small binaries into RAM and run
   them without touching the flash. This is useful for development. See
   dpflib/bfload executable to download a RAM binary and run it.
-- Developer Mode: hacked original firmware of a number of supported DPFs
-  to support some extra features and lcd4linux
-- New alternative firmware: Completely replaces internal firmware. This
-  is for advanced users who have identified their LCD brand and know how
-  to initialize it.
+- Alternative firmware: Completely replaces internal firmware.
+  From Version 0.3 up, two different firmware versions are available:
+  - 'Developer' version: firmware with same features and look
+    as pre-0.3 versions ("Blue Screen of Hack").
+  - 'Display' version: firmware for use as a status display (lcdlinux, vdr, etc.)
+     with splashscreen, bigger font and a more user-friendly menu system.
 
 Typically, all firmware manipulation of the DPF is done by python scripts.
 These are found in the fw/ folder of the distribution. Most of them work
 in all modes, you just have to specify different parameters for the USB
 connection, once it's made:
 
-'usb0': Device in bootloader or 'Developer mode' (Blue screen of Hack)
-'/dev/sg1' or '/dev/sr1': Device in original CDROM mode
+'usb0': Device in bootloader, 'Developer' or 'Display' mode.
+'/dev/sg1' or '/dev/sr1': Device in original CDROM mode.
 
 The numbers may vary, typically your /dev/sg0 is your hard disk, /dev/sr1
 your existing CDROM.
@@ -53,32 +52,33 @@ the original flash content using the fulldump.py script.
 The tar file contents are merely:
 
 - libdpf: A library to access the DPF in various modes (Boot mode, SCSI,
-  developer mode)
+  alternative firmware mode)
 - Python wrapper around the above library
-- Python scripts to patch various DPFs (listed in profiles.py) and other
-  auxiliaries
+- Python scripts to identify various DPFs (listed in knowndpfs.py) and other
+  auxiliaries.
 
 Description of a few tools
 ---------------------------
 
-app_detect.s, detect.py: Simple rudimentary detection for Sitronix/NXP
-                         compatible LCD controllers and SPI flash chip. Does
-                         not work in bootloader (BL) mode.
-fulldump.py:             Performs a dump of the flash according to detected
-                         flash size (often specified wrong by vendor).
-                         Works in all modes, but is very slow in BL mode
-restore.py:              Program full flash image from sector 0 to DPF.
-                         Use this in BL mode. Otherwise it may leave
-                         sector 0 incomplete and crash.
-update.py:               Example to patch single sector with a .ihx file
-identify.py:             Tries to identify a flash dump.
-hiddetach:               A simple shell script replacment for libhid-detach-device.
-                         Use it to "unbind" the device in bootloader mode for libhid.
+detect.py:    Simple rudimentary detection for Sitronix/NXP compatible
+              LCD controllers and SPI flash chip.
+              Does not work in bootloader (BL) mode.
+fulldump.py:  Performs a dump of the flash according to detected flash size
+              (often specified wrong by vendor).
+              Works in all modes, but is very slow in BL mode
+restore.py:   Program full flash image from sector 0 to DPF.
+              Use this ONLY in BL mode.
+              Otherwise it may leave sector 0 incomplete and crash.
+identify.py:  Identifys your dpf.
+hiddetach:    A simple shell script replacement for libhid-detach-device.
+              Use it to "unbind" the device in bootloader mode from libhid.
+setsplash.sh: Download your own splashimage to DPF.
+              Works only on DPFs with 'display' firmware.
                          
-Developer Mode
----------------
+Alternative firmware mode
+--------------------------
 
-When the unit is in Developer Mode, it registers itself as USB device with
+In alternative firmware mode, the unit registers itself as USB device with
 the same VID:PID, but not as USB storage. This allows much faster access using
 libusb and as non-root. However, the unit will still use USB storage SCSI
 commands, see dpflib for the wrapping over libusb.
@@ -91,52 +91,59 @@ Note that the protocol may change in future, once the internal firmware
 is fully replaced by something more structured. Thus, you should implement
 extras on the dpflib level only, never access USB directly.
 
-Alternative firmware mode
---------------------------
-
-This is for advanced users who wish to implement extra features for their
-DPF. The source distribution starting from 0.2 only supports the
-alternative firmware by default.
-
-To build your firmware, configure your Makefile for the correct DPF
-type and run "make". Then you can simply flash your DPF by putting it into
-boot mode and run
-
-restore.py fw_<your DPF type>.bin -f
-
-You might have to press RESET to boot into your new firmware.
-
 Prerequisites
 --------------
 
 You need:
 
 - A proper Linux system with GCC, python-dev (libraries and headers to
-  compilee your own modules)
+  compile your own modules)
 Optionally:
 - Possibly some knowledge of the 8051, if you want to mess around
 - A working sdcc distribution including asx8051, aslink, etc.
+- A copy of IntelHex (https://launchpad.net/intelhex/+download)
+- ffmpeg if you want to download a splashscreen to the unit.
 
 Usage
 ------
 
-1. run 'make' to build the tools and patches
+1. run 'make' to build the tools, firmware and patches.
 2. Initiate USB connection from the DPF via the menu
 3. Wait a while and check dmesg for the /dev/sgX assignment
-4. Run 'python hackit.py /dev/sgX' as root (CAREFUL!!!) to probe for
-   known DPFs and confirm that you wish to patch the DPF according to the
-   instructions.
+4. Run 'python identify.py /dev/sgX' as root (CAREFUL!!!) to probe for
+   known DPFs.
+5. If your dpf is supported, select the firmware identify.py suggest, put your
+   dpf in boot mode and run
+   - for 'devel' firmware:
+     ./hiddetach
+     restore.py ../src/fw_devel_<your DPF type>.bin -f
+   - or for 'disp' firmware:
+     ./hiddetach
+     restore.py ../src/fw_disp_<your DPF type>.bin -f
 
-The hackit.py script checks for a valid DPF, so you can not accidentally
-damage your hard disk. Also, it runs a crc32 check on critical modules
-for more safety. DO NOT CHANGE the existing checksums. Only *add* new
-profiles in profiles.py, don't EVER change existing ones.
+If your dpf is not supported, have a look at the picframe wiki at
+http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
+or you can try to contact me (superelchi) at sourceforge or forum.doozan.com.
 
-Before messing around, you might want to dump the entire flash using the
-fulldump.py script.
+IMPORTANT: identify.py will put a copy of your dpf's firmware in the file
+"full.bin". It is strongly recommended to make a backup of this file, so
+you can re-flash the original firmware if something goes wrong.
+Alternatively you can make a dump of the entire flash using the fulldump.py script.
 
-For those desiring to try adding hacks for other frame models, there is
-now a short howto in the reverse/ folder.
+LET ME SAY IT AGAIN: make a backup of your dpf's original firmware
+                     before messing around!
+
+If restore.py is not working (or you prefer windows :-o), the alternative
+firmware is also programmable with ProgSPI.exe (see openschemes.org.)
+
+Building a specific firmware
+-----------------------------
+
+To build a specificy firmware only, go into src/ folder, configure Make.config
+for the correct DPF and firmware mode and run "make clean all". Then you can
+simply flash your DPF by putting it into boot mode and run "make download".
+
+You might have to press RESET to boot into your new firmware.
 
 ----------------------------------------------------------------------------
 
@@ -164,13 +171,13 @@ TODO:
 1. Windows support, fully featured lcd4linux support via generic DPF library
    (I leave this to others. I hate Windows.)
 2. Replace flash firmware with improved opensource environment
-   [partially done]
+   [almost done]
 3. Rewrite lcd library
-
+   [partially done]
 ----------------------------------------------------------------------------
 Notes about the lcd4linux patch:
 
-The 128x128 DPFs all support an 'Orientation' property, like in the example
+Some 128x128 DPFs support an 'Orientation' property, like in the example
 section from a lcd4linux config file:
 
 Display dpf {

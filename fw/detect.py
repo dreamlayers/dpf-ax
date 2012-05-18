@@ -11,7 +11,7 @@
 
 import struct
 import sys
-sys.path.append("./Debug")
+sys.path.append("../Debug")
 import dpf
 
 g_spansion_types = {

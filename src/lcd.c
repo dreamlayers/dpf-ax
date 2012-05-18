@@ -53,21 +53,34 @@ void lcd_writeword(unsigned short rgb16)
 	_endasm;
 }
 
+static
+void doclrscreen(unsigned short col)
+{
+	unsigned short i;
+	col;
+
+	i = (RESOL_X * RESOL_Y) / 2;	// we assume that this is <= 0xFFFF!
+	do {
+		_asm
+		mov	a, dph
+		lcall otp_lcd_write
+		mov	a, dpl
+		lcall otp_lcd_write
+		mov	a, dph
+		lcall otp_lcd_write
+		mov	a, dpl
+		lcall otp_lcd_write
+		_endasm;
+	} while (--i);
+}
+
+
 void clrscreen(unsigned short col) __banked
 {
-	int x, y;
-	col;
 	g_blit.x0 = 0; g_blit.y0 = 0;
 	g_blit.x1 = RESOL_X - 1; g_blit.y1 = RESOL_Y - 1;
 	disp_blit();
-
-	y = RESOL_Y;
-	do {
-		x = RESOL_X;
-		do{
-			lcd_writeword(col);
-		} while (--x);
-	} while (--y);
+	doclrscreen(col);
 }
 
 void lcd_init(void) __banked
@@ -111,85 +124,6 @@ void lcd_init_by_table(__code unsigned char *p)
 			} while (--n);
 			break;
 		}
-	}
-}
-
-#if 0
-void lcd_demo(unsigned char n) __banked
-{
-	unsigned char i = 0;
-
-	for (i = 0; i < n; i++) {
-		RUB_WATCHDOG();
-		clrscreen(RGB565(255, 127, 64));
-		delay(200);
-		clrscreen(RGB565(127, 255, 64));
-		delay(200);
-	}
-	clrscreen(RGB565(0, 0, 0));
-	// delay(1000);
-}
-#endif
-
-static BYTE last = 0;
-
-void draw_bar(BYTE d, BYTE height)
-{
-	BYTE u, v;
-
-	if (d < last) {
-		u = last;
-		v = d;
-	} else {
-		u = d;
-		v = last;
-	}
-
-	while (height > u) {
-		lcd_writeword(g_term.bgcol);
-		height--;
-	}
-
-	while (height > v) {
-		lcd_writeword(g_term.col);
-		height--;
-	}
-
-	if (v == u) {
-		height--;
-		lcd_writeword(g_term.col);
-	}
-	
-	last = d;
-
-	while (height--) {
-		lcd_writeword(g_term.bgcol);
-	} 
-}
-
-#define DRAW_HEIGHT 64
-
-#if LCD_WIDTH == 128
-#define SCOPE_OFFSETX 64
-#else
-#define SCOPE_OFFSETX 128
-#endif
-
-void draw_buf(BYTE n) __banked
-{
-	__pdata BYTE *buf = g_databuf;
-	BYTE i;
-	BYTE x;
-	i = g_datacount - n;
-	i++; i %= n;
-	last = g_databuf[i];
-	for (x = SCOPE_OFFSETX; x < (SCOPE_OFFSETX + n); x++) {
-		// Oldest value:
-		g_blit.x0 = x; g_blit.y0 = g_term.offset_y;
-		g_blit.x1 = x; g_blit.y1 = g_term.offset_y + DRAW_HEIGHT - 1;
-		disp_blit();
-		draw_bar(g_databuf[i], DRAW_HEIGHT);
-		i++; i %= n;
 	}
 }
 

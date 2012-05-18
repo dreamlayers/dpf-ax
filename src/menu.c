@@ -19,7 +19,7 @@ void menu_clr(char i)
 {
 	g_term.x = 0;
 	while (i < 12) {
-		g_term.y = i; clr_line(NUM_COLS);
+		g_term.y = i; clr_line(NUM_COLS_SMALL);
 		i++;
 	}
 }
@@ -105,11 +105,11 @@ void display_menu(char selection)
 
 	if (selection & F_UPDATE) {
 		selection &= ~F_UPDATE;
-		term_selfont(0);
+		term_selfont(FONT_SMALL);
 		m = g_menu + prevsel;
 		GOTOXY(m->pos[0], m->pos[1]);
 		puts(m->text);
-		term_selfont(1);
+		term_selfont(FONT_SMALL_REVERSE);
 		m = g_menu + selection;
 		GOTOXY(m->pos[0], m->pos[1]);
 		puts(m->text);
@@ -118,16 +118,16 @@ void display_menu(char selection)
 			m = g_menu + i;
 			GOTOXY(m->pos[0], m->pos[1]);
 			if (i == selection) {
-				n = 1;
+				n = FONT_SMALL_REVERSE;
 			} else {
-				n = 0;
+				n = FONT_SMALL;
 			}
 			term_selfont(n);
 			puts(m->text);
 		}
 	}
 	prevsel = selection;
-	term_selfont(0);
+	term_selfont(FONT_SMALL);
 }
 
 MainState handle_edit(char selection, BYTE evt)
@@ -159,9 +159,9 @@ MainState handle_edit(char selection, BYTE evt)
 			if (m->handler) m->handler(evt);
 			// If we don't just show (0), select:
 			if (evt)
-				term_selfont(1);
+				term_selfont(FONT_SMALL_REVERSE);
 			GOTOXY(8, L_EDITOR + 1); print_short(( (BYTE *) m->prop)[0]);
-			term_selfont(0);
+			term_selfont(FONT_SMALL);
 			break;
 		case M_HANDLER:
 			s = (MainState) m->handler(evt);
@@ -190,7 +190,7 @@ void draw_menu(BYTE selection)
 	disp_home();
 // We assume that we have no more than 80 columns..
 	do {
-		clr_line(NUM_COLS);
+		clr_line(NUM_COLS_SMALL);
 	} while (--n);
 	display_menu(selection);
 }

@@ -1,4 +1,4 @@
-DISTVERSION = 0.2devel
+DISTVERSION = 0.3devel
 
 CURDIR = $(shell pwd)
 

@@ -6,5 +6,5 @@ for i in $MODELS; do
 	echo --------------------------------------
 	echo Building $i
 	make TYPE=$i clean all > /dev/null
-	cp fw_$i.ihx hexfiles
+	make TYPE=$i BUILD_DEVEL=1 clean all > /dev/null
 done

@@ -1,22 +1,38 @@
 // This is currently fixed. Don't change.
-#define CHAR_WIDTH   4
-#define CHAR_HEIGHT  8
+#define CHAR_WIDTH_SMALL   4 
+#define CHAR_WIDTH_LARGE   9
+#define CHAR_HEIGHT_SMALL  8
+#define CHAR_HEIGHT_LARGE  16
 
-#define TABLE_WIDTH  (CHAR_WIDTH * 16)
-#define NUM_COLS     (RESOL_X / CHAR_WIDTH)
-#define NUM_LINES    (RESOL_Y / CHAR_HEIGHT)
+#define NUM_COLS_SMALL     (RESOL_X / CHAR_WIDTH_SMALL)
+#define NUM_LINES_SMALL    (RESOL_Y / CHAR_HEIGHT_SMALL)
+#define NUM_COLS_LARGE     (RESOL_X / CHAR_WIDTH_LARGE)
+#define NUM_LINES_LARGE    (RESOL_Y / CHAR_HEIGHT_LARGE)
 
-extern
-__data unsigned char g_chartbl_offs[3];
+#define FONT_SMALL 0
+#define FONT_SMALL_REVERSE 1
+#define FONT_LARGE 2
+#define FONT_LARGE_WHITE 3
+#define FONT_LARGE_BLACK 4
 
+#define WHITE RGB565(255, 255, 255)
+#define BLACK RGB565(0, 0, 0)
+#define DEV_SCREEN_COL RGB565(0, 255, 0)
+#define DEV_SCREEN_BGCOL RGB565(0, 60, 40)
+
+extern __data unsigned char g_chartbl_offs[3];
+extern __bit g_largefont;
 extern char __pdata g_printbuf[];
 
 // blit.s:
-void blit_char4x8(unsigned char c);
+void blit_char(unsigned char c);
+#ifndef BUILD_DEVEL
+void _blit_splash(unsigned int, unsigned int);
+#endif
 
 void term_init(void) __banked;
 void term_selfont(unsigned char which) __banked;
-void disp_home(void) __banked;
+//void disp_home(void) __banked;
 void clr_line(unsigned char n) __banked;
 void guard_term(void);
 void rawputc(const char c);
@@ -34,7 +50,13 @@ void out_short(unsigned short val);
 // void putsx(const char __xdata *str);
 void putsc(const char __code *str);
 void print_dec(unsigned char val) __banked;
+void print_hex(unsigned char val) __banked;
 void print_short(unsigned short val) __banked;
+void print_splash(void) __banked;
 
-#define char_width() 4
-#define char_height() 8
+
+unsigned char num_cols() __banked;
+unsigned char num_lines() __banked;
+
+#define set_color(f) g_fgcol = f
+#define set_bgcolor(f) g_bgcol = f

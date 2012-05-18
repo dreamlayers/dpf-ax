@@ -7,7 +7,7 @@ _g_chartbl_offs::
 	.area PRINTF (CODE)
 
 
-_blit_char4x8::
+_blit_char::
 	; prepare SPI access:
 	clr	ea
 	clr	SPI_CS

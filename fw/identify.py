@@ -5,7 +5,7 @@ import time
 import binascii
 
 # Nedded for fulldump
-sys.path.append("./Debug")
+sys.path.append("../Debug")
 import dpf
 import detect
 

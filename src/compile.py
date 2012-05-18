@@ -12,7 +12,8 @@ import sys
 import crc
 
 # Set True if you want lots of output
-verbose = False
+#verbose = False
+verbose = True
 
 # Absolute max number of banks can currently be 32
 # For more, we have to enhance bankswitch.s
@@ -20,7 +21,7 @@ NBANKS   = 32 # max number of banks
 
 F_SPECIAL = 0x80
 BOOTSTRAP  = 0x00
-XDATA      = 0x10
+XDATA      = 0x20
 IGNORE     = 0x30
 
 GROUP_MASK  = 0xe0 # Group mask
@@ -105,38 +106,40 @@ class BootHeader:
 		c = crc.compute(hdr)
 		self.crc2 = c
 		
-	def dump(self, out):
+	def dump(self, out, fw_disp):
 		a = self.genhdr()
 		a += struct.pack(">H", self.crc2)
 
 		a += 14 * '\0'
 		a += struct.pack(">H", 0x55aa) # Terminator magic
 
-		# Following stuff only to keep ProgSPI happy
-		#
-		# If you dont need flash support by ProgSPI.exe
-		# you can delete everything up to the ##END## Marker
-		# Than change the following two defines in Makefile to:
-		#
-		#JMPTBL_OFFS  = 0x40
-		#CODE_OFFS    = 0x200
-		#
+		# Some infos about us...
 
-		a += struct.pack("BBB", 0, 0, 0x07)	#Flash-Adr of PhotoList (for DPFMate?)
+		a += struct.pack("BBB", 0, 0, 0x03)	#Flash-Adr of PhotoList (for DPFMate?)
+							#Flash-Adr of splashimage (for us)
 		a += struct.pack("<H", self.resx)	# LCD Width
 		a += struct.pack("<H", self.resy)	# LCD Height
+
 		a += '\xD8'							# Erase 64K Conmmand
 		a += '\0'							# Byte prg flag
 		a += '\02'							# Word prg flag
 		a += '\0'							# Enable write status register
 		a += struct.pack("BBB", 0, 0, 0x20)	#Flash capacity
 
+
 		a += 4 * '\0'
 		a += 14 * '\xFF'
 		a += "DPFv1.0hackfin\xFF\xFF"
 		a += "20120101\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
 		a += "Jan 01 2012\xFF\xFF\xFF\xFF\xFF"
-		a += "12:00:00\0\0\x55\x4F\xEF\x51\x06\x5E"
+		if (fw_disp):
+			# 03 - fw version 0.3, 01 - disp fw
+			a += "12:03:01\0\0\x55\x4F\xEF\x51\x06\x5E"
+		else:
+			# 03 - fw version 0.3, 00 - devel fw
+			a += "12:03:00\0\0\x55\x4F\xEF\x51\x06\x5E"
+
+		# Following stuff to keep ProgSPI happy
 
 		a += "ProcTbl5"
 		v = 0x1200
@@ -300,7 +303,7 @@ resy = int(sys.argv[8])
 hdr = BootHeader(sector_addr, start, size, jmpt, code, resx, resy)
 hdr.gencrc(buf)
 hdr.genJumptable(index)
-hdr.dump(out)
+hdr.dump(out, len(sys.argv) > 9)
 out.puts(hdr.flash_start, buf)
 
 out.dump()
@@ -312,9 +315,24 @@ out.tofile(outhex, "hex")
 outbin = outhex.split(".")
 outbin = ".".join(outbin[:-1]) + ".bin"
 sys.stderr.write("Write BIN file '%s'\n" % outbin)
-fontbin = open("font4x8.bin", "r")
+fontbin = open("res/font4x8.bin", "r")
 chartable = fontbin.read()
 fontbin.close()
 out.puts(0x10000, chartable)
+if (len(sys.argv) > 9):
+	fontbin = open("res/font9x16.bin", "r")
+	chartable = fontbin.read()
+	fontbin.close()
+	out.puts(0x20000, chartable)
+	splashbin = open(sys.argv[9], "r")
+	splash = splashbin.read()
+	splashbin.close()
+	if len(splash) != (resx * resy * 2):
+		print "Length of imagefile does not match given image with/height!"
+		sys.exit(1)
+#	out.puts(0x30000, struct.pack("BB",  ((len(splash) / 4) >> 8) & 0xff, (len(splash) / 4) & 0xff))
+#	out.puts(0x30002, splash)
+	out.puts(0x30000, struct.pack("BBBB", resx & 0xff, (resx >> 8) & 0xff, resy & 0xff, (resy >> 8) & 0xff))
+	out.puts(0x30004, splash)
 out.tofile(outbin, "bin")
 

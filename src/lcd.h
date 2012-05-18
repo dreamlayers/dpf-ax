@@ -48,6 +48,9 @@ unsigned char g_rgborder;
 #elif defined (LCD_320x240)
 #	define LCD_WIDTH  240L
 #	define LCD_HEIGHT 320L
+#elif defined (LCD_240x320)	//same as 320x240, portrait/landscape set by DEFAULT_ORIENTATION
+#	define LCD_WIDTH  240L
+#	define LCD_HEIGHT 320L
 #endif
 
 #ifdef LCD_CONTROLLER_ILI9163B

@@ -1,6 +1,6 @@
 import struct
 import sys
-sys.path.append("./Debug")
+sys.path.append("../Debug")
 import dpf
 import detect
 import time
@@ -8,7 +8,7 @@ import time
 SECTOR_SIZE = 0x10000
 
 def flash_restore(d, data):
-	sectors = len(data) / SECTOR_SIZE
+	sectors = (len(data) + SECTOR_SIZE - 1) / SECTOR_SIZE
 	d.eraseFlash() # erase full flash
 	# for i in range(sectors):
 		# print "Erasing sector %d..." % i

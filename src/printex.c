@@ -50,7 +50,7 @@ void print_padded(__code char *b)
 #define _RESOLVE(x) #x
 #define STRING(x) _RESOLVE(x)
 
-#if NUM_COLS >= 60
+#if NUM_COLS_SMALL >= 60
 #	define PAD_WIDTH "\071"
 #else
 #	define PAD_WIDTH "\035"
@@ -58,7 +58,6 @@ void print_padded(__code char *b)
 
 void print_splash(void) __banked
 {
-	__idata char codes[3];
 	disp_home();
 	rawputc(0x11); print_padded(PAD_WIDTH "\022"); rawputc(0x05); putsc("\n|");
 	print_padded(PAD_WIDTH " USB display"); putsc("|\n|");
@@ -70,11 +69,12 @@ void print_splash(void) __banked
 	putsc("LCD: " STRING(_INTERNAL_TAG) " (compatible)\n");
 #endif
 	putsc("Detecting flash...");
-	flash_detect(codes);
+	flash_detect();
 	putsc("\n");
-	flash_print_size(codes);
+	flash_print_size();
 	putsc("\n\n\nPress MENU for config mode");
 }
+
 
 void notice_powerdown(void) __banked
 {
@@ -83,6 +83,7 @@ void notice_powerdown(void) __banked
 	GOTOXY(1, 8);
 	print_padded(STR_CODE_CENTER PAD_WIDTH " Turning off.");
 }
+
 
 void print_status(void) __banked
 {
@@ -124,3 +125,4 @@ void print_usbstat(void) __banked
 	putsc("\n usbcon:"); out_short(usbcon);
 }
 #endif
+

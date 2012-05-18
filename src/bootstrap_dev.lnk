@@ -14,7 +14,7 @@
 ;-----------------------
 ; Shared data segments
 -b DATA0    = 0x4d1140
-; -b DATA1    = 0x4e1140
+;-b MENU1    = 0x511180
 ;-----------------------
 ; Bank switched:
 -b MAIN     = 0x621200
@@ -31,8 +31,9 @@
 -b LCDAUX   = 0x6b1200
 ; -b FLIX     = 0x6c1200
 ; Note: Bank d used (4d), see DATA0 segment
--b DEBUG    = 0x701200
--b INIT     = 0x6f1200
+; Note: Bank e used (4e), see MENU0 segment
+-b DEBUG     = 0x701200
+-b INIT      = 0x6f1200
 ;-----------------------
 ; Ignore XINIT segment, we initialize directly
 -b XINIT    = 0xb00000

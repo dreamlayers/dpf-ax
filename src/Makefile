@@ -8,13 +8,24 @@
 #	Added new model
 # 0.204devel 2012/04/20 by superelchi
 #	Changed detection of custom models
+# 0.300 2012/05/18 by superelchi
+#	Changes for "disp" and "devel" firmware
 #
 
-# Specify here the model you wish to compile for. See dpfmodel.h for valid
-# names.
+-include ./Make.config
 
+VERSION = 0.300
+ifdef BUILD_DEVEL
+  STATUS  = devel
+else
+  STATUS  = disp
+endif
+
+#
+# Set build type & type specific resoures
+#
 ifndef TYPE
-TYPE = white
+  TYPE = $(DEFAULT_TYPE)
 endif
 
 #
@@ -24,16 +35,28 @@ LCD_CONTROLLER=$(shell grep -EA4 DPFMODEL_$(TYPE)\\W config.h | grep -Eo LCD_CON
 RES=$(shell grep -EA4 DPFMODEL_$(TYPE)\\W config.h | grep -Eo LCD_[0-9]+x[0-9]+)
 RESX=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\1/")
 RESY=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\2/")
-ifdef FLIX
-COMPILE_OPTIONS = -DFLIX_MODE
-LNK_OPTIONS = "-b FLIX = 0x6c1200"
-else
-LNK_OPTIONS = ";"
+
+#
+# Set spash image
+#
+ifndef BUILD_DEVEL
+  SPLASH_FILE=res/splash.$(RESX)x$(RESY).rgb
 endif
 
+LNK_OPTIONS = ";"
+
+ifdef BUILD_DEVEL
+  BOOTSTRAP_LNK=bootstrap_dev.lnk
+    ifdef FLIX
+    COMPILE_OPTIONS = -DFLIX_MODE
+    LNK_OPTIONS = "-b FLIX = 0x6c1200"
+    endif
+else
+  BOOTSTRAP_LNK=bootstrap_dsp.lnk
+endif
 
 ifndef NETPP
-NETPP = $(HOME)/src/netpp/devices/dpf-ax206
+  NETPP = $(HOME)/src/netpp/devices/dpf-ax206
 endif
 
 DPFLIB = ../dpflib
@@ -48,10 +71,9 @@ LOAD_ADDR    = 0x1140 # Target prog mem address for executable
 JMPTBL_OFFS  = 0x248   # Jump table offset           --> BootHeader.jmpt_offset
 CODE_OFFS    = 0x400  # Offset of code start sector --> BootHeader.flash_start
 # Character table location in flash:
-CHARTBL_ADDR = $(FW_ADDR) + 0x10000
-
-VERSION = 0.205
-STATUS  = devel
+CHARTBL4x8_ADDR = $(FW_ADDR) + 0x10000
+CHARTBL9x16_ADDR = $(FW_ADDR) + 0x20000
+SPLASH_ADDR = $(FW_ADDR) + 0x30000
 
 # Build number file:
 PROG_BUILDNO = .buildno
@@ -74,36 +96,52 @@ CFLAGS  += -I../include
 
 CFLAGS  += $(COMPILE_OPTIONS)
 
+ifeq ($(LCD_CONTROLLER), LCD_CONTROLLER_CUSTOM)
+    LCD_OBJS = lcd/$(TYPE)/lcdblit.rel lcd/$(TYPE)/lcdinit.rel lcd/$(TYPE)/lcdsetor.rel
+endif
+DEVEL_OBJS = ovldata.rel lcd_devel.rel menu.rel printex.rel blit.rel debug.rel
+DISP_OBJS = ovlstr.rel
+DISP_OBJS += xmenu.rel xmenustr.rel
+DISP_OBJS += xmenu0data.rel xmenu1data.rel xmenu2data.rel xmenu3data.rel xmenu4data.rel
+DISP_OBJS += splash.rel usbdesc.rel initconf.rel blitchar.rel blitimg.rel
+
 
 # Feel free to add stuff, but note: Order matters!
 OBJS = main.rel  # ihx file will be named after first element
-OBJS += menu.rel ovldata.rel
 OBJS += bankswitch.rel
 # OBJS += boothdr.rel
 OBJS += bootstrap.rel lcd.rel
-ifeq ($(LCD_CONTROLLER), LCD_CONTROLLER_CUSTOM)
-OBJS += lcd/$(TYPE)/lcdblit.rel lcd/$(TYPE)/lcdinit.rel lcd/$(TYPE)/lcdsetor.rel
-endif
-OBJS += printex.rel
+OBJS += $(LCD_OBJS)
 OBJS += usbblit.rel 
 OBJS += appload.rel
 OBJS += usbaux.rel usb_ep1.rel
 OBJS += irqh.rel irq.rel
-OBJS += init.rel debug.rel
-OBJS += blit.rel print.rel 
+OBJS += init.rel
+OBJS += print.rel 
 OBJS += flash.rel properties.rel
-ifdef FLIX
-OBJS += flix.rel
+ifdef BUILD_DEVEL
+    OBJS += $(DEVEL_OBJS)
+    ifdef FLIX
+        OBJS += flix.rel
+    endif
+else
+    OBJS += $(DISP_OBJS)
 endif
 # OBJS += app_test.rel
 
 LIBS = dpf.lib lcd.lib
 
 CFLAGS += -DDPFMODEL_$(TYPE)
+CFLAGS += -DDEFAULT_SPLASH=$(DEFAULT_SPLASH)
+
+ifdef BUILD_DEVEL
+  CFLAGS += -DBUILD_DEVEL
+endif
+
 ifeq ($(STATUS),devel)
-	CFLAGS += -DBUILD_ID='$(TYPE)-$(VERSION)devel\#$(BUILDNO)'
+  CFLAGS += -DBUILD_ID='$(TYPE)-$(VERSION)devel\#$(BUILDNO)'
 else
-	CFLAGS += -DBUILD_ID='$(TYPE)-$(VERSION)$(STATUS)'
+  CFLAGS += -DBUILD_ID='$(TYPE)-$(VERSION)$(STATUS)'
 endif
 
 # Some shared overlay data area definitions:
@@ -142,36 +180,44 @@ app%.ihx: app%.rel
 
 # This actually compiles the whole habash. Also creates a .bin for the
 # full firmware.
-fw_$(TYPE).ihx: main.ihx
+fw_$(STATUS)_$(TYPE).ihx: main.ihx
 	python compile.py $< $@ $(FW_ADDR) $(LOAD_ADDR) \
-		$(JMPTBL_OFFS) $(CODE_OFFS) $(RESX) $(RESY) > output.log
+		$(JMPTBL_OFFS) $(CODE_OFFS) $(RESX) $(RESY) $(SPLASH_FILE) > output.log
 
-current.ihx: fw_$(TYPE).ihx 
+current.ihx: fw_$(STATUS)_$(TYPE).ihx 
 	ln -sf $< $@
 
-fw_$(TYPE).bin: fw_$(TYPE).ihx
+fw_$(STATUS)_$(TYPE).bin: fw_$(STATUS)_$(TYPE).ihx
 	@touch $@ # Hack to update current.bin link
 
-current.bin: fw_$(TYPE).bin
+current.bin: fw_$(STATUS)_$(TYPE).bin
 	ln -sf $< $@
 
 app: app_test.ihx
 
 TMPLNK = tmp.lnk
 
-config.inc: Makefile
+config.inc: Makefile Make.config
 	@echo "; This file is generated from the Makefile" > $@
 	@echo >> $@
 	@echo "jumptable_offset = $(FW_ADDR) + $(JMPTBL_OFFS)" >> $@
 	@echo "load_offset = $(FW_ADDR) + $(CODE_OFFS)" >> $@
+ifdef BUILD_DEVEL
+	@echo "BUILD_DEVEL = 1" >> $@
+endif
+
 	
 bankswitch.rel: bankswitch.s config.inc
 	$(AS) $(ASFLAGS) $<
 
-main.ihx: $(OBJS) $(LIBS) bootstrap.lnk Makefile $(BUILDNO)
-	@cp bootstrap.lnk $(TMPLNK)
+main.ihx: $(OBJS) $(LIBS) $(BOOTSTRAP_LNK) Makefile Make.config $(BUILDNO)
+	@cp $(BOOTSTRAP_LNK) $(TMPLNK)
 	@echo $(LNK_OPTIONS) >> $ $(TMPLNK)
-	@echo "-g chartbl_offs = $(CHARTBL_ADDR)" >> $(TMPLNK)
+	@echo "-g chartbl4x8_offs = $(CHARTBL4x8_ADDR)" >> $(TMPLNK)
+ifndef BUILD_DEVEL
+	@echo "-g chartbl9x16_offs = $(CHARTBL9x16_ADDR)" >> $(TMPLNK)
+	@echo "-g splash_offs = $(SPLASH_ADDR)" >> $(TMPLNK)
+endif
 	@for i in $(OBJS); do \
 		echo $$i >> $(TMPLNK); \
 	done
@@ -182,8 +228,8 @@ main.ihx: $(OBJS) $(LIBS) bootstrap.lnk Makefile $(BUILDNO)
 	@echo "Linking.."
 	@$(LD) -f $(TMPLNK) -n > /dev/null
 
-font4x8.bin: font4x8.pnm
-	python chartbl.py font4x8
+#font4x8.bin: font4x8.pnm
+#	python chartbl.py font4x8
 
 Debug/dpf.so: $(wildcard $(DPFLIB)/*.c) $(PYDPF)/py_device.c
 	$(MAKE) -C $(DPFLIB) all

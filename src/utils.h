@@ -23,6 +23,9 @@ void lcd_init(void) __banked;
 /** Initialize all peripherals */
 void init_all(unsigned char mode) __banked;
 
+/** Initialize p_config from flash */
+void init_config(void) __banked;
+
 /** Initialize PWM backlight */
 void timer1_config(unsigned char brightness) __banked;
 
@@ -48,7 +51,8 @@ MainState handle_event(MainState state, unsigned char evt) __banked;
 
 /* Generic utils for DPF hack */
 
-void disp_home(void) __banked;
+//void disp_home(void) __banked;
+#define disp_home() g_term.x = g_term.y = 0
 void set_orientation(unsigned char which) __banked;
 void clrscreen(unsigned short col) __banked;
 void lcd_demo(unsigned char n) __banked;
@@ -95,11 +99,12 @@ void bank_load(unsigned char bankno);
 unsigned long get_int3i(unsigned char __idata *b);
 void spi_sendaddr3i(unsigned char __idata *b);
 
-char flash_detect(__idata unsigned char *codes) __banked;
-void flash_print_size(__idata unsigned char *codes) __banked;
+extern __idata unsigned char flashid[3];
+void flash_detect() __banked;
+void flash_print_size() __banked;
 void flash_erasesector(unsigned long addr) __banked;
 unsigned char flash_write(__pdata unsigned char *buf, unsigned char n) __banked;
-
+void save_config2flash(void) __banked;
 
 // Simple property handling:
 char handle_setprop(__idata unsigned char *b) __banked;

@@ -1,6 +1,7 @@
 /* Attempt to create a configuration file for various DPF models */
 
 #define LOG_SECTOR 0x3e0000
+#define CONFIG_SECTOR 0x3d0000
 
 #if defined (DPFMODEL_white)
 #	define LCD_128x128
@@ -20,7 +21,7 @@
 #	define LCD_ORIENTATION_RGB RGB_DOWN
 #	define DEFAULT_ORIENTATION ROT_UP
 #elif defined (DPFMODEL_pearl)
-#	define LCD_320x240
+#	define LCD_240x320
 #	define LCD_CONTROLLER_OTM3225
 #	define LCD_ORIENTATION_RGB RGB_UP
 #	define DEFAULT_ORIENTATION ROT_DOWN
@@ -30,7 +31,7 @@
 #	define LCD_ORIENTATION_RGB RGB_UP
 #	define DEFAULT_ORIENTATION ROT_LEFT // USB is left
 #elif defined (DPFMODEL_focal)
-#	define LCD_320x240
+#	define LCD_240x320
 #	define LCD_CONTROLLER_ILI9325
 #	define LCD_ORIENTATION_RGB RGB_UP
 #	define DEFAULT_ORIENTATION ROT_DOWN

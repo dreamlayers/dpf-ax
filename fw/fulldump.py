@@ -8,7 +8,7 @@
 # usb0     : developer mode (already hacked)
 
 import sys
-sys.path.append("./Debug")
+sys.path.append("../Debug")
 import dpf
 
 import detect

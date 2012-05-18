@@ -14,11 +14,11 @@ void mdelay(BYTE x);
 void term_init(void) __banked
 {
 	_asm
-		mov	_g_chartbl_offs, #chartbl_offs
-		mov	_g_chartbl_offs + 1, #(chartbl_offs >> 8)
-		mov	_g_chartbl_offs + 2, #(chartbl_offs >> 16)
+		mov	_g_chartbl_offs, #chartbl4x8_offs
+		mov	_g_chartbl_offs + 1, #(chartbl4x8_offs >> 8)
+		mov	_g_chartbl_offs + 2, #(chartbl4x8_offs >> 16)
 	_endasm;
-	term_selfont(0);
+	term_selfont(FONT_SMALL);
 }
 
 void timer1_config(BYTE brightness) __banked
@@ -185,6 +185,8 @@ void config_ports(BYTE enable)
 	}
 }
 
+#ifdef BUILD_DEVEL
+
 __pdata BYTE g_databuf[0x40];
 unsigned BYTE g_datacount = 0;
 
@@ -223,6 +225,7 @@ void logger(void)
 	config_ports(0);
 	adc_config(0);
 }
+#endif
 
 void init(BYTE mode)
 {
@@ -265,6 +268,7 @@ void init(BYTE mode)
 
 void shutdown(BYTE mode) __banked
 {
+#ifdef BUILD_DEVEL
 	if (g_log) {
 		flash_erasesector(LOG_SECTOR);
 		g_datacount = 0;
@@ -272,7 +276,7 @@ void shutdown(BYTE mode) __banked
 		g_databuf[1] = 0xef;
 		flash_write(g_databuf, 2);
 	}
-
+#endif
 	switch (mode) {
 		case PWR_DOWN:
 			tmr3con &= ~T3ON; // Disable RTC timer
@@ -344,3 +348,19 @@ void turn_off(void) __banked
 	// g_refresh = 1; // force menu refresh
 }
 
+#ifndef BUILD_DEVEL
+extern BYTE _load_config_from_flash(unsigned long addr);
+
+void init_config() __banked
+{
+	BYTE status;
+	status = _load_config_from_flash(CONFIG_SECTOR);
+	if (status == 0)
+	{
+		g_config.splash = DEFAULT_SPLASH;
+		g_config.brightness = 7;
+	}
+	g_lcd.brightness = g_config.brightness;
+	timer1_config(g_lcd.brightness);
+}
+#endif

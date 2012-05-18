@@ -8,10 +8,13 @@ extern
 struct term {
 	unsigned char x;
 	unsigned char y;
-	unsigned short col;
-	unsigned short bgcol;
+	unsigned char num_cols;
+	unsigned char num_lines;
 	unsigned short offset_y;
 } __data g_term;
+
+extern unsigned short g_fgcol;
+extern unsigned short g_bgcol;
 
 extern
 struct lcd {
@@ -44,40 +47,49 @@ struct _usbcontext {
 	unsigned char __code *desc;
 } __data g_usb;
 
+/* Shared stuff (strings, etc.)  */
+
+#define OVLAREA __code
+
 /* Menu stuff */
 
-typedef struct menu {
+#ifndef BUILD_DEVEL
+
+  #define MENUAREA __code
+
+#else //BUILD_DEVEL
+  typedef struct menu {
 	const char text[12];
 	char pos[2];
 	unsigned char type_flags;
 	__idata void *prop;
 	__code char (*handler)(unsigned char evt) __reentrant;
-} Menu;
+  } Menu;
 
-/* Menu action codes */
+  /* Menu action codes */
 
-enum {
+  enum {
 	M_SHOW,
 	M_DIRECT_SHORT,
 	M_DIRECT_BYTE,
 	M_HANDLER,
 	M_EXIT
-};
+  };
 
-#define TYPE_MASK  0x0f
-#define F_ACTION   0x20
-#define F_EDITABLE 0x10
+  #define TYPE_MASK  0x0f
+  #define F_ACTION   0x20
+  #define F_EDITABLE 0x10
 
-#define OVLAREA __code
+  // Menu layout lines:
+  #define L_MENU   0
+  #define L_EDITOR 3
 
-// Menu layout lines:
-#define L_MENU   0
-#define L_EDITOR 3
+  extern const OVLAREA Menu g_menu[];
+  extern const OVLAREA char g_fakeleddesc[];
+  extern const OVLAREA char g_rebootmsg[];
+  extern const OVLAREA char g_menusize;
 
-extern const OVLAREA Menu g_menu[];
-extern const OVLAREA char g_fakeleddesc[];
-extern const OVLAREA char g_rebootmsg[];
-extern const OVLAREA char g_menusize;
+#endif //BUILD_DEVEL
 
 /* Some more global flags */
 
@@ -100,12 +112,25 @@ struct inputs {
 	volatile unsigned char evt;
 } __idata g_button;
 
+
+/* Splash screen defines */
+#define SPLASH_BLACK 	0x00
+#define SPLASH_WHITE 	0x01
+#define SPLASH_IMAGE 	0x02
+
+/* Non-volatile config, stored in flash */
+extern
+struct config_flash {
+	unsigned char splash;
+	unsigned char brightness;
+} __idata g_config;
+
 /* Data logging & buffering */
 
 extern
 __pdata unsigned char g_databuf[0x40];
-extern
-unsigned char g_datacount;
+extern unsigned char g_datacount;
+
 // Event and timer counter enums:
 
 enum {

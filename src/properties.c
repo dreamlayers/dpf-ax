@@ -26,10 +26,10 @@ RETCODE handle_setprop(__idata BYTE *b) __banked
 			g_refresh = 1;
 			break;
 		case PROPERTY_FGCOLOR:
-			g_term.col = b[9] | (b[10] << 8);
+			g_fgcol = b[9] | (b[10] << 8);
 			break;
 		case PROPERTY_BGCOLOR:
-			g_term.bgcol = b[9] | (b[10] << 8);
+			g_bgcol = b[9] | (b[10] << 8);
 			break;
 	}
 	return 0;

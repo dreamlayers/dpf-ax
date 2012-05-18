@@ -11,12 +11,19 @@
 #pragma constseg MAIN
 
 volatile __bit g_usb_active;
+
+#ifdef BUILD_DEVEL
 __bit g_debug = 0;
 __bit g_scope = 0;
 __bit g_log = 0;  // log, if set
+#endif
 
 struct inputs __idata g_button = {
 	0, 0 
+};
+
+struct config_flash __idata g_config = {
+	1, //SPLASH_DEVMODE
 };
 
 /* Note: Addressing can work different on other screens.
@@ -25,6 +32,8 @@ struct inputs __idata g_button = {
 
 
 extern void usb_isr(void);
+
+#ifdef BUILD_DEVEL
 
 static
 void fill(unsigned short rgb16)
@@ -89,28 +98,8 @@ void do_leds(void)
 		c <<= 1;
 	}
 }
+#endif  //ifdef BUILD_DEVEL
 
-#if 0
-void clr(unsigned short col)
-{
-	int x, y;
-	col;
-	g_blit.x0 = 0; g_blit.y0 = 0;
-	g_blit.x1 = RESOL_X - 1; g_blit.y1 = RESOL_Y - 1;
-	disp_blit();
-
-	for (y = 0; y < RESOL_X; y++) {
-		for (x = 0; x < RESOL_Y; x++) {
-			_asm
-			mov a, dph
-			lcall otp_lcdwrite
-			mov a, dpl
-			lcall otp_lcdwrite
-			_endasm;
-		}
-	}
-}
-#endif
 
 void sleep_interruptible(void)
 {
@@ -172,12 +161,18 @@ void umain(void) __banked
 
 	sleep(100);
 
+#ifdef BUILD_DEVEL
 	clrscreen(RGB565(0, 0, 70));
-	term_init();
-	disp_home(); print_splash();
-
 	// Load XSEG data:
 	BANK_LOAD(g_menu);
+#else
+	// Read g_config from flash
+	init_config();
+	// Load XSEG string data:
+	BANK_LOAD(g_rebootmsg);
+#endif
+	term_init();
+	disp_home(); print_splash();
 
 #ifdef FLIX_MODE
 	g_refresh = 1;
@@ -193,18 +188,19 @@ void umain(void) __banked
 		g_usb_active = 1;
 	}
 
+#ifdef BUILD_DEVEL
 	// Clear data buffer:
 	for (i = 0; i < sizeof(g_databuf); i++) {
 		g_databuf[i] = 0;
 	}
-
+#endif
 	g_register[SECONDS] = 0;
 	g_register[TIMER] = 20;
 	g_register[MONITOR] = 250;
 
 	count = g_count[TIMER];
-	g_term.bgcol = RGB565(0, 60, 40);
-	g_term.col = RGB565(0, 255, 0);
+	g_bgcol = DEV_SCREEN_BGCOL;
+	g_fgcol = DEV_SCREEN_COL;
 	g_term.offset_y = 32;
 
 	while (1) {
@@ -238,8 +234,10 @@ void umain(void) __banked
 
 		// Refresh of some screen items, when g_refresh set, force
 		if (STATE_LEAVE(prevstate, state, S_RUN) || g_refresh) {
-			GOTOXY(0, NUM_LINES - 2);
+#ifdef BUILD_DEVEL
+			GOTOXY(0, g_term.num_lines - 2);
 			puts(g_fakeleddesc);
+#endif
 			if (g_refresh) handle_event(state, EVT_REFRESH);
 			g_refresh = 0;
 		}
@@ -254,14 +252,16 @@ void umain(void) __banked
 					clrscreen(RGB565(255, 0, 0));
 					notice_powerdown();
 					sleep(3000);
+#ifdef BUILD_DEVEL
 					g_log = 0;
+#endif
 					shutdown(PWR_DEEPSLEEP);
 					clrscreen(RGB565(0, 0, 70));
 					g_refresh = 1;
 				} else if (pstate != S_LOW) {
 					pstate = S_LOW;
-					GOTOXY(0, NUM_LINES - 4);
-					clr_line(NUM_COLS - 1);
+					GOTOXY(0, g_term.num_lines - 4);
+					clr_line(g_term.num_cols - 1);
 					puts("!! LOW POWER !!");
 				}
 				pstate = S_LOW;
@@ -269,12 +269,13 @@ void umain(void) __banked
 			if (pstate != S_GOOD) {
 				g_fakeled &= ~LED_PWR;
 				pstate = S_GOOD;
-				GOTOXY(0, NUM_LINES - 4);
-				clr_line(NUM_COLS - 1);
+				GOTOXY(0, g_term.num_lines - 4);
+				clr_line(g_term.num_cols - 1);
 				puts("Power good");
 			}
 
 			count = g_count[TIMER];
+#ifdef BUILD_DEVEL
 			if (g_debug) print_status();
 			if (g_count[MONITOR] == 0) {
 				g_count[MONITOR] = g_register[MONITOR];
@@ -290,6 +291,7 @@ void umain(void) __banked
 			g_fakeled ^= LED_ALV; // heartbeat
 			if (g_log) g_fakeled |= LED_LOG;
 			else       g_fakeled &= ~LED_LOG;
+#endif  //ifdef BUILD_DEVEL
 		}
 
 		// Somewhat working with USB DP interrupt
