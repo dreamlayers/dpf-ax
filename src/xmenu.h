@@ -22,6 +22,7 @@ typedef struct xmenu {
 #define MENU_BACKLIGHT	2
 #define MENU_INFO	3
 #define MENU_SETUP	4
+#define MENU_USBSERIAL	5
     
 /* Menu action codes */
 
@@ -36,9 +37,6 @@ enum {
 #define TYPE_MASK     0x0f
 #define F_MENUSWITCH  0x40
 #define F_ACTION      0x20
-//#define F_EDITABLE 0x10
-
-#define L_EDITOR 8
 
 /* display_menu params */
 
@@ -50,6 +48,7 @@ extern const MENUAREA XMenu g_splashmenu;
 extern const MENUAREA XMenu g_backlightmenu;
 extern const MENUAREA XMenu g_infomenu;
 extern const MENUAREA XMenu g_setupmenu;
+extern const MENUAREA XMenu g_usbserialmenu;
 extern MENUAREA const char infostr_version[];
 
 #define MENU_PTR g_mainmenu

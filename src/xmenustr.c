@@ -16,20 +16,38 @@
 #define STRING(x) _RESOLVE(x)
 
 static __code const char * __code xmenu_strings[] = {
-	"", 0,						// XSTR_NULL
-	0, 0,						// XSTR_FLASH -- dynamic!
-#ifdef LCD_CONTROLLER_CUSTOM				// XSTR_LCD
+/* -- XSTR_NULL -- */
+	"", 0,
+
+/* -- XSTR_FLASH - dynamic! -- */
+	0, 0,
+
+/* -- XSTR_LCD -- */
+#ifdef LCD_CONTROLLER_CUSTOM
 	"Unknown (custom)", 0,
 #else
 	STRING(_INTERNAL_TAG) " (compatible)", 0,
 #endif
+
+/* -- XSTR_CREDITS -- */
 #if NUM_COLS_LARGE > 16
-	" By hackfin@section5.ch", "     and superelchi",	// XSTR_CREDITS
+	" By hackfin@section5.ch", "     and superelchi",
 #else
 	"By hackfin &", "    superelchi",
 #endif
-	STRING(BUILD_ID), 0,				// XSTR_VERSION
-	"http://dpf-ax.sourceforge.net", 0,		// XSTR_WWW
+
+/* -- XSTR_VERSION -- */
+	STRING(BUILD_ID), 0,
+
+/* -- XSTR_WWW -- */
+	"http://dpf-ax.sourceforge.net", 0,
+
+/* -- XSTR_REBOOT -- */
+#if NUM_COLS_LARGE > 16
+	"Changes will be applied", " on next reset/reboot",
+#else
+	"Reboot/reset", "to apply",
+#endif
 };
 
 #define NUM_XSTRINGS ((sizeof(xmenu_strings) / sizeof(__code char *)) / 2)

@@ -28,21 +28,6 @@ static void cls()
 	font_black();
 }
 
-char hdl_brightness(BYTE evt) __reentrant
-{
-	evt;
-	if (g_lcd.brightness < 1) g_lcd.brightness = 1;
-	if (g_lcd.brightness > PWM_PERIOD) g_lcd.brightness = PWM_PERIOD;
-	g_config.brightness = g_lcd.brightness;
-
-	tmr1cntl = tmr1cnth = 0;
-	tmr1perl = PWM_PERIOD; tmr1perh = 0x00;
-	tmr1pwml = (~g_lcd.brightness & 0x7);
-	tmr1pwmh = 0;
-	if (evt == KEY_MENU)
-		config2flash();
-	return S_EDIT;
-}
 
 char hdl_off(BYTE evt) __reentrant
 {
@@ -90,16 +75,18 @@ void display_menuitem(char item)
 {
     MENUAREA MItem *m = MENU_PTR.item + item;
     
-    if (!m->text[0]) return;
-    GOTOXY(START_COL, firstitem_line + item);
-    if (item == curitem) font_white(); else font_black();
-    clr_line(g_term.num_cols - START_COL);
-    g_term.y--;
-    if (((m->type_flags & TYPE_MASK) == M_IDATA_BYTE) && (m->param == ((__idata unsigned char *) m->prop)[0]))
+    if (m->text[0])
+    {
+        GOTOXY(START_COL, firstitem_line + item);
+        if (item == curitem) font_white(); else font_black();
+        clr_line(g_term.num_cols - START_COL);
+        g_term.y--;
+        if (((m->type_flags & TYPE_MASK) == M_IDATA_BYTE) && (m->param == ((__idata unsigned char *) m->prop)[0]))
 		puts("*");
 	else
 		g_term.x++;
-    puts(m->text);
+        puts(m->text);
+    }
     font_black();
     if (m->xstr_id)
     {
@@ -173,7 +160,7 @@ MainState handle_edit(BYTE evt)
 					;
 			}
 			if (m->handler) m->handler(evt);
-			GOTOXY(4, firstitem_line); print_short(( (BYTE *) m->prop)[0]);
+			GOTOXY(4, firstitem_line); print_dec(( (BYTE *) m->prop)[0]); puts("   ");
 			break;
 		case M_IDATA_BYTE:
 			( (__idata unsigned char *) m->prop)[0] = m->param;
@@ -203,6 +190,7 @@ MainState load_menu(unsigned char menu)
 		case MENU_BACKLIGHT: BANK_LOAD(g_backlightmenu); break;
 		case MENU_INFO: BANK_LOAD(g_infomenu); break;
 		case MENU_SETUP: BANK_LOAD(g_setupmenu); break;
+		case MENU_USBSERIAL: BANK_LOAD(g_usbserialmenu); break;
 
 		//case MENU_MAIN:
 		default:

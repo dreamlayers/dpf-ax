@@ -354,13 +354,19 @@ extern BYTE _load_config_from_flash(unsigned long addr);
 void init_config() __banked
 {
 	BYTE status;
+	// iSerial String is in code memory, so we have to do write-access via xdata
+        __xdata unsigned char *p = ((__xdata unsigned char *) &g_usbserial[4]) - 0x800;
+
 	status = _load_config_from_flash(CONFIG_SECTOR);
 	if (status == 0)
 	{
 		g_config.splash = DEFAULT_SPLASH;
 		g_config.brightness = 7;
+		g_config.usbserial = 1;
 	}
 	g_lcd.brightness = g_config.brightness;
 	timer1_config(g_lcd.brightness);
+	*p = (g_config.usbserial / 10) + '0';
+	*(p+2) = (g_config.usbserial % 10) + '0';
 }
 #endif

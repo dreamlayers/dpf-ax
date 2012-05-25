@@ -6,5 +6,6 @@
 #define XSTR_CREDITS  3
 #define XSTR_VERSION  4
 #define XSTR_WWW      5
+#define XSTR_REBOOT   6
 
 void put_xstring(unsigned char id) __banked;

@@ -6,11 +6,14 @@ VENDOR_ID	= 0x1908	;
 PRODUCT_ID	= 0x0102	;
 PRODUCT_VERSION	= 0x0200	; 2.0
 
+	.globl _g_usb
 
+
+	.include 'ax206.inc'
 	.include 'usb.inc'
 
 ;; -----------------------------------------------------------------------------
-	.area	USB0A	(CODE)
+	.area	USB0A (CODE)
 
 _usb_desc_device::
 	.db	18 ;USB_DT_DEVICE_SIZE
@@ -31,13 +34,17 @@ _usb_desc_device::
 
 _usb_desc_device_end::
 
-; string table:
 _usbdesc_strings::
-	.db  _usb_desc_string_language, _usb_desc_string_language  >> 8
-	.db  _usb_desc_string_serial, _usb_desc_string_serial>> 8
-	.db  _usb_desc_string_manufacturer, _usb_desc_string_manufacturer >> 8
-	.db  _usb_desc_string_product, _usb_desc_string_product >> 8
-	.db  _usb_desc_string_iface, _usb_desc_string_iface >> 8
+	.db  _usb_desc_string_language
+	.db  _usb_desc_string_language >> 8
+	.db  _g_usbserial 	;_usb_desc_string_serial
+	.db  _g_usbserial >> 8	;_usb_desc_string_serial >> 8
+	.db  _usb_desc_string_manufacturer
+	.db  _usb_desc_string_manufacturer >> 8
+	.db  _usb_desc_string_product
+	.db  _usb_desc_string_product >> 8
+	.db  _usb_desc_string_iface
+	.db  _usb_desc_string_iface >> 8
 
 ; note: strings are UNICODE
 _usb_desc_string_language::
@@ -93,15 +100,14 @@ _usb_desc_string_iface::
 	.db	'u, 0
 	.db	's, 0
 	.db	'b, 0
-
+; 
 usb_desc_string_iface_end:
-
 
 _usb_desc_config::
 	.db	9 ;USB_DT_CONFIG_SIZE
 	.db	USB_DT_CONFIG
-	.db	(_usbdesc_config_end - _usb_desc_config) & 0xff
-	.db	(_usbdesc_config_end - _usb_desc_config) >> 8
+	.db	(_usb_desc_config_end - _usb_desc_config) & 0xff
+	.db	(_usb_desc_config_end - _usb_desc_config) >> 8
 	.db	1		; number of interfaces
 	.db	1		; configuration number
 	.db	0		; configuration string idx
@@ -134,4 +140,5 @@ _usb_desc_config::
 	.db	0			; maximum packet size (msb)
 	.db	0			; polling interval
 
-_usbdesc_config_end::
+_usb_desc_config_end::
+

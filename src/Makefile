@@ -14,7 +14,7 @@
 
 -include ./Make.config
 
-VERSION = 0.300
+VERSION = 0.301
 ifdef BUILD_DEVEL
   STATUS  = devel
 else
@@ -102,7 +102,8 @@ endif
 DEVEL_OBJS = ovldata.rel lcd_devel.rel menu.rel printex.rel blit.rel debug.rel
 DISP_OBJS = ovlstr.rel
 DISP_OBJS += xmenu.rel xmenustr.rel
-DISP_OBJS += xmenu0data.rel xmenu1data.rel xmenu2data.rel xmenu3data.rel xmenu4data.rel
+DISP_OBJS += xmenu0data.rel xmenu1data.rel xmenu2data.rel xmenu2handler.rel
+DISP_OBJS += xmenu3data.rel xmenu4data.rel xmenu5data.rel xmenu5handler.rel
 DISP_OBJS += splash.rel usbdesc.rel initconf.rel blitchar.rel blitimg.rel
 
 

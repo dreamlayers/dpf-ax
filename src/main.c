@@ -166,10 +166,10 @@ void umain(void) __banked
 	// Load XSEG data:
 	BANK_LOAD(g_menu);
 #else
+	// Load XSEG overlay data:
+	BANK_LOAD(g_rebootmsg);
 	// Read g_config from flash
 	init_config();
-	// Load XSEG string data:
-	BANK_LOAD(g_rebootmsg);
 #endif
 	term_init();
 	disp_home(); print_splash();

@@ -40,6 +40,13 @@ KNOWN_DPFS = [
 		"http://www.frys.com/product/5439059",
 	 	([ 0 ], [ 0xd455d959 ]),
 	],
+# 2012-05-22 works with dx #27893 (white) & #27894 (blue)
+	[       () ,
+		("dx27893", "yes"),
+		("http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893",
+		 "http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-blue-107-picture-memory-storage-27894"),
+	 	([ 0x4d507697 ], [ 0xd5efd5d9 ]),
+	],
 ##################### 128 x 144 #############################
 	[       () ,
 		("focalprice144", "yes"),

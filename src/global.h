@@ -56,8 +56,10 @@ struct _usbcontext {
 #ifndef BUILD_DEVEL
 
   #define MENUAREA __code
+  extern const OVLAREA char g_usbserial[];
 
 #else //BUILD_DEVEL
+
   typedef struct menu {
 	const char text[12];
 	char pos[2];
@@ -123,6 +125,7 @@ extern
 struct config_flash {
 	unsigned char splash;
 	unsigned char brightness;
+	unsigned char usbserial;
 } __idata g_config;
 
 /* Data logging & buffering */
