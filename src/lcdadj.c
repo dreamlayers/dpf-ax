@@ -40,6 +40,8 @@ void _set_brightness(BYTE brightness)
 		per = ++per / 2;
 		pwm = ++pwm / 2;
 	}
+
+	tmr1con &= T1ON;
 #endif
 
 	//GOTOXY(1, 8); print_short(per); putchar(' '); print_short(pwm);
@@ -51,6 +53,10 @@ void _set_brightness(BYTE brightness)
 
 	tmr1cntl = 0;
 	tmr1cnth = 0;
+
+#ifdef LCD_BACKLIGHT_FREQ
+	tmr1con = T1POS1 | T1POEN | T1ON;
+#endif
 }
 
 void set_brightness(BYTE brightness) __banked
