@@ -44,8 +44,10 @@ KNOWN_DPFS = [
 	[       () ,
 		("dx27893", "yes"),
 		("http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893",
-		 "http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-blue-107-picture-memory-storage-27894"),
-	 	([ 0x4d507697 ], [ 0xd5efd5d9 ]),
+		 "http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-blue-107-picture-memory-storage-27894",
+		 "http://dx.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-with-8m-memory-for-140-photos-silver-33624",
+		 "http://www.amazon.de/Technaxx-Keypix-Digitaler-Fotorahmen-interner/dp/B0013SJV4O"),
+	 	([ 0x4d507697, 0xa483a45c ], [ 0xd5efd5d9 ]),
 	],
 ##################### 128 x 144 #############################
 	[       () ,
@@ -78,19 +80,26 @@ KNOWN_DPFS = [
 	 	( [ 0xfbed1394, 0xa4343eb3 ], [ 0x174c10b9 ]),
 	],
 	[       () ,
-		("linkdelight", "no"),
+		("linkdelight", "yes"),
 		("http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&rd=1&item=260978964426&ssPageName=STRK:MEAFB:IT",
 		 "http://www.ebay.de/itm/New-Mini-2-4-inch-Digital-Time-Day-Calendar-Alarm-Clock-Photo-Frame-POF16-/260883908884?pt=LH_DefaultDomain_0&hash=item3cbde48914#ht_4709wt_1046"
 		),
 	 	([ 0x30149543, 0xef9bb8e3 ], [ 0x334bfc75 ]),
 	],
 
-#************** WIP: WORK IN PROGRESS ***********************
 	[       () ,
-		("dx21334", "wip"),
+		("dx21334a", "yes"),
 		"http://www.dealextreme.com/p/2-4-lcd-desktop-digital-photo-frame-and-calendar-27-picture-memory-storage-21334",
 	 	([ 0x53c2379b ], [ 0xe7bb71fc ]),
 	],
+	[       () ,
+		("dx21334b", "yes"),
+		("http://www.dealextreme.com/p/2-4-lcd-desktop-digital-photo-frame-and-calendar-27-picture-memory-storage-21334",
+		"http://www.ebay.de/itm/160792780280"),
+	 	([ 0xc70ac3d2 ], [ 0xf4729795, 0x66aebe1e ]),
+	],
+
+#************** WIP: WORK IN PROGRESS ***********************
 
 #**************** UNSUPPORTED DPFS **************************
 

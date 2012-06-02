@@ -4,6 +4,7 @@
 #include "global.h"
 #include "utils.h"
 #include "dpf.h"
+#include "lcd.h"
 #include "spiflash.h"
 
 #pragma codeseg INIT
@@ -21,16 +22,21 @@ void term_init(void) __banked
 	term_selfont(FONT_SMALL);
 }
 
+
 void timer1_config(BYTE brightness) __banked
 {
+	set_brightness(brightness);
+#ifndef LCD_BACKLIGHT_FREQ
+	// backlight adjustment by pwm (clock-gen = RTC)
+	tmr1con = (3 << 4) | T1POS1 | T1POEN | T1ON;
+#else
+	// acklight adjustment by frequency (clock-gen = sys-clock)
+	tmr1con = T1POS1 | T1POEN | T1ON;
+#endif
 	tmr1cntl = 0;
 	tmr1cnth = 0;
-	// These are writeonly:
-	tmr1perl = PWM_PERIOD; tmr1perh = 0x00;
-	tmr1pwml = PWM_PERIOD - (brightness & 0x7);
-	tmr1pwmh = 0;
-	tmr1con = (3 << 4) | T1POS1 | T1POEN | T1ON;
 }
+
 
 void timer0_config()
 {
@@ -361,11 +367,11 @@ void init_config() __banked
 	if (status == 0)
 	{
 		g_config.splash = DEFAULT_SPLASH;
-		g_config.brightness = 7;
+		g_config.brightness = DEFAULT_BRIGHTNESS_VALUE;
 		g_config.usbserial = 1;
 	}
 	g_lcd.brightness = g_config.brightness;
-	timer1_config(g_lcd.brightness);
+	set_brightness(g_lcd.brightness);
 	*p = (g_config.usbserial / 10) + '0';
 	*(p+2) = (g_config.usbserial % 10) + '0';
 }

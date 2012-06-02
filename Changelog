@@ -3,6 +3,13 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Sat, 02 Jun 2012
+v0.310 by superelchi
+        * Support for frequency controlled backlight.
+	* New models:
+	  - dx21334a
+	  - dx21334b
+
 Wed, 23 May 2012
 v0.301 by superelchi
         * USB serial number adjustable in dpfs menu.

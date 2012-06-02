@@ -5,6 +5,7 @@
 #include "global.h"
 #include "utils.h"
 #include "usb.h"
+#include "lcd.h"
 #include "print.h"
 
 #pragma codeseg MAIN
@@ -154,7 +155,7 @@ void umain(void) __banked
 	// proper handlers yet. Otherwise, they'll really slow us down.
 	// ie &= ~(T0IE | T1IE | T2IE );
 
-	g_lcd.brightness = 7;
+	g_lcd.brightness = DEFAULT_BRIGHTNESS_VALUE;
 	g_lcd.orientation = DEFAULT_ORIENTATION;
 	// Initialize RTC, Clocks, LCD and ports:
 	init_all(PWR_DOWN);
@@ -219,6 +220,9 @@ void umain(void) __banked
 				pcon |= 1 << TMRCSEL_SHFT; // Select12 MHz
 				g_fakeled &= ~LED_USB;
 				g_usb_active = 0;
+#ifdef LCD_BACKLIGHT_FREQ
+				set_brightness(g_lcd.brightness);
+#endif
 			}
 
 		}
@@ -230,6 +234,9 @@ void umain(void) __banked
 			pcon |= 2 << TMRCSEL_SHFT; // Select48 MHz
 			g_fakeled |= LED_USB;
 			g_usb_active = 1;
+#ifdef LCD_BACKLIGHT_FREQ
+			set_brightness(g_lcd.brightness);
+#endif
 		}
 
 		// Refresh of some screen items, when g_refresh set, force

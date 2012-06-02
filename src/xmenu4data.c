@@ -10,10 +10,6 @@
 #include "xmenu.h"
 
 
-extern char hdl_off(BYTE evt) __reentrant;
-extern char hdl_brightness(BYTE evt) __reentrant;
-extern char hdl_reboot(BYTE evt) __reentrant;
-
 #if NUM_COLS_LARGE > 14
 #define STR_SPLASH "Splashscreen"
 #define STR_SERIAL "USB Serial Number"

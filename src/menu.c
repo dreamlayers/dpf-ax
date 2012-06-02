@@ -54,12 +54,9 @@ char hdl_brightness(BYTE evt) __reentrant
 {
 	evt;
 	if (g_lcd.brightness < 1) g_lcd.brightness = 1;
-	if (g_lcd.brightness > PWM_PERIOD) g_lcd.brightness = PWM_PERIOD;
-
-	tmr1cntl = 0; tmr1cnth = 0;
-	tmr1perl = PWM_PERIOD; tmr1perh = 0x00;
-	tmr1pwml = (~g_lcd.brightness & 0x7);
-	tmr1pwmh = 0;
+	if (g_lcd.brightness > MAX_BRIGHTNESS_VALUE)
+		g_lcd.brightness = MAX_BRIGHTNESS_VALUE;
+	set_brightness(g_lcd.brightness);
 	return S_EDIT;
 }
 

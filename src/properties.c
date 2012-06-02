@@ -9,9 +9,16 @@
 
 RETCODE handle_setprop(__idata BYTE *b) __banked
 {
+	unsigned char brightness;
 	switch (b[7]) {
 		case PROPERTY_BRIGHTNESS:
-			g_lcd.brightness = b[9];
+			// for backward compatibility:
+			// "old" brightness was 0..7, new is 0..21
+			brightness = b[9] * 3;
+			if (brightness >= MAX_BRIGHTNESS_VALUE)
+				brightness = MAX_BRIGHTNESS_VALUE;
+			else if (brightness) brightness -= 2;
+			g_lcd.brightness = brightness;
 			if (g_lcd.brightness == 0) {
 				tmr1con = 0;
 				_LCD_LED = nOFF;

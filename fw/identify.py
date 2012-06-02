@@ -401,12 +401,12 @@ print
     
 if dpf:
 	if dpf[1][1] == "yes":
-		print "Your dpf seems to be compatible with model %s." % dpf[1][0]
+		print "Your dpf is compatible with model %s." % dpf[1][0]
 	elif dpf[1][1] == "no":
-		print "Your dpf seems to be compatible with unsupported model %s." % dpf[1][0]
+		print "Your dpf is compatible with unsupported model %s." % dpf[1][0]
 		print "Sorry, this dpf in NOT supported by dpf-ax."
 	elif dpf[1][1] == "wip":
-		print "Your dpf seems to be compatible with currently unsupported model %s." % dpf[1][0]
+		print "Your dpf is compatible with currently unsupported model %s." % dpf[1][0]
 		print "Sorry, this dpf in NOT supported by dpf-ax at the moment."
 		print "Work in progress. Check back later."
 else:

@@ -26,8 +26,9 @@ void init_all(unsigned char mode) __banked;
 /** Initialize p_config from flash */
 void init_config(void) __banked;
 
-/** Initialize PWM backlight */
+/** Initialize backlight */
 void timer1_config(unsigned char brightness) __banked;
+void set_brightness(unsigned char brightness) __banked;
 
 enum {
 	PWR_IDLE,        ///< Go idle for one second

@@ -14,7 +14,7 @@
 
 -include ./Make.config
 
-VERSION = 0.301
+VERSION = 0.310
 ifdef BUILD_DEVEL
   STATUS  = devel
 else
@@ -111,7 +111,7 @@ DISP_OBJS += splash.rel usbdesc.rel initconf.rel blitchar.rel blitimg.rel
 OBJS = main.rel  # ihx file will be named after first element
 OBJS += bankswitch.rel
 # OBJS += boothdr.rel
-OBJS += bootstrap.rel lcd.rel
+OBJS += bootstrap.rel lcd.rel lcdadj.rel
 OBJS += $(LCD_OBJS)
 OBJS += usbblit.rel 
 OBJS += appload.rel
