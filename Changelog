@@ -3,6 +3,12 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Mon, 04 Jun 2012
+v0.311 by superelchi
+	* Backlight control changes.
+	* New model:
+	  - dx104838
+
 Sat, 02 Jun 2012
 v0.310 by superelchi
         * Support for frequency controlled backlight.

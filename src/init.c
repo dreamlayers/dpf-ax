@@ -26,11 +26,11 @@ void term_init(void) __banked
 void timer1_config(BYTE brightness) __banked
 {
 	set_brightness(brightness);
-#ifndef LCD_BACKLIGHT_FREQ
-	// backlight adjustment by pwm (clock-gen = RTC)
+#ifndef LCD_BACKLIGHT_HIGH
+	// Clock-gen = RTC
 	tmr1con = (3 << 4) | T1POS1 | T1POEN | T1ON;
 #else
-	// acklight adjustment by frequency (clock-gen = sys-clock)
+	// Clock-gen = sys-clock
 	tmr1con = T1POS1 | T1POEN | T1ON;
 #endif
 	tmr1cntl = 0;

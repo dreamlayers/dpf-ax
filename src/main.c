@@ -220,7 +220,7 @@ void umain(void) __banked
 				pcon |= 1 << TMRCSEL_SHFT; // Select12 MHz
 				g_fakeled &= ~LED_USB;
 				g_usb_active = 0;
-#ifdef LCD_BACKLIGHT_FREQ
+#ifdef LCD_BACKLIGHT_HIGH
 				set_brightness(g_lcd.brightness);
 #endif
 			}
@@ -234,7 +234,7 @@ void umain(void) __banked
 			pcon |= 2 << TMRCSEL_SHFT; // Select48 MHz
 			g_fakeled |= LED_USB;
 			g_usb_active = 1;
-#ifdef LCD_BACKLIGHT_FREQ
+#ifdef LCD_BACKLIGHT_HIGH
 			set_brightness(g_lcd.brightness);
 #endif
 		}

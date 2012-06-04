@@ -98,6 +98,11 @@ KNOWN_DPFS = [
 		"http://www.ebay.de/itm/160792780280"),
 	 	([ 0xc70ac3d2 ], [ 0xf4729795, 0x66aebe1e ]),
 	],
+	[       () ,
+		("dx104838", "yes"),
+		"http://www.dealextreme.com/p/stylish-a18-2-4-lcd-desktop-digital-photo-picture-frame-album-white-silver-16mb-104838",
+	 	([ 0x8a41585c ], [ 0xe1eb846e ]),
+	],
 
 #************** WIP: WORK IN PROGRESS ***********************
 

@@ -9,7 +9,7 @@
 #pragma codeseg LCDAUX
 #pragma constseg LCDAUX
 
-#ifdef LCD_BACKLIGHT_FREQ
+#ifdef LCD_BACKLIGHT_HIGH
 extern __code unsigned char custom_backlighttbl_len;
 extern __code unsigned char custom_backlighttbl[];
 extern __code unsigned char custom_backlighttbl2_len;
@@ -21,18 +21,29 @@ void _set_brightness(BYTE brightness)
 	unsigned int per;
 	unsigned int pwm;
 
-#ifndef LCD_BACKLIGHT_FREQ
-	// PWM adjustment (clock-gen = RTC, 32,768 kHz)
+#ifndef LCD_BACKLIGHT_HIGH
+	// Clock-gen = RTC, 32,768 kHz
 	if (brightness > MAX_BRIGHTNESS_VALUE)
 	    brightness = MAX_BRIGHTNESS_VALUE;
+	// PWM adjustment
 	per = MAX_BRIGHTNESS_VALUE;
-	pwm = MAX_BRIGHTNESS_VALUE - brightness;
+	pwm = (MAX_BRIGHTNESS_VALUE - brightness);
 #else
-	// FREQ adjustment (clock-gen = sys-clock, 12 / 48 MHz)
+	// Clock-gen = sys-clock, 12 / 48 MHz
 	if (brightness >= custom_backlighttbl_len)
 		brightness = custom_backlighttbl_len - 1;
-	per = custom_backlighttbl[brightness];
-	pwm = custom_backlighttbl2[brightness];
+	if (custom_backlighttbl2_len > 0)
+	{
+	// FREQ adjustment
+		per = custom_backlighttbl[brightness];
+		pwm = custom_backlighttbl2[brightness];
+	}
+	else
+	{
+	// PWM adjustment
+		per = 0x0FF0;
+		pwm = 0xFF0 - (custom_backlighttbl[brightness] << 4);
+	}
 	if (pcon & (2 << TMRCSEL_SHFT)){	// 48 MHz ? 
 		per *= 2;
 		pwm *= 2;
@@ -54,7 +65,7 @@ void _set_brightness(BYTE brightness)
 	tmr1cntl = 0;
 	tmr1cnth = 0;
 
-#ifdef LCD_BACKLIGHT_FREQ
+#ifdef LCD_BACKLIGHT_HIGH
 	tmr1con = T1POS1 | T1POEN | T1ON;
 #endif
 }

@@ -14,7 +14,7 @@
 
 -include ./Make.config
 
-VERSION = 0.310
+VERSION = 0.311
 ifdef BUILD_DEVEL
   STATUS  = devel
 else

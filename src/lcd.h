@@ -105,10 +105,6 @@ unsigned char g_rgborder;
 #define MAX_BRIGHTNESS_VALUE     21	// max brightness value
 #define DEFAULT_BRIGHTNESS_VALUE 12	// inital brightness value
 
-#ifndef LCD_BACKLIGHT_FREQ		// adjust backlight by frequency variation
-#	define LCD_BACKLIGHT_PWM	// adjust backlight by pwm variation
-#endif
-
 // This rotation is defined by the typical application. Up means: default.
 // Note: the USB connector location may vary.
 // This is the logical rotation of the screen. The *physical* rotation
