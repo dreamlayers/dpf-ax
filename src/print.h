@@ -1,3 +1,5 @@
+#include "userconfig.h"
+
 // This is currently fixed. Don't change.
 #define CHAR_WIDTH_SMALL   4 
 #define CHAR_WIDTH_LARGE   9
@@ -11,12 +13,19 @@
 
 #define FONT_SMALL 0
 #define FONT_SMALL_REVERSE 1
-#define FONT_LARGE 2
-#define FONT_LARGE_WHITE 3
-#define FONT_LARGE_BLACK 4
+#define FONT_LARGE         2
+#define FONT_LARGE_REVERSE 3
 
-#define WHITE RGB565(255, 255, 255)
-#define BLACK RGB565(0, 0, 0)
+#define COLOR_WHITE RGB565(255, 255, 255)
+#define COLOR_BLACK RGB565(0, 0, 0)
+#ifndef MENU_COLOR
+#  define MENU_COLOR COLOR_BLACK
+#endif
+#ifndef MENU_BGCOLOR 
+#  define MENU_BGCOLOR COLOR_WHITE
+#endif
+#define DISP_SCREEN_COL MENU_COLOR
+#define DISP_SCREEN_BGCOL MENU_BGCOLOR
 #define DEV_SCREEN_COL RGB565(0, 255, 0)
 #define DEV_SCREEN_BGCOL RGB565(0, 60, 40)
 

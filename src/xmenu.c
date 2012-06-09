@@ -19,13 +19,13 @@ static void config2flash()
 	save_config2flash();
 }
 
-static void font_black() { term_selfont(FONT_LARGE_BLACK); }
-static void font_white() { term_selfont(FONT_LARGE_WHITE); }
+static void font_normal() { term_selfont(FONT_LARGE); }
+static void font_reverse() { term_selfont(FONT_LARGE_REVERSE); }
 
 static void cls()
 {
-	clrscreen(WHITE);
-	font_black();
+	clrscreen(DISP_SCREEN_BGCOL);
+	font_normal();
 }
 
 
@@ -78,7 +78,7 @@ void display_menuitem(char item)
     if (m->text[0])
     {
         GOTOXY(START_COL, firstitem_line + item);
-        if (item == curitem) font_white(); else font_black();
+        if (item == curitem) font_reverse(); else font_normal();
         clr_line(g_term.num_cols - START_COL);
         g_term.y--;
         if (((m->type_flags & TYPE_MASK) == M_IDATA_BYTE) && (m->param == ((__idata unsigned char *) m->prop)[0]))
@@ -87,7 +87,7 @@ void display_menuitem(char item)
 		g_term.x++;
         puts(m->text);
     }
-    font_black();
+    font_normal();
     if (m->xstr_id)
     {
 	GOTOXY(1, firstitem_line + MENU_PTR.num_items + INFO_OFFSET);

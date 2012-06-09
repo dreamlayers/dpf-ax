@@ -3,6 +3,10 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Sat, 09 Jun 2012
+v0.312 by superelchi
+	* Menu colors configurable in Make.config
+
 Mon, 04 Jun 2012
 v0.311 by superelchi
 	* Backlight control changes.

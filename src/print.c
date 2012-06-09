@@ -194,11 +194,11 @@ void term_selfont(BYTE which) __banked
         g_chartbl_offs[1] = (TABLE_SIZE >> 8) * which;
     }
     else {
-        if (which == FONT_LARGE_BLACK) {
-            set_color(BLACK); set_bgcolor(WHITE);
+        if (which == FONT_LARGE) {
+            set_color(DISP_SCREEN_COL); set_bgcolor(DISP_SCREEN_BGCOL);
         }
-        else if (which == FONT_LARGE_WHITE) {
-            set_color(WHITE); set_bgcolor(BLACK);
+        else if (which == FONT_LARGE_REVERSE) {
+            set_color(DISP_SCREEN_BGCOL); set_bgcolor(DISP_SCREEN_COL);
         }
         g_largefont = 1;
         g_term.num_cols = NUM_COLS_LARGE;

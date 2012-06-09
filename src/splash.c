@@ -26,10 +26,10 @@ void print_splash(void) __banked
 	term_selfont(FONT_SMALL);
 	switch (g_config.splash)
 	{
-		case SPLASH_BLACK: clrscreen(BLACK); credits_short(); break;
-		case SPLASH_WHITE: clrscreen(WHITE); credits_short(); break;
+		case SPLASH_BLACK: clrscreen(COLOR_BLACK); credits_short(); break;
+		case SPLASH_WHITE: clrscreen(COLOR_WHITE); credits_short(); break;
 		case SPLASH_IMAGE:
-			set_color(WHITE); set_bgcolor(BLACK);
+			set_color(COLOR_WHITE); set_bgcolor(COLOR_BLACK);
 			g_blit.x0 = 0; g_blit.y0 = 0;
 			g_blit.x1 = RESOL_X - 1; g_blit.y1 = RESOL_Y - 1;
 			disp_blit();

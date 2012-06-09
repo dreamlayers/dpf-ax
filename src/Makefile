@@ -14,7 +14,7 @@
 
 -include ./Make.config
 
-VERSION = 0.311
+VERSION = 0.312
 ifdef BUILD_DEVEL
   STATUS  = devel
 else
@@ -158,7 +158,7 @@ TARGET += $(PATCHES:%.s=%.ihx) $(APPLETS:%.s=%.ihx)
 
 -include local.mk
 
-HEADERS += config.inc
+HEADERS += config.inc userconfig.h
 
 all: $(PROG_BUILDNO) $(HEADERS) fwload Debug/dpf.so $(DUTIES) current.bin
 
@@ -207,6 +207,15 @@ ifdef BUILD_DEVEL
 	@echo "BUILD_DEVEL = 1" >> $@
 endif
 
+userconfig.h: Makefile Make.config
+	@echo "// This file is generated from the Makefile" > $@
+	@echo >> $@
+ifdef CUSTOM_MENU_COLOR
+	@echo "#define MENU_COLOR RGB565($(CUSTOM_MENU_COLOR))" >> $@
+endif
+ifdef CUSTOM_MENU_BGCOLOR
+	@echo "#define MENU_BGCOLOR RGB565($(CUSTOM_MENU_BGCOLOR))" >> $@
+endif
 	
 bankswitch.rel: bankswitch.s config.inc
 	$(AS) $(ASFLAGS) $<
@@ -290,7 +299,7 @@ clean: libclean
 	rm -fr lcd/**/*.sym lcd/**/*.lst lcd/**/*.rst lcd/**/*.rel
 	rm -f *.raw
 	rm -f current.bin
-	-rm config.inc
+	-rm userconfig.h config.inc
 
 $(PROG_BUILDNO):
 	echo "1" > $(PROG_BUILDNO)
