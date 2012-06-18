@@ -19,6 +19,11 @@ __bit g_scope = 0;
 __bit g_log = 0;  // log, if set
 #endif
 
+#ifdef DEBUG_DEV
+__pdata unsigned char g_debugbuf[DEBUGBUF_SIZE];
+unsigned char g_debugcount = 0;
+#endif
+
 struct inputs __idata g_button = {
 	0, 0 
 };
@@ -158,7 +163,7 @@ void umain(void) __banked
 	g_lcd.brightness = DEFAULT_BRIGHTNESS_VALUE;
 	g_lcd.orientation = DEFAULT_ORIENTATION;
 	// Initialize RTC, Clocks, LCD and ports:
-	init_all(PWR_DOWN);
+	init_all();
 
 	sleep(100);
 
@@ -173,8 +178,7 @@ void umain(void) __banked
 	init_config();
 #endif
 	term_init();
-	disp_home(); print_splash();
-
+	disp_home(); print_splash(); lcd_backlight_on();
 #ifdef FLIX_MODE
 	g_refresh = 1;
 	g_debug = 1;
@@ -251,6 +255,7 @@ void umain(void) __banked
 
 		if ((g_count[TIMER] - count) > g_register[TIMER] && (state != S_RUN)) {
 			// Retrieve ADC value:
+#ifndef NO_BATTERY_CHECK			
 			i = NORMALIZE_ADCVAL(g_adc); 
 			if (i < VBAT_THRESH_WARN) {
 				g_fakeled ^= LED_PWR; // blink
@@ -263,7 +268,8 @@ void umain(void) __banked
 					g_log = 0;
 #endif
 					shutdown(PWR_DEEPSLEEP);
-					clrscreen(RGB565(0, 0, 70));
+					//clrscreen(RGB565(0, 0, 70));
+					disp_home(); print_splash(); lcd_backlight_on();
 					g_refresh = 1;
 				} else if (pstate != S_LOW) {
 					pstate = S_LOW;
@@ -280,7 +286,7 @@ void umain(void) __banked
 				clr_line(g_term.num_cols - 1);
 				puts("Power good");
 			}
-
+#endif
 			count = g_count[TIMER];
 #ifdef BUILD_DEVEL
 			if (g_debug) print_status();

@@ -19,9 +19,13 @@ void sleep(unsigned short ticks) __banked;
 
 /** Initialize LCD screen */
 void lcd_init(void) __banked;
+#define lcd_backlight_on() timer1_config(g_lcd.brightness); _LCD_LED = nON;
+#define lcd_backlight_off() tmr1con = 0; _LCD_LED = nOFF;
+
+
 
 /** Initialize all peripherals */
-void init_all(unsigned char mode) __banked;
+void init_all(void) __banked;
 
 /** Initialize p_config from flash */
 void init_config(void) __banked;

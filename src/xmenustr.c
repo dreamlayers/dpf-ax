@@ -16,12 +16,6 @@
 #define STRING(x) _RESOLVE(x)
 
 static __code const char * __code xmenu_strings[] = {
-/* -- XSTR_NULL -- */
-	"", 0,
-
-/* -- XSTR_FLASH - dynamic! -- */
-	0, 0,
-
 /* -- XSTR_LCD -- */
 #ifdef LCD_CONTROLLER_CUSTOM
 	"Unknown (custom)", 0,
@@ -54,23 +48,44 @@ static __code const char * __code xmenu_strings[] = {
 
 void put_xstring(unsigned char id) __banked
 {
-	if (id < NUM_XSTRINGS)
+	unsigned char i, c;
+	if (id && id <= NUM_XSTRINGS)
 	{
+		id--;
+		id *= 2;
+		puts(xmenu_strings[id]);
+		if (xmenu_strings[id+1])
+		{
+			puts("\n");
+			puts(xmenu_strings[id+1]);
+		}
+	}
+	else
+	{	
+	// Dynamically build strings
 		if (id == XSTR_FLASH)
 		{
 			flash_detect();
 			flash_print_size();
 		}
-		else
+#ifdef DEBUG_DEV		
+		else if (id == XSTR_DEBUG)
 		{
-			id *= 2;
-			puts(xmenu_strings[id]);
-			if (xmenu_strings[id+1])
+			for (i = 0; i < g_debugcount; i++)
 			{
-				puts("\n");
-				puts(xmenu_strings[id+1]);
+				c = g_debugbuf[i];
+				putchar(c & 0x7F);
+				if (c & 0x80)
+				{
+				    i++;
+				    putchar('[');
+				    print_short(*((unsigned short *) &g_debugbuf[i++]));
+				    putchar(']');
+			        }
+				
 			}
 		}
+#endif
 	}
 }
 

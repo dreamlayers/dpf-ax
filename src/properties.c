@@ -20,11 +20,9 @@ RETCODE handle_setprop(__idata BYTE *b) __banked
 			else if (brightness) brightness -= 2;
 			g_lcd.brightness = brightness;
 			if (g_lcd.brightness == 0) {
-				tmr1con = 0;
-				_LCD_LED = nOFF;
+				lcd_backlight_off();
 			} else {
-				timer1_config(g_lcd.brightness);
-				_LCD_LED = nON;
+				lcd_backlight_on();
 			}
 			break;
 		case PROPERTY_ORIENTATION:

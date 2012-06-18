@@ -14,7 +14,7 @@
 
 -include ./Make.config
 
-VERSION = 0.312
+VERSION = 0.313
 ifdef BUILD_DEVEL
   STATUS  = devel
 else
@@ -137,6 +137,14 @@ CFLAGS += -DDEFAULT_SPLASH=$(DEFAULT_SPLASH)
 
 ifdef BUILD_DEVEL
   CFLAGS += -DBUILD_DEVEL
+else
+  ifdef DEBUG_DEV
+    CFLAGS += -DDEBUG_DEV
+  endif
+endif
+
+ifdef NO_BATTERY_CHECK
+  CFLAGS += -DNO_BATTERY_CHECK
 endif
 
 ifeq ($(STATUS),devel)

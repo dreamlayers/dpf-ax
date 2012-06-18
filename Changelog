@@ -3,6 +3,13 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Sat, 16 Jun 2012
+v0.313 by superelchi
+	* Changed startup timing for backlight (keep off until display initialized).
+	* Option in Make.config to disable battery checks.
+	* Wrong value for dx21334a in config.h fixed.
+	* Added debug support (for development only).
+
 Sat, 09 Jun 2012
 v0.312 by superelchi
 	* Menu colors configurable in Make.config

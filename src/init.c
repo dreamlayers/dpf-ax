@@ -37,7 +37,6 @@ void timer1_config(BYTE brightness) __banked
 	tmr1cnth = 0;
 }
 
-
 void timer0_config()
 {
 	tmr0cnt = 0; // Reset counter
@@ -248,6 +247,7 @@ void init(BYTE mode)
 	switch (mode) {
 		case PWR_DOWN:
 			tmr3con = T3FB | T3IE | T3LP | T3ON;
+		// no break!
 		case PWR_DEEPSLEEP:
 			pcon &= ~SELRTC;  // use 24 mhz sysclk
 			_asm nop nop nop _endasm;
@@ -259,8 +259,10 @@ void init(BYTE mode)
 			adc_config(1);
 			lcd_init(); // Initialize LCD
 			adccon |= ADCGO; // kick on conversion
+		// no break!
 		case PWR_SLEEP:
-			timer1_config(g_lcd.brightness);
+			//do not turn backlight here!
+			//lcd_backlight_on();
 	}
 
 	sleep(100);
@@ -286,6 +288,7 @@ void shutdown(BYTE mode) __banked
 	switch (mode) {
 		case PWR_DOWN:
 			tmr3con &= ~T3ON; // Disable RTC timer
+		// no break!
 		case PWR_DEEPSLEEP:
 			ckcon = IROMCEN;   // Turn off ROM clock
 #ifdef DANGEROUS_SLEEP
@@ -296,11 +299,12 @@ void shutdown(BYTE mode) __banked
 #endif
 			config_ports(0);
 			adc_config(0);
+		// no break!
 		case PWR_SLEEP:
 			tmr2con &= ~T2ON; // Disable timer
 			tmr1con = 0;
 			tmr0con &= ~T0ON; // Disable timer
-			_LCD_LED = nOFF; // turn off backlight
+			lcd_backlight_off(); // turn off backlight
 	}
 
 	wdtcon &= ~WDTEN; // Turn off watchdog
@@ -337,9 +341,9 @@ void shutdown(BYTE mode) __banked
 	init(mode); // Initialize all
 }
 
-void init_all(BYTE mode) __banked
+void init_all() __banked
 {
-	init(mode);
+	init(PWR_DOWN);
 }
 
 void turn_off(void) __banked
@@ -349,8 +353,8 @@ void turn_off(void) __banked
 	shutdown(PWR_DEEPSLEEP);
 	sleep(200);
 	g_button.evt = 0; // clear events so we don't right repeat this
-	clrscreen(RGB565(0, 0, 70));
-	disp_home(); print_splash();
+	//clrscreen(RGB565(0, 0, 70));
+	disp_home(); print_splash(); lcd_backlight_on();
 	// g_refresh = 1; // force menu refresh
 }
 

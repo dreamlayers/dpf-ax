@@ -134,6 +134,23 @@ extern
 __pdata unsigned char g_databuf[0x40];
 extern unsigned char g_datacount;
 
+/* DEBUG_DEV support */
+
+#ifdef DEBUG_DEV
+#define DEBUGBUF_SIZE  0x20
+extern __pdata unsigned char g_debugbuf[];
+extern unsigned char g_debugcount;
+
+#define DEBUG_CHAR(c) 	 if (g_debugcount < DEBUGBUF_SIZE - 1) \
+				g_debugbuf[g_debugcount++] = c & 0x7F; 
+#define DEBUG_HEX(c, h)  if (g_debugcount < DEBUGBUF_SIZE - 3)   \
+				*(g_debugbuf+g_debugcount) = c | 0x80;   \
+				*(g_debugbuf+g_debugcount+1) = h & 0xFF; \
+				*(g_debugbuf+g_debugcount+2) = h >> 8;   \
+				g_debugcount += 3;
+#define DEBUG_CLEARBUF()  g_debugcount = 0;
+#endif
+
 // Event and timer counter enums:
 
 enum {
