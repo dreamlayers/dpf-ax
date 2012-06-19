@@ -3,6 +3,10 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Tue, 19 Jun 2012
+       by superelchi
+        * Fixed compiler warning in xmenustring.c
+
 Sat, 16 Jun 2012
 v0.313 by superelchi
 	* Changed startup timing for backlight (keep off until display initialized).

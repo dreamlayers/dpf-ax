@@ -48,7 +48,9 @@ static __code const char * __code xmenu_strings[] = {
 
 void put_xstring(unsigned char id) __banked
 {
+#ifdef DEBUG_DEV		
 	unsigned char i, c;
+#endif
 	if (id && id <= NUM_XSTRINGS)
 	{
 		id--;
