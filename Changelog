@@ -3,6 +3,11 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Mon, 25 Jun 2012
+       by superelchi
+        * New model
+          - avlabs_avl969s (by ax206geek)
+
 Tue, 19 Jun 2012
        by superelchi
         * Fixed compiler warning in xmenustring.c

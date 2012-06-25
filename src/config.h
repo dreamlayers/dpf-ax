@@ -94,6 +94,11 @@
 #	define LCD_ORIENTATION_RGB RGB_UP
 #	define DEFAULT_ORIENTATION ROT_LEFT
 #	define LCD_BACKLIGHT_HIGH
+#elif defined (DPFMODEL_avlabs_avl969s)
+#	define LCD_128x128
+#	define LCD_CONTROLLER_CUSTOM
+#	define LCD_ORIENTATION_RGB RGB_UP
+#	define DEFAULT_ORIENTATION ROT_LEFT
 // <<<< INSERT NEW DPFS BEFORE THIS LINE <<<<
 #else
 #error	"Unrecognized DPF TYPE specification"

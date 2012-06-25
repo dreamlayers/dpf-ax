@@ -49,6 +49,12 @@ KNOWN_DPFS = [
 		 "http://www.amazon.de/Technaxx-Keypix-Digitaler-Fotorahmen-interner/dp/B0013SJV4O"),
 	 	([ 0x4d507697, 0xa483a45c ], [ 0xd5efd5d9 ]),
 	],
+# 2012-06-17 by ax206geek
+	[       () ,
+		("avlabs_avl969s", "yes"),
+		"http://www.avlabs.net",
+	 	([ 0x31fac453 ], [ 0x2c33f515 ]),
+	],
 ##################### 128 x 144 #############################
 	[       () ,
 		("focalprice144", "yes"),
