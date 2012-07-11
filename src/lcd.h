@@ -103,7 +103,7 @@ unsigned char g_rgborder;
 
 // Backlight
 #define MAX_BRIGHTNESS_VALUE     21	// max brightness value
-#define DEFAULT_BRIGHTNESS_VALUE 12	// inital brightness value
+#define DEFAULT_BRIGHTNESS_VALUE 21	// inital brightness value
 
 // This rotation is defined by the typical application. Up means: default.
 // Note: the USB connector location may vary.

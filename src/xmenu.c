@@ -5,7 +5,7 @@
 #include "print.h"
 #include "utils.h"
 #include "xmenu.h"
-#include "xmenustr.h"
+#include "xmenuhook.h"
 
 #pragma codeseg MENU
 #pragma constseg MENU
@@ -191,6 +191,7 @@ MainState load_menu(unsigned char menu)
 		case MENU_INFO: BANK_LOAD(g_infomenu); break;
 		case MENU_SETUP: BANK_LOAD(g_setupmenu); break;
 		case MENU_USBSERIAL: BANK_LOAD(g_usbserialmenu); break;
+		case MENU_TESTSCREEN: BANK_LOAD(g_testscreenmenu); break;
 
 		//case MENU_MAIN:
 		default:

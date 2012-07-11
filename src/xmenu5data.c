@@ -8,7 +8,7 @@
 #include "print.h"
 #include "global.h"
 #include "xmenu.h"
-#include "xmenustr.h"
+#include "xmenuhook.h"
 
 extern char hdl_usbserial(BYTE evt) __reentrant;
 

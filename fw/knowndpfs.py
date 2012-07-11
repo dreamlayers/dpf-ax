@@ -55,6 +55,12 @@ KNOWN_DPFS = [
 		"http://www.avlabs.net",
 	 	([ 0x31fac453 ], [ 0x2c33f515 ]),
 	],
+# 2012-06-20 by sairon
+	[       () ,
+		("abeyerr_black", "wip"),
+		"http://www.ebay.com/itm/280828187564",
+	 	([ 0 ], [ 0xfa7b6f9c ]),
+	],
 ##################### 128 x 144 #############################
 	[       () ,
 		("focalprice144", "yes"),
@@ -108,6 +114,12 @@ KNOWN_DPFS = [
 		("dx104838", "yes"),
 		"http://www.dealextreme.com/p/stylish-a18-2-4-lcd-desktop-digital-photo-picture-frame-album-white-silver-16mb-104838",
 	 	([ 0x8a41585c ], [ 0xe1eb846e ]),
+	],
+	# may crash on USB connect/disconnect
+	[       () ,
+		("dx104500", "yes"),
+		"http://www.dealextreme.com/p/stylish-a33-2-4-lcd-desktop-digital-photo-picture-frame-album-silver-16mb-104500",
+	 	([ 0xdb8e3308 ], [ 0xb48f20a1 ]),
 	],
 
 #************** WIP: WORK IN PROGRESS ***********************

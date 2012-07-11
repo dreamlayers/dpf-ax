@@ -8,7 +8,7 @@
 #include "print.h"
 #include "global.h"
 #include "xmenu.h"
-#include "xmenustr.h"
+#include "xmenuhook.h"
 
 
 const MENUAREA XMenu g_infomenu = {
@@ -19,7 +19,7 @@ const MENUAREA XMenu g_infomenu = {
 
 const MENUAREA MItem items[] = {
 #ifdef DEBUG_DEV
-	{ "Debug"   , F_MENUSWITCH, MENU_MAIN, 0, 0, XSTR_DEBUG},
+	{ "Debug"   , F_MENUSWITCH, MENU_MAIN, 0, 0, XHOOK_DEBUG},
 #endif	
 	{ "Version" , F_MENUSWITCH, MENU_MAIN, 0, 0, XSTR_VERSION},
 	{ "Credits" , F_MENUSWITCH, MENU_MAIN, 0, 0, XSTR_CREDITS},
@@ -27,7 +27,7 @@ const MENUAREA MItem items[] = {
 	{ "Homepage" , F_MENUSWITCH, MENU_MAIN, 0, 0, XSTR_WWW},
 	{ "LCD"     , F_MENUSWITCH, MENU_MAIN, 0, 0, XSTR_LCD },
 #endif
-	{ "Flash"   , F_MENUSWITCH, MENU_MAIN, 0, 0, XSTR_FLASH},
+	{ "Flash"   , F_MENUSWITCH, MENU_MAIN, 0, 0, XHOOK_FLASH},
 	{ "Back"    , F_MENUSWITCH, MENU_MAIN, 0, 0, 0},
 };  
 

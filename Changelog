@@ -3,6 +3,15 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Wed, 11 Jul 2012
+v0.314 by superelchi
+	* New menuentry 'Setup - Screen Testpattern'
+	  for judging lcd alignment/brightness/contrast. 
+	* Changed inital backlight value back to maximum.
+	* New models:
+	  - dx104500 (not finished, may crash on USB connect/disconnect)
+	  - abeyerr_black.
+
 Mon, 25 Jun 2012
        by superelchi
         * New model

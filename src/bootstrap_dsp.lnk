@@ -20,6 +20,7 @@
 -b XMENU3    = 0x531180
 -b XMENU4    = 0x541180
 -b XMENU5    = 0x551180
+-b XMENU6    = 0x561180
 ;-----------------------
 ; Bank switched:
 -b MAIN     = 0x621200
@@ -44,6 +45,7 @@
 ; Note: Bank 13 used (53), see MENU3 segment
 ; Note: Bank 14 used (54), see MENU4 segment
 ; Note: Bank 15 used (55), see MENU5 segment
+; Note: Bank 16 used (56), see MENU6 segment
 ;-----------------------
 ; Ignore XINIT segment, we initialize directly
 -b XINIT    = 0xb00000
