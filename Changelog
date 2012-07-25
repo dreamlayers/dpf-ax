@@ -3,6 +3,13 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Tue, 24 Jul 2012
+       by superelchi
+        * New models
+          - acme_1 (thx RedoX)
+          - copy_dp151_bw (by mrlinux)
+          - dx27893_2 (by RedoX)
+
 Wed, 11 Jul 2012
 v0.314 by superelchi
 	* New menuentry 'Setup - Screen Testpattern'

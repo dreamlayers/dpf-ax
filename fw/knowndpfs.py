@@ -49,6 +49,12 @@ KNOWN_DPFS = [
 		 "http://www.amazon.de/Technaxx-Keypix-Digitaler-Fotorahmen-interner/dp/B0013SJV4O"),
 	 	([ 0x4d507697, 0xa483a45c ], [ 0xd5efd5d9 ]),
 	],
+# 2012-07-24 by RedoX - variation of above
+	[       () ,
+		("dx27893_2", "yes"),
+		"http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893",
+	 	([ 0x922c6b87 ], [ 0x67ec4802 ]),
+	],
 # 2012-06-17 by ax206geek
 	[       () ,
 		("avlabs_avl969s", "yes"),
@@ -57,9 +63,21 @@ KNOWN_DPFS = [
 	],
 # 2012-06-20 by sairon
 	[       () ,
-		("abeyerr_black", "wip"),
-		"http://www.ebay.com/itm/280828187564",
+		("abeyerr_black", "yes"),
+		"",
 	 	([ 0 ], [ 0xfa7b6f9c ]),
+	],
+# 2012-07-24 by mrlinux
+	[       () ,
+		("coby_dp151_bw", "yes"),
+		"http://www.ebay.com/itm/280828187564",
+	 	([ 0 ], [ 0x111dedb7 ]),
+	],
+# 2012-07-24 (thx RedoX)
+	[       () ,
+		("acme_1", "yes"),
+		"Unknown ebay seller",
+	 	([ 0 ], [ 0xa27e3c21 ]),
 	],
 ##################### 128 x 144 #############################
 	[       () ,
