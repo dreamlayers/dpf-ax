@@ -4,8 +4,19 @@
 
 _lcd_custom_init::
 	mov	dptr,#_custom_initseq
-	ljmp	_lcd_init_by_table
-
+	lcall	_lcd_init_by_table
+;
+; initial contrast
+;
+	mov	a,#0x2a
+	clr	LCD_A0
+	lcall	otp_lcd_write
+	mov	a,#0x48
+	clr	LCD_A0
+	lcall	otp_lcd_write
+;
+	ret
+;
 	.area LCDAUX (CODE)
 
 _custom_initseq::
