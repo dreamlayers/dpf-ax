@@ -59,5 +59,20 @@ X163e:	djnz	r7,X163e
 X164f:	clr	LCD_A0
 	ljmp	otp_lcd_write
 ;
-X1654:	clr	LCD_A0
+;
+_lcd_custom_setcontrast::
+	mov	a,#0x81
+    clr	LCD_A0
+	lcall	otp_lcd_write
+	mov	a,dpl
+	dec	a
+	mov	dptr,#contrast_table
+	movc	a,@a+dptr
+    setb    LCD_A0
 	ljmp	otp_lcd_write
+
+	.area LCDAUX (CODE)
+contrast_table:
+	.db	0x83, 0x86, 0x89, 0x8c, 0x8f, 0x92, 0x95
+;
+_custom_contrasttbl_len::  .db  . - contrast_table

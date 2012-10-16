@@ -1,8 +1,11 @@
+#!/usr/bin/python
+#
 import struct
 import struct
 import sys
 import time
 import binascii
+import os
 
 # Nedded for fulldump
 sys.path.append("../Debug")
@@ -10,26 +13,27 @@ import dpf
 import detect
 
 # DPF profiles
-import knowndpfs
+import knowntypes
 
-# Set this to 1 to get additional infos
-dev_mode = 0
+
+
+############################################################################
+
+verbose = 0
 
 JUMPTABLE_OFFSET_BUILDWIN = 0x80
 JUMPTABLE_OFFSET_COBY = 0x180
 
 jumptable_offset = 0
 
-############################################################################
-
 bswap = lambda x: ( (x >> 8) & 0xff ) | ((x << 8) & 0xff00)
 
 def find_dpf_by_version_string(buf):
 	version = (buf[0x50:0x58], buf[0x60: 0x70], buf[jumptable_offset:jumptable_offset+8])
-	for i in knowndpfs.KNOWN_DPFS:
-		if len(i[0]) > 0:
-			v = i[0]
-			if v[0] == str(version[0]) and v[1] == str(version[1]) and v[2] == str(version[2]):
+	for i in knowntypes.KNOWN_TYPES:
+		if 'Version' in i:
+			v = i['Version']
+			if v[0] == version[0] and v[1] == version[1] and v[2] == version[2]:
 				return i
 	return None
 
@@ -90,6 +94,15 @@ scan_locate_initbl = [
 scan_locate_openwin = [
 0x90, 0x0a, 0x80, 0x7b, val, 0x7c, val, 0x7d, 0x00, 0x7e, val, 0x7f, val, 0x12
 ]
+scan_locate_std_Lcd_Contrast = [
+0xeb, 0x78, 0xc4, 0xf6, 0x7f, 0x01, 0x74, val, 0x90, val, val, 0x12
+]
+scan_locate_Lcd_Contrast = [
+0x78, 0xc5, 0xe6, 0xfb, 0x12, val, val, 0x78, 0xc4, 0xe6, 0xfb, 0x12, val, val
+]
+scan_locate_contrast_backlight_default = [
+0x78, 0xc4, 0x76, val, 0x08, 0x76, val, 0x08, 0x76
+]
 
 # Stolen from dump.py, stolen from scantool:
 class Scanner:
@@ -133,7 +146,7 @@ def add_vals(context, args, p):
 		e.append(args[i])
 
 def dump_tables(tbls):
-	outf = open("lcdinitbl_tmp.txt", "w")
+	outf = open("identify.out/lcdinitbl_tmp.txt", "w")
 	for tbl in tbls:
 		outf.write(tbl[0])
 		outf.write("::")
@@ -148,6 +161,39 @@ def dump_tables(tbls):
 	outf.close()
 
 
+def find_setcontrast(buf, module):
+	start, end, flashaddr = get_module(buf, module)
+	l = end - start
+	start += 0x800
+	data = buf[flashaddr : flashaddr + l]
+	# look for custom 
+	contrastoffs = []
+	scanner = Scanner(data, scan_locate_Lcd_Contrast)
+	scanner.scan((contrastoffs, start), add_offs)
+	if len(contrastoffs) == 3:
+	    p = contrastoffs[2] - start
+	    print "Module %d:" % module
+	    lcdcontrast_tmp = data[p:p+0x400]
+	    # check for standard Lcd_Contrast
+	    contrastoffs = []
+	    scanner = Scanner(lcdcontrast_tmp, scan_locate_std_Lcd_Contrast)
+	    scanner.scan((contrastoffs, 0), add_vals)
+	    if len(contrastoffs) == 4:
+	        print "LCD_Contrast (Tbl) at 0x%04x (0x%06x)" % (p + start, p + flashaddr)
+	        return True
+	    # save non-standard Lcd_Contrast
+            print "LCD_Contrast !NOTBL! at 0x%04x (0x%06x)" % (p + start, p + flashaddr)
+	    outf = open("identify.out/setcontrast_tmp.bin", "wb")
+	    outf.write(lcdcontrast_tmp)
+	    outf.close()
+	    outf = open("identify.out/setcontrast_tmp.sh", "w")
+	    outf.write("#!/bin/sh\n#\ncp ../identify_d52.in setcontrast_tmp.ctl\nd52 -p -b -n -d setcontrast_tmp.bin x%04x\n" % (p + start))
+	    outf.close()
+	    print "Written to identify.out/setcontrast_tmp.bin."
+	    return True
+
+	return False
+
 lcdinit_found = False
 
 def find_initbl(buf, module):
@@ -158,36 +204,50 @@ def find_initbl(buf, module):
 	start += 0x800
 	data = buf[flashaddr : flashaddr + l]
 
-	if dev_mode > 1:
-		initbloffs = []
-		scanner = Scanner(data, scan_locate_stdlcdinit)
-		scanner.scan((initbloffs, start), add_offs)
-		if len(initbloffs) > 0:
+	crc_init = 0
+
+	initbloffs = []
+	scanner = Scanner(data, scan_locate_stdlcdinit)
+	scanner.scan((initbloffs, start), add_offs)
+	if len(initbloffs) > 0:
+		if verbose:
 			p = initbloffs[0]
 			print
 			print "Module %d:" % module
 			print "LcdInit (Tbl)   at 0x%04x (0x%06x)" % (p + start, p + flashaddr)
+		lcdinit_found = True
+	else:
+		initbloffs = []
+		scanner = Scanner(data, scan_locate_lcdinit)
+		scanner.scan((initbloffs, start), add_offs)
+		if len(initbloffs) > 0:
+			p = initbloffs[0]
 			lcdinit_found = True
-		else:
-			initbloffs = []
-			scanner = Scanner(data, scan_locate_lcdinit)
-			scanner.scan((initbloffs, start), add_offs)
-			if len(initbloffs) > 0:
-				p = initbloffs[0]
+			crc_init = binascii.crc32(data[p:p+100]) & 0xffffffff
+			if verbose:
 				print
 				print "Module %d:" % module
-				print "LcdInit !NOTBL! at 0x%04x (0x%06x)" % (p + start, p + flashaddr)
-				lcdinit_found = True
+				print "LcdInit !NOTBL! at 0x%04x (0x%06x), CRC = 0x%x" % (p + start, p + flashaddr, crc_init)
+				if verbose > 1:
+					lcdinit_tmp = data[p:p+0x800]
+					outf = open("identify.out/lcdinit_tmp.bin", "wb")
+					outf.write(lcdinit_tmp)
+					outf.close()
+					outf = open("identify.out/lcdinit_tmp.sh", "w")
+					outf.write("#!/bin/sh\n#\ncp ../identify_d52.in lcdinit_tmp.ctl\nd52 -p -b -n lcdinit_tmp.bin x%04x\n" % (p + start))
+					outf.close()
+					print "Written to identify.out/lcdinit_tmp.bin."
 		
+	crc_tbl = 0
+
 	initbloffs = []
-	c = 0
 	scanner = Scanner(data, scan_locate_initbl)
 	scanner.scan((initbloffs, start), add_offs)
 	if len(initbloffs) == 2:
 	    try:
 		p = initbloffs[1] - start
 		i = struct.unpack("B", data[p])[0]
-		if dev_mode:
+		if verbose:
 			if not lcdinit_found:
 				print
 			print "Module %d:" % module
@@ -195,24 +255,32 @@ def find_initbl(buf, module):
 			#tbls.append(["_custom_scheduletbl", data[p+1:p+i+1]])
 		p += i + 1
 		i = struct.unpack("B", data[p])[0]
-		if dev_mode:
+		lcdcontrasttbl_paracount = struct.unpack("B", data[p+1])[0]
+		if verbose:
 			print "LcdContrastTbl  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
-			tbls.append(["_custom_lcdcontrasttbl", data[p+1:p+i+1]])
+			l = struct.unpack("B", data[p+2])[0]
+			tbls.append(["_custom_contrasttbl", data[p+3:p+l+3]])
 		p += i + 1
 		i = struct.unpack("B", data[p])[0]
-		if dev_mode:
+		if verbose:
 			print "LcdContrastTb2  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
-			tbls.append(["_custom_contrasttbl2", data[p+1:p+i+1]])
+			ctbl2_offs = []
+			for j in range(lcdcontrasttbl_paracount):
+				ctbl2_offs.append(struct.pack("B", struct.unpack("<H", data[p+j+1 : p+j+3])[0] - p - start - 2))
+			ctbl2 = data[p+len(ctbl2_offs)*2+2:p+i+1];
+			ctbl2 += '\xFF';
+			tbls.append(["_custom_contrasttbl2", ctbl2])
+			tbls.append(["_custom_contrasttbl2_offsets", ctbl2_offs])
 		p += i + 1
 		i = struct.unpack("B", data[p])[0]
-		if dev_mode:
+		if verbose:
 			  print "LcdBacklightTbl at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
 			  tbls.append(["_custom_backlighttbl", data[p+1:p+i+1]])
 		p += i + 1
 		j = i
 		i = struct.unpack("B", data[p])[0]
 		if (i == j):   		# seems to have two LcdBackLightTbls...
-			if dev_mode:
+			if verbose:
 				print "LcdBacklightTb2 at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i)
 				tbls.append(["_custom_backlighttbl2", data[p+1:p+i+1]])
 			p += i + 1
@@ -223,20 +291,20 @@ def find_initbl(buf, module):
 		p += 2
 		if (p + l) < len(data):
 		    lcdinitbl = data[p:p+l]
-		    if dev_mode:
+		    if verbose:
 			print "LcdIniTbl       at 0x%04x (0x%06x), len 0x%02x," % (p + start, p + flashaddr, l),
 			tbls.append(["_custom_initseq", data[p:p+l] + "\xFF"])
-		    c = binascii.crc32(lcdinitbl) & 0xffffffff
-		    if dev_mode:
-				print "CRC = 0x%x" % c
-			        if dev_mode > 1:
+		    crc_tbl = binascii.crc32(lcdinitbl) & 0xffffffff
+		    if verbose:
+				print "CRC = 0x%x" % crc_tbl
+			        if verbose > 1:
 				    dump_tables(tbls)
-				    print "Written to lcdinitbl_tmp.txt."
+				    print "Written to identify.out/lcdinitbl_tmp.txt."
 	    except:
-		if dev_mode:
+		if verbose:
 			print "Invalid LcdIniTbl!"
 
-	return c
+	return crc_tbl, crc_init
 
 def find_openwin(buf):
 	openwinoffs = []
@@ -249,24 +317,28 @@ def find_openwin(buf):
 		openwin_found = True
 		p = openwinoffs[2]
 		l = openwinoffs[1] - 0xa80
-		if dev_mode:
+		if verbose:
 			print
 			print "OpenWin        at 0x1280 (0x%06x), len 0x%02x," %  (p, l),
 		openwin = buf[p:p+l]
-		if dev_mode > 1:
-			outf = open("openwin_tmp.bin", "wb")
+		if verbose > 1:
+			outf = open("identify.out/openwin_tmp.bin", "wb")
 			outf.write(openwin)
 			outf.close()
+			outf = open("identify.out/openwin_tmp.sh", "w")
+			outf.write("#!/bin/sh\n#\nif [ ! -e openwin_tmp.ctl ] ; then\n  cp ../identify_d52.in openwin_tmp.ctl\nfi\nd52 -p -b -n openwin_tmp.bin x1280\n")
+			outf.write("echo 'If openwin_tmp.d52 contains the string $$$_0x77_$$$, edit openwin_tmp.ctl and try again!'\necho")
+			outf.close()
 		c = binascii.crc32(openwin) & 0xffffffff
-		if dev_mode:
+		if verbose:
 			print "CRC = 0x%x" % c
-			if dev_mode > 1:
-				print "Written to openwin_tmp.bin."
+			if verbose > 1:
+				print "Written to identify.out/openwin_tmp.bin."
 	else:
 		c = 0
 		if len(openwinoffs) > 3:
 			print "More than one match!"
-			if dev_mode:
+			if verbose:
 				for i in range(len(openwinoffs) / 3):
 					print "Match %d at flashoffset 0x%06x, adr 0x%06x len 0x%04x" % (i, openwinoffs[i*3], openwinoffs[i*3 + 2], (openwinoffs[i*3 + 1]) - 0xa80)
 		else:
@@ -307,7 +379,95 @@ def recognize_dpf(dump):
 			print "This in no known firmware!"
 		return None, partial_match
 
-	# Look for display known by their fw and build-date (old way)
+	# Try to find OpenWin and LcdIniTbl
+	print "Looking for Openwin..............:",
+	crc_openwin = find_openwin(dump)
+	if crc_openwin == 0:
+		print "WARNING: This is no \"standard\" buildwin software!"
+	elif not verbose:
+		print "Found."
+
+	print "Looking for LcdIniTbl............:",
+	initbl_count = 0
+	crc_initbl = 0
+	crc_init = 0
+	for i in range(1, num_modules):
+		ct, ci = find_initbl(dump, i)
+		if ct != 0:
+			crc_initbl = ct
+			initbl_count += 1
+		if ci != 0:
+			crc_init = ci
+
+	if crc_initbl == 0:
+		crc_initbl = crc_init
+	if initbl_count == 0:
+		print "None."
+	elif initbl_count > 1:
+		print "%d matches." % initbl_count
+	elif not verbose:
+		print "Found."
+	if not crc_initbl:
+		print "WARNING: This is no \"standard\" buildwin software!"
+
+        # some additional infos (for development only)
+        default_contrast = 0
+        default_backlight = 0
+	if verbose > 1:
+	    print "Looking for lcd_contrast.........:"
+	    setcontrast_count = 0
+	    for i in range(1, num_modules):
+		c = find_setcontrast(dump, i)
+	        if c == True:
+		    setcontrast_count += 1
+	    if setcontrast_count == 0:
+		print "WARNING: This fw has no detectable Lcd_Contrast routine!"
+	    elif setcontrast_count > 1:
+		print "WARNING: %d Lcd_Contrast matches, using last one!" % setcontrast_count
+
+	    defaultcb = []    
+	    scanner = Scanner(dump[0:0x10000], scan_locate_contrast_backlight_default)
+	    scanner.scan((defaultcb, 0), add_vals)
+	    if len(defaultcb) == 3:
+	        default_contrast = defaultcb[1]
+		default_backlight = defaultcb[2]
+
+	if verbose > 1:
+		print
+		print "CRCs (OpenWin, Init)  = 0x%x, 0x%x" % (crc_openwin, crc_initbl)
+		if default_contrast > 0:
+	            print "Default contrast  = %d" % default_contrast
+		    print "Default backlight = %d" % default_backlight
+	        else:
+		    print "Default contrast/backlight init not found!"
+		print
+
+	# Now look for display known by their signatur of LcdIniTbl and OpenWin (new way)
+	print "Looking for known signatures.....:",
+	if verbose:
+		print
+	for i in knowntypes.KNOWN_TYPES:
+		if 'CRC' in i:
+			record = i['CRC']
+			for r in record:
+				if crc_openwin == r[0] and crc_initbl == r[1]:
+					if not verbose:
+						print "Found."
+					return i, None
+			if i['Status'] == 'supported':
+				for r in record:
+					if crc_openwin == r[0]:
+						partial_match.append(i['Type'])
+						if verbose:
+							print "OpenWin:   match at model %s" % i['Type']
+					if crc_initbl == r[1]:
+						partial_match.append(i['Type'])
+						if verbose:
+							print "LcdIniTbl: match at model %s" % i['Type']
+
+	print "None."
+
+	# Fallback; look for display known by their fw and build-date (old way)
 	print "Looking for known version info...:",
 	dpf = find_dpf_by_version_string(dump)
 	if dpf:
@@ -315,82 +475,56 @@ def recognize_dpf(dump):
 		return dpf, partial_match
 	print "None."
 
-	# Try to find OpenWin and LcdIniTbl
-	print "Looking for Openwin..............:",
-	crc_openwin = find_openwin(dump)
-	if crc_openwin == 0:
-		print "WARNING: This is no \"standard\" buildwin software!"
-	elif not dev_mode:
-		print "Found."
-
-	print "Looking for LcdIniTbl............:",
-	initbl_count = 0
-	crc_initbl = 0
-	for i in range(1, num_modules):
-		c = find_initbl(dump, i)
-		if c != 0:
-			crc_initbl = c
-			initbl_count += 1
-	if initbl_count == 0:
-		print "None."
-	elif initbl_count > 1:
-		print "%d matches." % initbl_count
-	elif not dev_mode:
-		print "Found."
-	if not crc_initbl:
-		print "WARNING: This is no \"standard\" buildwin software!"
-			
-
-	# Now look for display known by their signatur of LcdIniTbl and OpenWin (new way)
-	print "Looking for known signatures.....:",
-	if dev_mode:
-		print
-	for i in knowndpfs.KNOWN_DPFS:
-		record = i[3]
-		if len(record) > 0:
-			has_initbl = match_crc(crc_initbl, record[0])
-			has_openwin = match_crc(crc_openwin, record[1])
-			if has_initbl and has_openwin:
-				if not dev_mode:
-					print "Found."
-				return i, None
-			if has_initbl and record[0][0] != 0 and i[1][1] == "yes":
-				partial_match.append(i[1][0])
-				if dev_mode:
-					print "LcdIniTbl: match at model %s" % i[1][0]
-			if has_openwin and i[1][1] == "yes":
-				partial_match.append(i[1][0])
-				if dev_mode:
-					print "OpenWin:   match at model %s" % i[1][0]
-	print "None."
 	return None, partial_match
 	
 #
 #
 # MAIN
 
-if len(sys.argv) != 2:
-	print "Usage: python %s dumpfile|dpf-devicenode" % sys.argv[0]
+argerr = False
+
+if len(sys.argv) == 2:
+	arg = sys.argv[1]
+elif len(sys.argv) == 3:
+	if sys.argv[1] == "-v":
+		verbose = 1
+	elif sys.argv[1] == "-d":
+		verbose = 2
+	else:
+		argerr = True
+	if argerr == False:
+		arg = sys.argv[2]
+else:
+	argerr = True
+	
+if argerr == True:
+	print "Usage: %s [option] dumpfile|dpf-devicenode\n  -v   show more infos\n  -d  build developer support files in identify.out" % sys.argv[0]
 	sys.exit(-1)
 
-dumpfile = sys.argv[1]
-if dumpfile.startswith("/dev/"):
+# Make dir for writing temp code
+if not os.path.exists("identify.out"):
+	os.makedirs("identify.out")
+else:
+	os.system("rm -f identify.out/*")
+
+dumpfile = arg
+if arg.startswith("/dev/"):
 #
 # copy of fulldump.py
 #
 	print "Detecting & reading dpf flash..."
-	d = dpf.open(sys.argv[1])
+	d = dpf.open(arg)
 	size = detect.detect_flash(d)
 	# Offset, size
 	print "Reading %x bytes..." % size
 	buf = d.readFlash(0x00, size)
-	f = open("full.bin", "wb")
+	f = open("identify.out/full.bin", "wb")
 	f.write(buf)
 	f.close()
 	d.close()
-	print "Flash written to file 'full.bin'."
+	print "Flash written to file 'identify.out/full.bin'."
 	print
-	dumpfile = "full.bin"
+	dumpfile = "identify.out/full.bin"
 	
 f = open(dumpfile, "rb")
 data = f.read()
@@ -400,13 +534,13 @@ dpf, pm = recognize_dpf(data)
 print
     
 if dpf:
-	if dpf[1][1] == "yes":
-		print "Your dpf is compatible with model %s." % dpf[1][0]
-	elif dpf[1][1] == "no":
-		print "Your dpf is compatible with unsupported model %s." % dpf[1][0]
+	if dpf['Status'] == "supported":
+		print "Your dpf is compatible with model %s." % dpf['Type']
+	elif dpf['Status'] == "unsupported":
+		print "Your dpf is compatible with unsupported model %s." % dpf['Type']
 		print "Sorry, this dpf in NOT supported by dpf-ax."
-	elif dpf[1][1] == "wip":
-		print "Your dpf is compatible with currently unsupported model %s." % dpf[1][0]
+	elif dpf['Status'] == "wip":
+		print "Your dpf is compatible with currently unsupported model %s." % dpf['Type']
 		print "Sorry, this dpf in NOT supported by dpf-ax at the moment."
 		print "Work in progress. Check back later."
 else:

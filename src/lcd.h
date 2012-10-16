@@ -55,7 +55,7 @@ unsigned char g_rgborder;
 
 #ifdef LCD_CONTROLLER_ILI9163B
 #include "ili9163.h"
-#	ifdef DPFMODEL_pink
+#	if DPFMODEL == pink
 #	define _INTERNAL_TAG sitronix
 #	else
 // Use same sitronix blitting routine:
@@ -103,7 +103,21 @@ unsigned char g_rgborder;
 
 // Backlight
 #define MAX_BRIGHTNESS_VALUE     21	// max brightness value
-#define DEFAULT_BRIGHTNESS_VALUE 21	// inital brightness value
+#ifdef LCD_DEFAULT_BRIGHTNESS_VALUE	// inital brightness value
+#	define DEFAULT_BRIGHTNESS_VALUE LCD_DEFAULT_BRIGHTNESS_VALUE
+#else
+#	define DEFAULT_BRIGHTNESS_VALUE MAX_BRIGHTNESS_VALUE
+#endif
+void set_brightness(unsigned char brightness) __banked;
+
+// Contrast
+#ifdef LCD_DEFAULT_CONTRAST_VALUE
+#	define DEFAULT_CONTRAST_VALUE LCD_DEFAULT_CONTRAST_VALUE
+#else
+#	define DEFAULT_CONTRAST_VALUE 1		// not used if no default value defined
+#endif
+void set_contrast(unsigned char contrast) __banked;
+void lcd_set_contrast_by_table(unsigned char contrast);
 
 // This rotation is defined by the typical application. Up means: default.
 // Note: the USB connector location may vary.
@@ -124,6 +138,10 @@ unsigned char g_rgborder;
 #define RGB_DOWN  2
 #define RGB_RIGHT 3
 
+#ifndef LCD_ORIENTATION_RGB
+#	define	LCD_ORIENTATION_RGB RGB_UP
+#endif
+
 #define ROTCODE_UP     0xd0 | PIXELORDER(LCD_ORIENTATION_RGB)
 #define ROTCODE_LEFT   0x60 | PIXELORDER(LCD_ORIENTATION_RGB + 1)
 #define ROTCODE_DOWN   0x10 | PIXELORDER(LCD_ORIENTATION_RGB + 2)
@@ -132,7 +150,12 @@ unsigned char g_rgborder;
 #define ST_ROTCODE(x)     (x & 0xf0)
 #define RGBORDER(x)       (x & 0x06)
 
+
 // Assign dimensions according to default rotation:
+
+#ifndef DEFAULT_ORIENTATION
+#	define DEFAULT_ORIENTATION ROT_LEFT
+#endif
 
 #if (DEFAULT_ORIENTATION == ROT_RIGHT) || (DEFAULT_ORIENTATION == ROT_LEFT)
 #	define RESOL_X LCD_HEIGHT
@@ -174,6 +197,7 @@ void lcd_ili_setorientation(unsigned char which);
 void lcd_init_by_table(__code unsigned char *table);
 void lcd_custom_setorientation(unsigned char which);
 void lcd_custom_init(void);
+void lcd_custom_setcontrast(unsigned char contrast);
 
 #ifdef END_INCLUSIVE
 #define END_OFFSET_X (LCD_OFFSET_X - 1)

@@ -174,7 +174,7 @@ void config_ports(BYTE enable)
 		p1 = MIC;
 
 		p2dir = ~(P27 | BUZZER | LCD_LED | LCD_CS | FLA_CS ); // Outputs
-#ifdef DPFMODEL_pink
+#if DPFMODEL == pink
 		p2up  = ~(      BUZZER | LCD_LED | LCD_CS | FLA_CS ); // PU disable
 		p2   &= ~(      BUZZER           | LCD_CS | FLA_CS ); // ????
 		// Pulling FLA_CS active does not make sense
@@ -372,10 +372,12 @@ void init_config() __banked
 	{
 		g_config.splash = DEFAULT_SPLASH;
 		g_config.brightness = DEFAULT_BRIGHTNESS_VALUE;
+		g_config.contrast = DEFAULT_CONTRAST_VALUE;
 		g_config.usbserial = 1;
 	}
 	g_lcd.brightness = g_config.brightness;
 	set_brightness(g_lcd.brightness);
+	set_contrast(g_config.contrast);
 	*p = (g_config.usbserial / 10) + '0';
 	*(p+2) = (g_config.usbserial % 10) + '0';
 }

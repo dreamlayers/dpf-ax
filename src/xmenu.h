@@ -24,6 +24,7 @@ typedef struct xmenu {
 #define MENU_SETUP	4
 #define MENU_USBSERIAL	5
 #define MENU_TESTSCREEN	6
+#define MENU_CONTRAST	7
     
 /* Menu action codes */
 
@@ -51,6 +52,7 @@ extern const MENUAREA XMenu g_infomenu;
 extern const MENUAREA XMenu g_setupmenu;
 extern const MENUAREA XMenu g_usbserialmenu;
 extern const MENUAREA XMenu g_testscreenmenu;
+extern const MENUAREA XMenu g_contrastmenu;
 extern MENUAREA const char infostr_version[];
 
 #define MENU_PTR g_mainmenu

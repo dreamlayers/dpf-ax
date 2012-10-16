@@ -13,7 +13,6 @@
 
 char hdl_brightness(BYTE evt) __reentrant
 {
-	evt;
 	if (g_lcd.brightness < 1) g_lcd.brightness = 1;
 	if (g_lcd.brightness > MAX_BRIGHTNESS_VALUE) g_lcd.brightness = MAX_BRIGHTNESS_VALUE;
 	set_brightness(g_lcd.brightness);

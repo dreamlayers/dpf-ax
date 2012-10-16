@@ -174,7 +174,7 @@ void umain(void) __banked
 #else
 	// Load XSEG overlay data:
 	BANK_LOAD(g_rebootmsg);
-	// Read g_config from flash
+	// Read g_config from flash and init brightness, contrast, ...
 	init_config();
 #endif
 	term_init();

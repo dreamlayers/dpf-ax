@@ -6,6 +6,12 @@ _lcd_custom_init::
 	mov	dptr,#_custom_initseq
 	ljmp	_lcd_init_by_table
 
+;
+; No detectable Lcd_Contrast routine - do not use contrast setting!
+;
+;_lcd_custom_setcontrast::
+;	ret
+
 	.area LCDAUX (CODE)
 
 _custom_initseq::
@@ -24,3 +30,4 @@ _custom_initseq::
   .db	#0x94, #0x00, #0x02, #0x00, #0x81, #0x71, #0x2b, #0x94, #0x00, #0x03, #0x00, #0x82
   .db	#0x71, #0x29, #0xb0, #0x64, #0x71, #0x2c
   .db #0xFF
+

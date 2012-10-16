@@ -75,3 +75,47 @@ void set_brightness(BYTE brightness) __banked
 	_set_brightness(brightness);
 }
 
+
+#if defined(LCD_CONTROLLER_CUSTOM) && defined(LCD_DEFAULT_CONTRAST_VALUE)
+extern __code unsigned char custom_contrasttbl_len;
+#endif
+
+void set_contrast(unsigned char contrast) __banked
+{
+	if (contrast == 0) contrast++;
+#if defined(LCD_CONTROLLER_CUSTOM) && defined(LCD_DEFAULT_CONTRAST_VALUE)
+	if (contrast > custom_contrasttbl_len)
+		contrast = custom_contrasttbl_len;
+	lcd_custom_setcontrast(contrast);
+#endif
+	g_config.contrast = contrast;
+}
+
+#if defined(LCD_HAS_CONTRASTTABLE)
+extern __code unsigned char custom_contrasttbl2_len;
+extern __code unsigned char custom_contrasttbl2_offsets_len;
+extern __code unsigned char custom_contrasttbl[];
+extern __code unsigned char custom_contrasttbl2[];
+extern __code unsigned char custom_contrasttbl2_offsets[];
+
+void lcd_set_contrast_by_table(unsigned char contrast)
+{
+	unsigned char i;
+	unsigned char v;
+	__xdata unsigned char *p;
+	if (contrast > 0 && contrast <= custom_contrasttbl_len)
+		contrast--;
+	else
+		contrast = 0;
+	contrast *= custom_contrasttbl2_offsets_len;
+
+	for (i = 0; i < custom_contrasttbl2_offsets_len; i++)
+	{
+		v = custom_contrasttbl[contrast++];
+
+		p = (unsigned char __xdata *) &(custom_contrasttbl2 + custom_contrasttbl2_offsets[i] - 0x800);
+		*p = v;
+	}
+	lcd_init_by_table(custom_contrasttbl2);
+}
+#endif

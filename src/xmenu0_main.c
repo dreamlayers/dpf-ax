@@ -1,5 +1,5 @@
 /**
- * Menu 0 (main menu) definition
+ * Menu 0 - main menu definition
  */
 
 #pragma constseg XMENU0

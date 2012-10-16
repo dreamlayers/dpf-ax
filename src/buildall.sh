@@ -1,9 +1,8 @@
 #!/bin/sh
 
-MODELS="blue white pink pearl pearl_landscape focal focal_landscape"
-CUSTOM_MODELS=$(ls -1 lcd)
+MODELS=$(ls -1 lcd)
 
-for i in $MODELS $CUSTOM_MODELS; do
+for i in $MODELS; do
 	echo --------------------------------------
 	echo Building $i
 	make TYPE=$i clean all > /dev/null

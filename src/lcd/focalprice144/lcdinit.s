@@ -287,3 +287,21 @@ X1893:	djnz	r7,X1893
 ;
 X18a4:	clr	LCD_A0	
 	ljmp	otp_lcd_write
+;
+_lcd_custom_setcontrast::
+	mov	a,#0x81
+	clr	LCD_A0
+	lcall	otp_lcd_write
+	mov	a,dpl
+	dec	a
+	mov	dptr,#contrast_table
+	movc	a,@a+dptr
+	clr	LCD_A0
+	ljmp	otp_lcd_write
+	
+	.area LCDAUX (CODE)
+
+contrast_table:
+	.db	0x29, 0x2b, 0x2d, 0x2f, 0x31, 0x33, 0x35, 0x37, 0x39, 0x3b, 0x3d 
+;
+_custom_contrasttbl_len::  .db  . - contrast_table

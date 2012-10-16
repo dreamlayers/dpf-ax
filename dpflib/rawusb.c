@@ -174,7 +174,9 @@ int dpf_usb_open(int index, usb_dev_handle **u)
 	}
 	if (usb_claim_interface(usb_dev, 0) < 0) {
 		handle_error("Failed to claim usb device!");
-		printf("Possibly you have to 'sudo libhid-detach-device 1908:3318'\n");
+		printf("Possibly you have to detach the device from hid.\n");
+		printf("Use hiddetach from the fw folder: 'sudo fw/hiddetach'\n");
+		printf("                       or libhid: 'sudo libhid-detach-device 1908:3318'\n");
 		return -1;
 	}
 	*u = usb_dev;

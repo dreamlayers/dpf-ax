@@ -32,7 +32,6 @@ void init_config(void) __banked;
 
 /** Initialize backlight */
 void timer1_config(unsigned char brightness) __banked;
-void set_brightness(unsigned char brightness) __banked;
 
 enum {
 	PWR_IDLE,        ///< Go idle for one second

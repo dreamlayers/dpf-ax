@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#
 import struct
 import sys
 sys.path.append("../Debug")

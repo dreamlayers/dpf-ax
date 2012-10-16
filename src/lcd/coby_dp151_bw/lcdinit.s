@@ -166,11 +166,28 @@ _lcd_custom_init::
 	ret
 
 X16ec:	mov	r5,a
-;X1702:	mov	r5,a
-;X170c:	mov	r5,a
 ;
 X1702:	clr	LCD_A0
 	ljmp	otp_lcd_write
 ;
 X170c:	setb	LCD_A0
 	ljmp	otp_lcd_write
+;
+_lcd_custom_setcontrast::
+	mov	a,#0x25
+    clr	LCD_A0
+	lcall	otp_lcd_write
+	mov	a,dpl
+	dec	a
+	mov	dptr,#contrast_table
+	movc	a,@a+dptr
+    setb	LCD_A0	
+    ljmp	otp_lcd_write
+
+	.area LCDAUX (CODE)
+
+contrast_table:
+	.db	0x25, 0x27, 0x29, 0x2b, 0x2d, 0x30, 0x35, 0x3a, 0x40
+	.db	0x45, 0x4a, 0x50, 0x55, 0x5a, 0x60, 0x65
+;
+_custom_contrasttbl_len::  .db  . - contrast_table

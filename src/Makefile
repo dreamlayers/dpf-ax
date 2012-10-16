@@ -14,7 +14,7 @@
 
 -include ./Make.config
 
-VERSION = 0.314
+VERSION = 0.320
 ifdef BUILD_DEVEL
   STATUS  = devel
 else
@@ -31,11 +31,12 @@ endif
 #
 # Set controller type
 #
-LCD_CONTROLLER=$(shell grep -EA4 DPFMODEL_$(TYPE)\\W config.h | grep -Eo LCD_CONTROLLER_\\w+)
-RES=$(shell grep -EA4 DPFMODEL_$(TYPE)\\W config.h | grep -Eo LCD_[0-9]+x[0-9]+)
-RESX=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\1/")
-RESY=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\2/")
+LCD_CONTROLLER:=$(shell cat lcd/$(TYPE)/dpfmodel.h | grep -Eo LCD_CONTROLLER_\\w+)
+RES:=$(shell cat lcd/$(TYPE)/dpfmodel.h | grep -Eo LCD_[0-9]+x[0-9]+)
+RESX:=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\1/")
+RESY:=$(shell echo $(RES) | sed -r "s/LCD_([0-9]+)x([0-9]+)/\2/")
 
+#
 #
 # Set spash image
 #
@@ -92,19 +93,30 @@ ASFLAGS  = -olsxffg
 CFLAGS   = -mmcs51 --model-$(MEMMODEL) # --Werror
 CFLAGS  += --opt-code-size
 # CFLAGS += --no-xinit-opt # Do not initialize XSEG
-CFLAGS  += -I../include
+CFLAGS  += -I../include -I./lcd/$(TYPE)
 
 CFLAGS  += $(COMPILE_OPTIONS)
+
+#
+# See if lcd uses contrasttables
+#
+ifeq ($(LCD_CONTROLLER), LCD_CONTROLLER_CUSTOM)
+  HAS_CTBL:=$(shell grep _lcd_set_contrast_by_table lcd/$(TYPE)/lcdinit.s)
+  ifdef HAS_CTBL
+    CFLAGS += -DLCD_HAS_CONTRASTTABLE
+  endif
+endif
 
 ifeq ($(LCD_CONTROLLER), LCD_CONTROLLER_CUSTOM)
     LCD_OBJS = lcd/$(TYPE)/lcdblit.rel lcd/$(TYPE)/lcdinit.rel lcd/$(TYPE)/lcdsetor.rel
 endif
+
 DEVEL_OBJS = ovldata.rel lcd_devel.rel menu.rel printex.rel blit.rel debug.rel
 DISP_OBJS = ovlstr.rel
 DISP_OBJS += xmenu.rel xmenuhook.rel
-DISP_OBJS += xmenu0data.rel xmenu1data.rel xmenu2data.rel xmenu2handler.rel
-DISP_OBJS += xmenu3data.rel xmenu4data.rel xmenu5data.rel xmenu5handler.rel
-DISP_OBJS += xmenu6data.rel
+DISP_OBJS += xmenu0_main.rel xmenu1_splash.rel xmenu2_backlight.rel xmenu2handler.rel
+DISP_OBJS += xmenu3_info.rel xmenu4_setup.rel xmenu5_usbser.rel xmenu5handler.rel
+DISP_OBJS += xmenu6_testscr.rel xmenu7_contrast.rel xmenu7handler.rel
 DISP_OBJS += splash.rel usbdesc.rel initconf.rel blitchar.rel blitimg.rel
 
 
@@ -133,7 +145,8 @@ endif
 
 LIBS = dpf.lib lcd.lib
 
-CFLAGS += -DDPFMODEL_$(TYPE)
+//CFLAGS += -DDPFMODEL_$(TYPE)
+CFLAGS += -DDPFMODEL=$(TYPE)
 CFLAGS += -DDEFAULT_SPLASH=$(DEFAULT_SPLASH)
 
 ifdef BUILD_DEVEL

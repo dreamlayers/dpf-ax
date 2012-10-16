@@ -205,3 +205,8 @@ X1726:	clr	LCD_A0
 ;
 X1730:	setb	LCD_A0
 	ljmp	otp_lcd_write
+;
+; No detectable Lcd_Contrast routine - do not use contrast setting!
+;
+;_lcd_custom_setcontrast::
+;	ret

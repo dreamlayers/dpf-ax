@@ -97,7 +97,6 @@ void lcd_init_by_table(__code unsigned char *p)
 {
 	BYTE n;
 	BYTE c;
-
 	while ((c = *p++) != CMD_END) {
 		switch (c & MASK_CMD) {
 		case CMD_CS:
@@ -123,9 +122,15 @@ void lcd_init_by_table(__code unsigned char *p)
 				write(*p++);
 			} while (--n);
 			break;
+		default:
+			// ignore unknown cmds
+			n = c & ~MASK_CMD;
+			while (n--)
+				p++;
 		}
 	}
 }
+
 
 #ifdef EXPERIMENTAL
 

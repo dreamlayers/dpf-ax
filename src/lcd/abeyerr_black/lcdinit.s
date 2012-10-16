@@ -172,13 +172,6 @@ X14c5:	mov	a,#0x1d
 X14cf:	mov	a,#0x29
 	lcall	X17a2
 ;
-; initial contrast
-;
-	mov	a,#0x25
-	lcall	X17a2
-	mov	a,#0x58
-	lcall	X17ac
-;
 	ret	
 ;
 X178c:	mov	r5,a
@@ -194,3 +187,21 @@ X17a2:	clr	LCD_A0
 ;
 X17ac:	setb	LCD_A0
 	ljmp	otp_lcd_write
+;
+_lcd_custom_setcontrast::
+	mov	a,#0x25
+	clr	LCD_A0
+	lcall	otp_lcd_write
+	mov	a,dpl
+	dec	a
+	mov	dptr,#contrast_table
+	movc	a,@a+dptr
+	setb	LCD_A0
+	ljmp	otp_lcd_write
+	
+	.area LCDAUX (CODE)
+
+contrast_table:
+	.db	0x36, 0x3e, 0x42, 0x46, 0x50, 0x52, 0x58, 0x5c, 0x60, 0x64, 0x68
+;
+_custom_contrasttbl_len::  .db  . - contrast_table

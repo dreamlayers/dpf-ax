@@ -192,6 +192,7 @@ MainState load_menu(unsigned char menu)
 		case MENU_SETUP: BANK_LOAD(g_setupmenu); break;
 		case MENU_USBSERIAL: BANK_LOAD(g_usbserialmenu); break;
 		case MENU_TESTSCREEN: BANK_LOAD(g_testscreenmenu); break;
+		case MENU_CONTRAST: BANK_LOAD(g_contrastmenu); break;
 
 		//case MENU_MAIN:
 		default:

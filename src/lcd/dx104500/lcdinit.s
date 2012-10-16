@@ -25,15 +25,25 @@ X1555:	djnz	r7,X1555
 	djnz	r5,X1551
 	ret	
 ;
+; No detectable Lcd_Contrast routine - do not use contrast setting!
+;
+;_lcd_custom_setcontrast::
+;	ret
+
+;
 	.area LCDAUX (CODE)
 
-_custom_lcdcontrasttbl::
-  .db  0x01, 0x07, 0x26, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3a
-_custom_lcdcontrasttbl_len::  .db  9
+;_custom_contrasttbl::
+;  .db  0x26, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3a
+;_custom_contrasttbl_len::  .db  7
 
-_custom_contrasttbl2::
-  .db  0xdb, 0x14, 0x04, 0x71, 0x25, 0x91, 0x26
-_custom_contrasttbl2_len::  .db  7
+;_custom_contrasttbl2::
+;  .db  0x71, 0x25, 0x91, 0x26, 0xff
+;_custom_contrasttbl2_len::  .db  5
+
+;_custom_contrasttbl2_offsets::
+;  .db  0x05
+;_custom_contrasttbl2_offsets_len::  .db  1
 
 ;
 ; This is the "original" backlighttbl.
@@ -70,6 +80,7 @@ _custom_backlighttbl2::
   .db  0x1e, 0x21, 0x24, 0x27, 0x2a, 0x2d, 0x30, 0x33, 0x36, 0x39
   .db  0x3c, 0x3f
 _custom_backlighttbl2_len::  .db  22
+
 
 _custom_initseq::
   .db  0x72, 0x00, 0x00, 0x92, 0x00, 0x01, 0xb0, 0x96, 0x72, 0x00
