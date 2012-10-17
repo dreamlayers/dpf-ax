@@ -3,6 +3,10 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Wed, 17 Oct 2012
+       by superelchi
+       * Added contrast support info to knowntypes.html.
+
 Thu, 16 Oct 2012
 v0.320 by superelchi
 	* Support for model specific contrast init.

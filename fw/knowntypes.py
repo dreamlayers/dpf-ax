@@ -16,7 +16,7 @@ KNOWN_TYPES = [
 # By superelchi, thx sairon
 # 2012-06-20
 #
-{'Status': 'supported', 'CRC': [[4202393500, 2081370330]], 'Credit': ['By superelchi, thx sairon'], 'Lcd_size': '128x128', 'Date': ['2012-06-20'], 'Type': ['abeyerr_black']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[4202393500, 2081370330]], 'Credit': ['By superelchi, thx sairon'], 'Lcd_size': '128x128', 'Date': ['2012-06-20'], 'ContrastMenuSupport': 'Yes', 'Type': ['abeyerr_black']},
 
 #
 # acme_1
@@ -25,7 +25,7 @@ KNOWN_TYPES = [
 # By superelchi, thx RedoX
 # 2012-07-24
 #
-{'Comment': ['Unknown ebay seller'], 'Status': 'supported', 'Credit': ['By superelchi, thx RedoX'], 'CRC': [[2726181921, 3130997315]], 'Lcd_size': '128x128', 'Date': ['2012-07-24'], 'Type': ['acme_1']},
+{'Comment': ['Unknown ebay seller'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'Credit': ['By superelchi, thx RedoX'], 'CRC': [[2726181921, 3130997315]], 'Lcd_size': '128x128', 'Date': ['2012-07-24'], 'ContrastMenuSupport': 'Yes', 'Type': ['acme_1']},
 
 #
 # acme_2
@@ -34,13 +34,13 @@ KNOWN_TYPES = [
 # By superelchi, thx ax206geek, norefall
 # 2012-10-10
 #
-{'Comment': ['Unknown manufacturer'], 'Status': 'supported', 'Credit': ['By superelchi, thx ax206geek, norefall'], 'CRC': [[3992676317, 608883650]], 'Lcd_size': '128x128', 'Date': ['2012-10-10'], 'Type': ['acme_2']},
+{'Comment': ['Unknown manufacturer'], 'Status': 'supported', 'ContrastSupport': 'No', 'Credit': ['By superelchi, thx ax206geek, norefall'], 'CRC': [[3992676317, 608883650]], 'Lcd_size': '128x128', 'Date': ['2012-10-10'], 'ContrastMenuSupport': 'No', 'Type': ['acme_2']},
 
 #
 # agk_violet
 #
 #
-{'Status': 'supported', 'CRC': [[3589264857, 1422689575]], 'Type': ['agk_violet'], 'Lcd_size': '128x128'},
+{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[3589264857, 1422689575]], 'Lcd_size': '128x128', 'ContrastMenuSupport': 'No', 'Type': ['agk_violet']},
 
 #
 # avlabs_avl969s
@@ -48,7 +48,7 @@ KNOWN_TYPES = [
 # By ax206geek
 # 2012-06-17
 #
-{'Status': 'supported', 'CRC': [[741602581, 838517843]], 'Url': ['http://www.avlabs.net'], 'Credit': ['By ax206geek'], 'Lcd_size': '128x128', 'Date': ['2012-06-17'], 'Type': ['avlabs_avl969s']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[741602581, 838517843]], 'Url': ['http://www.avlabs.net'], 'Credit': ['By ax206geek'], 'Lcd_size': '128x128', 'Date': ['2012-06-17'], 'ContrastMenuSupport': 'Yes', 'Type': ['avlabs_avl969s']},
 
 #
 # blue
@@ -56,7 +56,7 @@ KNOWN_TYPES = [
 # Buildin (generic) lcd-controller definition
 # By hackfin
 #
-{'Comment': ['Buildin (generic) lcd-controller definition'], 'Status': 'supported', 'Url': ['http://www.dealextreme.com/details.dx/sku.27894'], 'Credit': ['By hackfin'], 'Version': ['20090401', 'Oct 15 2010\xff\xff\xff\xff\xff', 'ProcTbl1'], 'Lcd_size': '128x128', 'Type': ['blue']},
+{'Comment': ['Buildin (generic) lcd-controller definition'], 'Status': 'supported', 'ContrastSupport': 'No', 'Url': ['http://www.dealextreme.com/details.dx/sku.27894'], 'Credit': ['By hackfin'], 'Version': ['20090401', 'Oct 15 2010\xff\xff\xff\xff\xff', 'ProcTbl1'], 'Lcd_size': '128x128', 'ContrastMenuSupport': 'No', 'Type': ['blue']},
 
 #
 # coby_dp151_bw
@@ -64,7 +64,7 @@ KNOWN_TYPES = [
 # By superelchi, thx mrlinux
 # 2012-07-24
 #
-{'Status': 'supported', 'CRC': [[287174071, 805928632]], 'Url': ['http://www.ebay.com/itm/280828187564'], 'Credit': ['By superelchi, thx mrlinux'], 'Lcd_size': '128x128', 'Date': ['2012-07-24'], 'Type': ['coby_dp151_bw']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[287174071, 805928632]], 'Url': ['http://www.ebay.com/itm/280828187564'], 'Credit': ['By superelchi, thx mrlinux'], 'Lcd_size': '128x128', 'Date': ['2012-07-24'], 'ContrastMenuSupport': 'Yes', 'Type': ['coby_dp151_bw']},
 
 #
 # coby_dp151_white
@@ -72,7 +72,7 @@ KNOWN_TYPES = [
 # By superelchi, thx donashe
 # 2012-05-14
 #
-{'Status': 'supported', 'CRC': [[3562395993, 464803725]], 'Url': ['http://www.frys.com/product/5439059'], 'Credit': ['By superelchi, thx donashe'], 'Lcd_size': '128x128', 'Date': ['2012-05-14'], 'Type': ['coby_dp151_white']},
+{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[3562395993, 464803725]], 'Url': ['http://www.frys.com/product/5439059'], 'Credit': ['By superelchi, thx donashe'], 'Lcd_size': '128x128', 'Date': ['2012-05-14'], 'ContrastMenuSupport': 'No', 'Type': ['coby_dp151_white']},
 
 #
 # delightdigi_black
@@ -81,7 +81,7 @@ KNOWN_TYPES = [
 # By superelchi, thx rotitude
 # 2012-04-22
 #
-{'Comment': ['From ebay seller delight-digi'], 'Status': 'supported', 'Credit': ['By superelchi, thx rotitude'], 'CRC': [[3718890135, 3664700611]], 'Lcd_size': '128x128', 'Date': ['2012-04-22'], 'Type': ['delightdigi_black']},
+{'Comment': ['From ebay seller delight-digi'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'Credit': ['By superelchi, thx rotitude'], 'CRC': [[3718890135, 3664700611]], 'Lcd_size': '128x128', 'Date': ['2012-04-22'], 'ContrastMenuSupport': 'Yes', 'Type': ['delightdigi_black']},
 
 #
 # dx27893
@@ -90,7 +90,7 @@ KNOWN_TYPES = [
 # By superelchi
 # 2012-07-28
 #
-{'Comment': ['Works with dx #27893 (white) & #27894 (blue)'], 'Status': 'supported', 'CRC': [[3589264857, 1297118871]], 'Url': ['http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893', 'http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-blue-107-picture-memory-storage-27894', 'http://dx.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-with-8m-memory-for-140-photos-silver-33624', 'http://www.amazon.de/Technaxx-Keypix-Digitaler-Fotorahmen-interner/dp/B0013SJV4O', 'http://www.7dayshop.com/7dayshop-pebble-digital-photo-frame-1-5-tft-keyring-version-silver-irresistible-price'], 'Credit': ['By superelchi'], 'Lcd_size': '128x128', 'Date': ['2012-07-28'], 'Type': ['dx27893']},
+{'Comment': ['Works with dx #27893 (white) & #27894 (blue)'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 1297118871]], 'Url': ['http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893', 'http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-blue-107-picture-memory-storage-27894', 'http://dx.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-with-8m-memory-for-140-photos-silver-33624', 'http://www.amazon.de/Technaxx-Keypix-Digitaler-Fotorahmen-interner/dp/B0013SJV4O', 'http://www.7dayshop.com/7dayshop-pebble-digital-photo-frame-1-5-tft-keyring-version-silver-irresistible-price'], 'Credit': ['By superelchi'], 'Lcd_size': '128x128', 'Date': ['2012-07-28'], 'ContrastMenuSupport': 'Yes', 'Type': ['dx27893']},
 
 #
 # dx27893_2
@@ -99,7 +99,7 @@ KNOWN_TYPES = [
 # By superelchi, thx RedoX
 # 2012-07-24
 #
-{'Comment': ['Variation of dx27893'], 'Status': 'supported', 'CRC': [[1743538178, 2452384647]], 'Url': ['http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893'], 'Credit': ['By superelchi, thx RedoX'], 'Lcd_size': '128x128', 'Date': ['2012-07-24'], 'Type': ['dx27893_2']},
+{'Comment': ['Variation of dx27893'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1743538178, 2452384647]], 'Url': ['http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893'], 'Credit': ['By superelchi, thx RedoX'], 'Lcd_size': '128x128', 'Date': ['2012-07-24'], 'ContrastMenuSupport': 'Yes', 'Type': ['dx27893_2']},
 
 #
 # jovisa
@@ -107,7 +107,7 @@ KNOWN_TYPES = [
 # By superelchi, thx djJack
 # 2012-09-19
 #
-{'Status': 'supported', 'CRC': [[2726181921, 2701100526]], 'Url': ['http://www.jovisa.biz/images/egg%20dpf%20or%20copy.jpg'], 'Credit': ['By superelchi, thx djJack'], 'Lcd_size': '128x128', 'Date': ['2012-09-19'], 'Type': ['jovisa']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2726181921, 2701100526]], 'Url': ['http://www.jovisa.biz/images/egg%20dpf%20or%20copy.jpg'], 'Credit': ['By superelchi, thx djJack'], 'Lcd_size': '128x128', 'Date': ['2012-09-19'], 'ContrastMenuSupport': 'Yes', 'Type': ['jovisa']},
 
 #
 # pink
@@ -115,7 +115,7 @@ KNOWN_TYPES = [
 # Buildin (generic) lcd-controller definition
 # By hackfin
 #
-{'Comment': ['Buildin (generic) lcd-controller definition'], 'Status': 'supported', 'Credit': ['By hackfin'], 'Version': ['20090113', 'Nov 13 2010\xff\xff\xff\xff\xff', 'ProcTbl4'], 'Lcd_size': '128x128', 'Type': ['pink']},
+{'Comment': ['Buildin (generic) lcd-controller definition'], 'Status': 'supported', 'ContrastSupport': 'No', 'Credit': ['By hackfin'], 'Version': ['20090113', 'Nov 13 2010\xff\xff\xff\xff\xff', 'ProcTbl4'], 'Lcd_size': '128x128', 'ContrastMenuSupport': 'No', 'Type': ['pink']},
 
 #
 # white
@@ -123,7 +123,7 @@ KNOWN_TYPES = [
 # Buildin (generic) lcd-controller definition
 # By hackfin
 #
-{'Comment': ['Buildin (generic) lcd-controller definition'], 'Status': 'supported', 'Url': ['http://www.dealextreme.com/details.dx/sku.27893'], 'Credit': ['By hackfin'], 'Version': ['20090113', 'Sep 16 2010\xff\xff\xff\xff\xff', 'ProcTbl4'], 'Lcd_size': '128x128', 'Type': ['white']},
+{'Comment': ['Buildin (generic) lcd-controller definition'], 'Status': 'supported', 'ContrastSupport': 'No', 'Url': ['http://www.dealextreme.com/details.dx/sku.27893'], 'Credit': ['By hackfin'], 'Version': ['20090113', 'Sep 16 2010\xff\xff\xff\xff\xff', 'ProcTbl4'], 'Lcd_size': '128x128', 'ContrastMenuSupport': 'No', 'Type': ['white']},
 
 ###################### 128x144 ##############################
 
@@ -132,7 +132,7 @@ KNOWN_TYPES = [
 #
 # By superelchi
 #
-{'Status': 'supported', 'Credit': ['By superelchi'], 'Lcd_size': '128x144', 'Type': ['focalprice144'], 'CRC': [[811528212, 1201222071]]},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[811528212, 1201222071]], 'Credit': ['By superelchi'], 'Lcd_size': '128x144', 'ContrastMenuSupport': 'Yes', 'Type': ['focalprice144']},
 
 ###################### 240x320 ##############################
 
@@ -143,7 +143,7 @@ KNOWN_TYPES = [
 # By superelchi, thx dms
 # 2012-09-28
 #
-{'Comment': ['Portrait mode, different enclosure, battery powered'], 'Status': 'supported', 'CRC': [[472729229, 1980929741]], 'Url': ['http://www.ebay.com/itm/280736717264'], 'Credit': ['By superelchi, thx dms'], 'Lcd_size': '240x320', 'Date': ['2012-09-28'], 'Type': ['delightdigi_2_portrait']},
+{'Comment': ['Portrait mode, different enclosure, battery powered'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[472729229, 1980929741]], 'Url': ['http://www.ebay.com/itm/280736717264'], 'Credit': ['By superelchi, thx dms'], 'Lcd_size': '240x320', 'Date': ['2012-09-28'], 'ContrastMenuSupport': 'No', 'Type': ['delightdigi_2_portrait']},
 
 #
 # focal_portrait
@@ -151,7 +151,7 @@ KNOWN_TYPES = [
 # Buildin (generic) lcd-controller definition (portrait)
 # By hackfin
 #
-{'Comment': ['Buildin (generic) lcd-controller definition (portrait)'], 'Status': 'supported', 'Url': ['http://www.focalprice.com/detail_EX042W.html', 'http://www.ebay.com/itm/220885046238', 'http://www.ebay.de/itm/220885046238', 'http://www.ebay.de/itm/170808432027'], 'Credit': ['By hackfin'], 'Version': ['20090504', 'Jul 24 2010\xff\xff\xff\xff\xff', 'ProcTbl5'], 'Lcd_size': '240x320', 'Type': ['focal_portrait']},
+{'Comment': ['Buildin (generic) lcd-controller definition (portrait)'], 'Status': 'supported', 'ContrastSupport': 'No', 'Url': ['http://www.focalprice.com/detail_EX042W.html', 'http://www.ebay.com/itm/220885046238', 'http://www.ebay.de/itm/220885046238', 'http://www.ebay.de/itm/170808432027'], 'Credit': ['By hackfin'], 'Version': ['20090504', 'Jul 24 2010\xff\xff\xff\xff\xff', 'ProcTbl5'], 'Lcd_size': '240x320', 'ContrastMenuSupport': 'No', 'Type': ['focal_portrait']},
 
 #
 # pearl_portrait
@@ -159,7 +159,7 @@ KNOWN_TYPES = [
 # Buildin (generic) lcd-controller definition (portrait)
 # By hackfin
 #
-{'Comment': ['Buildin (generic) lcd-controller definition (portrait)'], 'Status': 'supported', 'Url': ['http://www.pearl.de/a-HPM1184-5618.shtml'], 'Credit': ['By hackfin'], 'Version': ['20090504', 'Mar 27 2010\xff\xff\xff\xff\xff', 'ProcTbl5'], 'Lcd_size': '240x320', 'Type': ['pearl_portrait']},
+{'Comment': ['Buildin (generic) lcd-controller definition (portrait)'], 'Status': 'supported', 'ContrastSupport': 'No', 'Url': ['http://www.pearl.de/a-HPM1184-5618.shtml'], 'Credit': ['By hackfin'], 'Version': ['20090504', 'Mar 27 2010\xff\xff\xff\xff\xff', 'ProcTbl5'], 'Lcd_size': '240x320', 'ContrastMenuSupport': 'No', 'Type': ['pearl_portrait']},
 
 ###################### 320x240 ##############################
 
@@ -169,28 +169,28 @@ KNOWN_TYPES = [
 # May crash on USB connect/disconnect
 # By superelchi
 #
-{'Comment': ['May crash on USB connect/disconnect'], 'Status': 'supported', 'Credit': ['By superelchi'], 'Url': ['http://www.dealextreme.com/p/stylish-a33-2-4-lcd-desktop-digital-photo-picture-frame-album-silver-16mb-104500'], 'CRC': [[3029278881, 3683529480]], 'Lcd_size': '320x240', 'Type': ['dx104500']},
+{'Comment': ['May crash on USB connect/disconnect'], 'Status': 'supported', 'ContrastSupport': 'No', 'Credit': ['By superelchi'], 'Url': ['http://www.dealextreme.com/p/stylish-a33-2-4-lcd-desktop-digital-photo-picture-frame-album-silver-16mb-104500'], 'CRC': [[3029278881, 3683529480]], 'Lcd_size': '320x240', 'ContrastMenuSupport': 'No', 'Type': ['dx104500']},
 
 #
 # dx104838
 #
 # By superelchi
 #
-{'Status': 'supported', 'CRC': [[3790308462, 2319538268]], 'Url': ['http://www.dealextreme.com/p/stylish-a18-2-4-lcd-desktop-digital-photo-picture-frame-album-white-silver-16mb-104838'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'Type': ['dx104838']},
+{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[3790308462, 2319538268]], 'Url': ['http://www.dealextreme.com/p/stylish-a18-2-4-lcd-desktop-digital-photo-picture-frame-album-white-silver-16mb-104838'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'ContrastMenuSupport': 'No', 'Type': ['dx104838']},
 
 #
 # dx21334a
 #
 # By superelchi
 #
-{'Status': 'supported', 'CRC': [[3887821308, 1405237147]], 'Url': ['http://www.dealextreme.com/p/2-4-lcd-desktop-digital-photo-frame-and-calendar-27-picture-memory-storage-21334'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'Type': ['dx21334a']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3887821308, 1405237147]], 'Url': ['http://www.dealextreme.com/p/2-4-lcd-desktop-digital-photo-frame-and-calendar-27-picture-memory-storage-21334'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'ContrastMenuSupport': 'No', 'Type': ['dx21334a']},
 
 #
 # dx21334b
 #
 # By superelchi
 #
-{'Status': 'supported', 'CRC': [[4101150613, 3339371474]], 'Url': ['http://www.dealextreme.com/p/2-4-lcd-desktop-digital-photo-frame-and-calendar-27-picture-memory-storage-21334', 'http://www.ebay.de/itm/160792780280'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'Type': ['dx21334b']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[4101150613, 3339371474]], 'Url': ['http://www.dealextreme.com/p/2-4-lcd-desktop-digital-photo-frame-and-calendar-27-picture-memory-storage-21334', 'http://www.ebay.de/itm/160792780280'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'ContrastMenuSupport': 'No', 'Type': ['dx21334b']},
 
 #
 # focal
@@ -198,14 +198,14 @@ KNOWN_TYPES = [
 # Buildin (generic) lcd-controller definition (landscape)
 # By hackfin
 #
-{'Comment': ['Buildin (generic) lcd-controller definition (landscape)'], 'Status': 'supported', 'Url': ['http://www.focalprice.com/detail_EX042W.html', 'http://www.ebay.com/itm/220885046238', 'http://www.ebay.de/itm/220885046238', 'http://www.ebay.de/itm/170808432027'], 'Credit': ['By hackfin'], 'Version': ['20090504', 'Jul 24 2010\xff\xff\xff\xff\xff', 'ProcTbl5'], 'Lcd_size': '320x240', 'Type': ['focal']},
+{'Comment': ['Buildin (generic) lcd-controller definition (landscape)'], 'Status': 'supported', 'ContrastSupport': 'No', 'Url': ['http://www.focalprice.com/detail_EX042W.html', 'http://www.ebay.com/itm/220885046238', 'http://www.ebay.de/itm/220885046238', 'http://www.ebay.de/itm/170808432027'], 'Credit': ['By hackfin'], 'Version': ['20090504', 'Jul 24 2010\xff\xff\xff\xff\xff', 'ProcTbl5'], 'Lcd_size': '320x240', 'ContrastMenuSupport': 'No', 'Type': ['focal']},
 
 #
 # linkdelight
 #
 # By superelchi
 #
-{'Status': 'supported', 'CRC': [[390860985, 4226618260], [860617845, 806655299]], 'Url': ['http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&rd=1&item=260978964426&ssPageName=STRK:MEAFB:IT', 'http://www.ebay.de/itm/New-Mini-2-4-inch-Digital-Time-Day-Calendar-Alarm-Clock-Photo-Frame-POF16-/260883908884?pt=LH_DefaultDomain_0&hash=item3cbde48914#ht_4709wt_1046'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'Type': ['linkdelight']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[390860985, 4226618260], [860617845, 806655299]], 'Url': ['http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&rd=1&item=260978964426&ssPageName=STRK:MEAFB:IT', 'http://www.ebay.de/itm/New-Mini-2-4-inch-Digital-Time-Day-Calendar-Alarm-Clock-Photo-Frame-POF16-/260883908884?pt=LH_DefaultDomain_0&hash=item3cbde48914#ht_4709wt_1046'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'ContrastMenuSupport': 'No', 'Type': ['linkdelight']},
 
 #
 # linkdelight_2
@@ -214,7 +214,7 @@ KNOWN_TYPES = [
 # By superelchi, thx fred_feuerstein
 # 2012-09-07
 #
-{'Comment': ['Variation of linkdelight'], 'Status': 'supported', 'CRC': [[841589230, 1030004459]], 'Url': ['http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&rd=1&item=260883908884'], 'Credit': ['By superelchi, thx fred_feuerstein'], 'Lcd_size': '320x240', 'Date': ['2012-09-07'], 'Type': ['linkdelight_2']},
+{'Comment': ['Variation of linkdelight'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[841589230, 1030004459]], 'Url': ['http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&rd=1&item=260883908884'], 'Credit': ['By superelchi, thx fred_feuerstein'], 'Lcd_size': '320x240', 'Date': ['2012-09-07'], 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_2']},
 
 #
 # linkdelight_3
@@ -223,7 +223,7 @@ KNOWN_TYPES = [
 # By superelchi, thx ax206geek, m_K_o
 # 2012-10-16
 #
-{'Comment': ['Variation of linkdelight'], 'Status': 'supported', 'CRC': [[3935538804, 3754832255]], 'Url': ['http://www.ebay.de/itm/260978964426?ssPageName=STRK:MEWNX:IT&_trksid=p3984.m1439.l2649'], 'Credit': ['By superelchi, thx ax206geek, m_K_o'], 'Lcd_size': '320x240', 'Date': ['2012-10-16'], 'Type': ['linkdelight_3']},
+{'Comment': ['Variation of linkdelight'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3935538804, 3754832255]], 'Url': ['http://www.ebay.de/itm/260978964426?ssPageName=STRK:MEWNX:IT&_trksid=p3984.m1439.l2649'], 'Credit': ['By superelchi, thx ax206geek, m_K_o'], 'Lcd_size': '320x240', 'Date': ['2012-10-16'], 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_3']},
 
 #
 # pearl
@@ -231,7 +231,7 @@ KNOWN_TYPES = [
 # Buildin (generic) lcd-controller definition (landscape)
 # By hackfin
 #
-{'Comment': ['Buildin (generic) lcd-controller definition (landscape)'], 'Status': 'supported', 'Url': ['http://www.pearl.de/a-HPM1184-5618.shtml'], 'Credit': ['By hackfin'], 'Version': ['20090504', 'Mar 27 2010\xff\xff\xff\xff\xff', 'ProcTbl5'], 'Lcd_size': '320x240', 'Type': ['pearl']},
+{'Comment': ['Buildin (generic) lcd-controller definition (landscape)'], 'Status': 'supported', 'ContrastSupport': 'No', 'Url': ['http://www.pearl.de/a-HPM1184-5618.shtml'], 'Credit': ['By hackfin'], 'Version': ['20090504', 'Mar 27 2010\xff\xff\xff\xff\xff', 'ProcTbl5'], 'Lcd_size': '320x240', 'ContrastMenuSupport': 'No', 'Type': ['pearl']},
 
 #
 # pearl_custom
@@ -240,6 +240,6 @@ KNOWN_TYPES = [
 # By superelchi
 # 2012-07-28
 #
-{'Comment': ['Custom (flash-dump based) version of pearl'], 'Status': 'supported', 'CRC': [[497821697, 3130612463]], 'Url': ['http://www.pearl.de/a-HPM1184-5618.shtml'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'Date': ['2012-07-28'], 'Type': ['pearl_custom']},
+{'Comment': ['Custom (flash-dump based) version of pearl'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[497821697, 3130612463]], 'Url': ['http://www.pearl.de/a-HPM1184-5618.shtml'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'Date': ['2012-07-28'], 'ContrastMenuSupport': 'No', 'Type': ['pearl_custom']},
 
 ]

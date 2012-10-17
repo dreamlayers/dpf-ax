@@ -120,6 +120,20 @@ for dpf in dirs:
 		typedict['Lcd_size'] = keys[0]
 	else:
 		typedict['Lcd_size'] = '?unkown?'
+		
+	#Contrast support
+	keys = re.findall(r'[^/]#[ \t]*define[ \t]+(LCD_DEFAULT_CONTRAST_VALUE.+)$', data, re.MULTILINE)
+	if len(keys) != 0:
+		typedict['ContrastSupport'] = 'Yes'
+	else:
+		typedict['ContrastSupport'] = 'No'
+
+	#Contrast menu support
+	keys = re.findall(r'[^/]#[ \t]*define[ \t]+(LCD_USER_ADJUSTABLE_CONTRAST.+)$', data, re.MULTILINE)
+	if len(keys) != 0:
+		typedict['ContrastMenuSupport'] = 'Yes'
+	else:
+		typedict['ContrastMenuSupport'] = 'No'
 
 	alltypes.append(typedict)
 
@@ -168,23 +182,32 @@ kt = open("knowntypes.html", "w")
 
 kt.write('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n   "http://www.w3.org/TR/html4/strict.dtd">\n')
 kt.write('<HTML><HEAD><meta http-equiv="Content-type" content="text/html;charset=UTF-8">\n')
-kt.write('<style type="text/css>">\n')
+kt.write('<style type="text/css">\n')
 kt.write('<!--\n')
 kt.write('table.types { border: 1px solid; border-collapse: collapse; border-spacing: 0; }\n')
 kt.write('table.types td { border: 1px solid;  padding: .1em .25em; }\n')
-kt.write('table.wiki th { border: 1px solid; padding: .1em .25em; }\n')
+kt.write('table.types th { border: 1px solid; padding: .1em .25em; }\n')
 kt.write('-->\n')
 kt.write('</style>\n')
 kt.write('<TITLE>Supported Types</TITLE></HEAD>\n')
 kt.write('<BODY><H1>Supported Types</H1>\n')
 kt.write('<table class="types">\n')
-kt.write('<tr><th>Type</th><th>Size (w x h)</th><th>Link(s)</th><th>Comment</th>\n')
+kt.write('<tr><th>Type</th><th>Size (w x h)</th><th>Contrast Support</th><th>Link(s)</th><th>Comment</th>\n')
 for typedict in alltypes:
 	if typedict['Status'] == 'supported':
 		kt.write('<tr>')
 		kt.write('<td>%s</td>' % cgi.escape(typedict['Type'][0]))
 		size = typedict['Lcd_size'].split("x")
 		kt.write('<td>%s x %s</td>' % (size[0], size[1]))
+		kt.write('<td>')
+		if typedict['ContrastSupport'] == 'Yes':
+			if typedict['ContrastMenuSupport'] == 'Yes':
+				kt.write('In menu')
+			else:
+				kt.write('Yes')
+		else:
+			kt.write('No')
+		kt.write('</td>')
 		kt.write('<td>')
 		if 'Url' in typedict:
 			for s in typedict['Url']:
