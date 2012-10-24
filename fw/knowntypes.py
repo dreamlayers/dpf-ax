@@ -102,6 +102,14 @@ KNOWN_TYPES = [
 {'Comment': ['Variation of dx27893'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1743538178, 2452384647]], 'Url': ['http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893'], 'Credit': ['By superelchi, thx RedoX'], 'Lcd_size': '128x128', 'Date': ['2012-07-24'], 'ContrastMenuSupport': 'Yes', 'Type': ['dx27893_2']},
 
 #
+# intertronic
+#
+# By superelchi, thx grouproot
+# 2012-10-22
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3718890135, 1505088704]], 'Url': ['http://www.interdiscount.ch/idshop/product/Spielwaren/873152_ER-324609050132160/INTERTRONIC_Digitaler_Bilderrahmen/detail.jsf'], 'Credit': ['By superelchi, thx grouproot'], 'Lcd_size': '128x128', 'Date': ['2012-10-22'], 'ContrastMenuSupport': 'Yes', 'Type': ['intertronic']},
+
+#
 # jovisa
 #
 # By superelchi, thx djJack
