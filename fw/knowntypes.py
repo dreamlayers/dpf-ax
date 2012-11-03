@@ -59,6 +59,14 @@ KNOWN_TYPES = [
 {'Comment': ['Buildin (generic) lcd-controller definition'], 'Status': 'supported', 'ContrastSupport': 'No', 'Url': ['http://www.dealextreme.com/details.dx/sku.27894'], 'Credit': ['By hackfin'], 'Version': ['20090401', 'Oct 15 2010\xff\xff\xff\xff\xff', 'ProcTbl1'], 'Lcd_size': '128x128', 'ContrastMenuSupport': 'No', 'Type': ['blue']},
 
 #
+# carrefour_bfv151
+#
+# By superelchi, thx assas1
+# 2012-11-02
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3189525217, 3498632343]], 'Url': ['http://www.mjshk.com/products/Digital%20Photo%20Frame/page/DPF815A_Max.htm', 'http://www.prixing.fr/products/bfv151-1-5-pouce-cadre-photo-porte-cles-carrefour-3606605023771'], 'Credit': ['By superelchi, thx assas1'], 'Lcd_size': '128x128', 'Date': ['2012-11-02'], 'ContrastMenuSupport': 'Yes', 'Type': ['carrefour_bfv151']},
+
+#
 # coby_dp151_bw
 #
 # By superelchi, thx mrlinux
