@@ -110,6 +110,15 @@ KNOWN_TYPES = [
 {'Comment': ['Variation of dx27893'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1743538178, 2452384647]], 'Url': ['http://www.dealextreme.com/p/1-5-lcd-rechargeable-digital-usb-photo-frame-keychain-white-107-picture-memory-storage-27893'], 'Credit': ['By superelchi, thx RedoX'], 'Lcd_size': '128x128', 'Date': ['2012-07-24'], 'ContrastMenuSupport': 'Yes', 'Type': ['dx27893_2']},
 
 #
+# eachdesk_tumbler
+#
+# Nice enclosure: tumbler design.
+# By superelchi (thx c.dent)
+# 2012-07-28
+#
+{'Comment': ['Nice enclosure: tumbler design.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 1730849026]], 'Url': ['http://www.ebay.com/itm/Hot-1-5-Digital-Photo-Frame-Picture-Album-16MB-New-Tumbler-03-/110842497224'], 'Credit': ['By superelchi (thx c.dent)'], 'Lcd_size': '128x128', 'Date': ['2012-07-28'], 'ContrastMenuSupport': 'Yes', 'Type': ['eachdesk_tumbler']},
+
+#
 # intertronic
 #
 # By superelchi, thx grouproot
