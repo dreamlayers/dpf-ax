@@ -3,6 +3,12 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Sat, 01 Dec 2012
+       by superelchi
+       * New models:
+	 - linkdelight_4 (thx Solo0815)
+         - pt824 (thx olderzeus).
+
 Sun, 04 Nov 2012
        by superelchi
        * New model:

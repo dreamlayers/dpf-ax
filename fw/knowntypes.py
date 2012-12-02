@@ -259,6 +259,15 @@ KNOWN_TYPES = [
 {'Comment': ['Variation of linkdelight'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3935538804, 3754832255]], 'Url': ['http://www.ebay.de/itm/260978964426?ssPageName=STRK:MEWNX:IT&_trksid=p3984.m1439.l2649'], 'Credit': ['By superelchi, thx ax206geek, m_K_o'], 'Lcd_size': '320x240', 'Date': ['2012-10-16'], 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_3']},
 
 #
+# linkdelight_4
+#
+# Another variation of linkdelight
+# By superelchi, thx Solo0815
+# 2012-12-01
+#
+{'Comment': ['Another variation of linkdelight'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1722727966, 3339371474]], 'Url': ['http://www.ebay.de/itm/260978964426?ssPageName=STRK:MEWNX:IT&_trksid=p3984.m1497.l2649'], 'Credit': ['By superelchi, thx Solo0815'], 'Lcd_size': '320x240', 'Date': ['2012-12-01'], 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_4']},
+
+#
 # pearl
 #
 # Buildin (generic) lcd-controller definition (landscape)
@@ -274,5 +283,14 @@ KNOWN_TYPES = [
 # 2012-07-28
 #
 {'Comment': ['Custom (flash-dump based) version of pearl'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[497821697, 3130612463]], 'Url': ['http://www.pearl.de/a-HPM1184-5618.shtml'], 'Credit': ['By superelchi'], 'Lcd_size': '320x240', 'Date': ['2012-07-28'], 'ContrastMenuSupport': 'No', 'Type': ['pearl_custom']},
+
+#
+# pt824
+#
+# Should work with PT824A/B/C.
+# By superelchi (thx olderzeus)
+# 2012-11-24
+#
+{'Comment': ['Should work with PT824A/B/C.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[497821697, 3923636230]], 'Url': ['http://item.taobao.com/item.htm?id=9197767508', 'http://www.longmatech.com/index.php/product/PT824A.html', 'http://www.longmatech.com/index.php/product/PT824A.html', 'http://lucy89.en.made-in-china.com/product/RbUxXeCrhvcJ/China-Christmas-Gifts-Digital-Photo-Frame-PT824b.html', 'http://konsun.appliances-china.com/Product_Look.php?ID=100077', 'http://www.corpmarket.com/sell/2-4inch-digital-photo-frame-PT824C-detail-1245-747967.html', 'http://www.gongchang.com/2_4_inch_color_LCD_display_PT824C_digital_picture_viewer_heart_shaped-dp621446/'], 'Credit': ['By superelchi (thx olderzeus)'], 'Lcd_size': '320x240', 'Date': ['2012-11-24'], 'ContrastMenuSupport': 'No', 'Type': ['pt824']},
 
 ]
