@@ -67,6 +67,14 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3189525217, 3498632343]], 'Url': ['http://www.mjshk.com/products/Digital%20Photo%20Frame/page/DPF815A_Max.htm', 'http://www.prixing.fr/products/bfv151-1-5-pouce-cadre-photo-porte-cles-carrefour-3606605023771'], 'Credit': ['By superelchi, thx assas1'], 'Lcd_size': '128x128', 'Date': ['2012-11-02'], 'ContrastMenuSupport': 'Yes', 'Type': ['carrefour_bfv151']},
 
 #
+# clas_ohlson
+#
+# By superelchi, thx BufferFramed
+# 2012-12-05
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[640222753, 4127089957]], 'Url': ['http://www.clasohlson.com/fi/Avaimenper%C3%A4,-jossa-digitaalinen-valokuvakehys/Pr383925000'], 'Credit': ['By superelchi, thx BufferFramed'], 'Lcd_size': '128x128', 'Date': ['2012-12-05'], 'ContrastMenuSupport': 'Yes', 'Type': ['clas_ohlson']},
+
+#
 # coby_dp151_bw
 #
 # By superelchi, thx mrlinux
