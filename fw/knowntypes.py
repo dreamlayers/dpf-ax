@@ -276,6 +276,14 @@ KNOWN_TYPES = [
 {'Comment': ['Another variation of linkdelight'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1722727966, 3339371474]], 'Url': ['http://www.ebay.de/itm/260978964426?ssPageName=STRK:MEWNX:IT&_trksid=p3984.m1497.l2649'], 'Credit': ['By superelchi, thx Solo0815'], 'Lcd_size': '320x240', 'Date': ['2012-12-01'], 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_4']},
 
 #
+# linkdelight_5
+#
+# Another variation of linkdelight
+# By superelchi
+#
+{'Comment': ['Another variation of linkdelight'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'Credit': ['By superelchi'], 'Url': ['http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&item=110897096126'], 'CRC': [[2108676850, 2938400978]], 'Lcd_size': '320x240', 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_5']},
+
+#
 # pearl
 #
 # Buildin (generic) lcd-controller definition (landscape)
