@@ -309,4 +309,12 @@ KNOWN_TYPES = [
 #
 {'Comment': ['Should work with PT824A/B/C.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[497821697, 3923636230]], 'Url': ['http://item.taobao.com/item.htm?id=9197767508', 'http://www.longmatech.com/index.php/product/PT824A.html', 'http://www.longmatech.com/index.php/product/PT824A.html', 'http://lucy89.en.made-in-china.com/product/RbUxXeCrhvcJ/China-Christmas-Gifts-Digital-Photo-Frame-PT824b.html', 'http://konsun.appliances-china.com/Product_Look.php?ID=100077', 'http://www.corpmarket.com/sell/2-4inch-digital-photo-frame-PT824C-detail-1245-747967.html', 'http://www.gongchang.com/2_4_inch_color_LCD_display_PT824C_digital_picture_viewer_heart_shaped-dp621446/'], 'Credit': ['By superelchi (thx olderzeus)'], 'Lcd_size': '320x240', 'Date': ['2012-11-24'], 'ContrastMenuSupport': 'No', 'Type': ['pt824']},
 
+#
+# taobao
+#
+# By superelchi (thx cuckoohello)
+# 2013-01-05
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2212265512, 1765720342]], 'Url': ['http://item.taobao.com/item.htm?id=10380777914'], 'Credit': ['By superelchi (thx cuckoohello)'], 'Lcd_size': '320x240', 'Date': ['2013-01-05'], 'ContrastMenuSupport': 'No', 'Type': ['taobao']},
+
 ]
