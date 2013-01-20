@@ -19,6 +19,14 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[4202393500, 2081370330]], 'Credit': ['By superelchi, thx sairon'], 'Lcd_size': '128x128', 'Date': ['2012-06-20'], 'ContrastMenuSupport': 'Yes', 'Type': ['abeyerr_black']},
 
 #
+# abeyerr_black_2
+#
+# By superelchi, thx kroonen
+# 2013-01-17
+#
+{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[2726181921, 1032129360]], 'Url': ['http://www.ebay.com/itm/280828187564'], 'Credit': ['By superelchi, thx kroonen'], 'Lcd_size': '128x128', 'Date': ['2013-01-17'], 'ContrastMenuSupport': 'No', 'Type': ['abeyerr_black_2']},
+
+#
 # acme_1
 #
 # Unknown ebay seller
@@ -316,5 +324,19 @@ KNOWN_TYPES = [
 # 2013-01-05
 #
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2212265512, 1765720342]], 'Url': ['http://item.taobao.com/item.htm?id=10380777914'], 'Credit': ['By superelchi (thx cuckoohello)'], 'Lcd_size': '320x240', 'Date': ['2013-01-05'], 'ContrastMenuSupport': 'No', 'Type': ['taobao']},
+
+
+#************** WIP: WORK IN PROGRESS ***********************
+
+###################### 240x320 ##############################
+
+#
+# linkdelight_black_portrait
+#
+# Portrait mode, different enclosure, battery powered
+# By superelchi, thx Papa Oscar
+# 2013-01-18
+#
+{'Comment': ['Portrait mode, different enclosure, battery powered'], 'Status': 'wip', 'ContrastSupport': 'Yes', 'CRC': [[3230522243, 2026185173]], 'Url': [' http://www.ebay.com/itm/230670117410'], 'Credit': ['By superelchi, thx Papa Oscar'], 'Lcd_size': '240x320', 'Date': ['2013-01-18'], 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_black_portrait']},
 
 ]
