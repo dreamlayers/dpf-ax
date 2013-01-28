@@ -167,6 +167,14 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[1493111108, 2479827774]], 'Url': ['http://www.7dayshop.com/7dayshop-pebble-digital-photo-frame-1-5-tft-keyring-version-silver-irresistible-price'], 'Credit': ['By superelchi, thx daveg'], 'Lcd_size': '128x128', 'Date': ['2012-10-19'], 'ContrastMenuSupport': 'No', 'Type': ['sevendayshop_pebble']},
 
 #
+# sunluxy
+#
+# By superelchi, thx glb
+# 2013-01-27
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2726181921, 3709981863]], 'Url': ['http://www.amazon.fr/gp/product/B00AQV277C/'], 'Credit': ['By superelchi, thx glb'], 'Lcd_size': '128x128', 'Date': ['2013-01-27'], 'ContrastMenuSupport': 'Yes', 'Type': ['sunluxy']},
+
+#
 # white
 #
 # Buildin (generic) lcd-controller definition
