@@ -10,7 +10,7 @@
 struct blit __data g_blit;
 
 struct lcd __idata g_lcd = {
-	DEFAULT_ORIENTATION,
+	LCD_ORIENTATION,
 	7 // Brightness
 };
 
@@ -37,7 +37,7 @@ void write(BYTE d)
 	_asm
 		.include 'dpf.inc'
 		mov a, dpl
-		lcall otp_lcd_write
+		lcall lcd_write
 	_endasm;
 }
 
@@ -47,9 +47,9 @@ void lcd_writeword(unsigned short rgb16)
 	rgb16;
 	_asm
 	mov	a, dph
-	lcall otp_lcd_write
+	lcall lcd_write
 	mov	a, dpl
-	lcall otp_lcd_write
+	lcall lcd_write
 	_endasm;
 }
 
@@ -63,13 +63,13 @@ void doclrscreen(unsigned short col)
 	do {
 		_asm
 		mov	a, dph
-		lcall otp_lcd_write
+		lcall lcd_write
 		mov	a, dpl
-		lcall otp_lcd_write
+		lcall lcd_write
 		mov	a, dph
-		lcall otp_lcd_write
+		lcall lcd_write
 		mov	a, dpl
-		lcall otp_lcd_write
+		lcall lcd_write
 		_endasm;
 	} while (--i);
 }
@@ -85,11 +85,11 @@ void clrscreen(unsigned short col) __banked
 
 void lcd_init(void) __banked
 {
-#if defined(LCD_CONTROLLER_CUSTOM)
+//#if defined(LCD_CONTROLLER_CUSTOM)
 	lcd_custom_init();
-#else
-	lcd_init_by_table(init_sequence);
-#endif
+//#else
+//	lcd_init_by_table(init_sequence);
+//#endif
 	lcd_orientation(g_lcd.orientation);
 }
 

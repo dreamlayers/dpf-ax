@@ -6,10 +6,29 @@ _lcd_custom_init::
 	mov	dptr,#_custom_initseq
 	ljmp	_lcd_init_by_table
 
-_lcd_custom_setcontrast::
-	ljmp	_lcd_set_contrast_by_table
+;
+; If custom backlight handling is needed, uncomment the following label
+; and set LCD_BACKLIGHT_CUSTOM in dpfmodel.h
+;
+;_lcd_custom_setbacklight::
+
+;
+; If custom contrast handling is needed, uncomment the following label
+; and set LCD_CONTRAST_CUSTOM in dpfmodel.h
+;
+;_lcd_custom_setcontrast::
 
 	.area LCDAUX (CODE)
+
+
+;backlight_table::
+;	.db	If needed, put data for custom backlight handling here
+;_custom_backlighttbl_len::  .db  . - backlight_table
+
+
+;contrast_table::
+;	.db	If needed, put data for custom contrast handling here
+;_custom_contrasttbl_len::  .db  . - contrast_table
 
 _custom_contrasttbl::
   .db  0x26, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3a

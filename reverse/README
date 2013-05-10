@@ -1,0 +1,169 @@
+Reverse engineering HOWTO
+----------------------------------------------------------------------------
+
+Here it is, the long awaited hacking howto for the AX206 DPFs.
+
+BIG FAT WARNING: You have to be able to read 8051 assembly code and you
+HAVE TO know what it is doing. Otherwise you will likely brick your frame
+and we will all laugh at you.
+
+Also you should know something about the SPI flash layout, have a look
+at the m25p80 datasheets found all over the web. Basically you should
+remember that the flashes are organized in sectors of 0x10000 size.
+
+Since the boot loader mode is a big secret, we have to exploit the hardware
+somewhat to get into the "Developer Mode" (hacking is a ugly word).
+To implement developer mode, we normally use the strategy to modify the
+powerdown routine such that when USB is plugged in and you press and hold
+MENU for a few seconds, it will enter the modified state.
+This allows us to return to the original firmware by pressing RESET.
+
+To get started, you need a few tools and items:
+- A dump of your DPFs firmware (look for fulldump.py script from the
+  dpfhack-*.tgz archive to create one)
+- The d52 disassembler: http://www.8052.com/users/disasm/
+- Installed Python package
+
+The dump binary first needs to be split up into single modules.
+Why modules? The memory of the AX206 isn't big enough to store a full
+program, thus a bank switching technique is used. A bank switched call
+looks like:
+
+        mov     a,#0x1e         ; 13a2   74 1e      t.
+        mov     dptr,#mod31_1330; 13a4   90 13 30   ..0
+        lcall   tramp_jsr       ; 13a7   12 19 38   ..8
+
+The number moved into 'a' is the module number minus one. The dump.py
+script analyses the code, so you will only have to look at the modXX_XXXX
+function. This is the target function called in the according module.
+The loading on demand and calling of the function is handled by
+tramp_jsr().
+
+
+1. First, you copy the generated dump (full.bin) into a folder, like
+   dpf/reverse/new and rename it to full_dump.bin
+2. Run the makefile:
+   > make -f ../Makefile dump"
+   You will end up with a number of
+   *.in files in the current directory if this was successful.
+3. Run make again:
+   > make -f ../Makefile
+   Now you should have a few *.asm files in the working directory.
+4. Identify the powerdown module. Normally, it helps to grep for p2up:
+   > grep p2up *.asm
+   That should list a module with number around 36 or 37.
+5. The powerdown ROUTINE is the function that is called most often from many
+   modules, but most probably NOT called from module 1 (dump01). In many
+   cases, this turned out to be mod37_1330.
+
+WARNING: You have to make sure that this module does not live in sector
+0x000000 of the flash (see "dump file offset" tag in the header of the
+assembly file). If it lives in sector 0x000000, the described method
+will NOT work and you will brick your DPF.
+
+5. Find the splash screen routine that is called from the powerdown.
+   This is normally the routine called at the beginning of the powerdown
+   routine and contains code like:
+
+        mov     G_lcd_cxH,a     ; 1509   f5 78      ux
+        mov     G_lcd_cyL,a     ; 150b   f5 79      uy
+        mov     G_lcd_cyH,a     ; 150d   f5 7a      uz
+        mov     G_lcd_dxL,a     ; 150f   f5 7b      u{
+
+6. This routine you can patch. Take a p_start_*.s from an already hacked frame
+   and make sure you understand what is happening. Adapt the .org statements
+   to the locations where YOUR patched code can safely live.
+
+7. The final jump into the patched firmware occurs at the bottom of the
+   patch, looking like
+
+        mov     a,#(53 - 1)
+        mov     dptr,#entry_addr
+        ljmp    tramp_jmp
+
+   The module number in here will be the number of the last module you
+   extracted, PLUS ONE - because we are gonna add an extra module.
+   For this, the jump table will need to be modified.
+
+8. We do not touch the original jump table, but make a copy of it (because
+   it lives in sector 0x000000). The jump table record for this extra module
+   will be stored in the end table tag which can be read clear text in the
+   dump00.asm as "-EndTbl-". Have a look at a jmptbl_*.s file, the .org
+   statement - i.e. the address offset - has to be the offset address of the
+   "-EndTbl-" string.
+
+9. Have a look at the hackit.py script. The critical function overwriting
+   data on the flash is the .patchSector() method, called like
+
+	d.patchSector(start, flashaddr, hexfile)
+
+   start is the relocation start address of the hexfile that the flash is
+   patched with, it is normally identical with the first .org offset specified
+   in the *.s file.
+   flashaddr is where it is stored on the flash.
+   hexfile is the intel hex data file the flash is patched with.
+
+   The hackit.py framework will take care of the patching, so you merely
+   will need to add another configuration record in profiles.py.
+
+   This is an example record:
+
+patch_pink = [
+        (COPY,   [0x000000, 0x3f0000]),  # Copy sector 0
+        (PATCH,  [0x0, 0x3f0000], "jmptbl_pink.ihx"),
+        (BINARY, [0x0, 0x390000], "font4x8.bin"),
+        (PATCH,  [0x0, 0x380000], "fw_pink.ihx"),
+        (37,     [ 0x87f37fa6, 0xc8c55832, 0x27b13328 ] ,  "p_start_pink.ihx"), 
+]
+
+  The first COPY statement tells hackit to make a copy of the first sector
+  to the specified address, which should be at the end of the flash.
+  The PATCH statements patch the given sector address with the hex file
+  specified.
+  The BINARY option just copies a plain binary to the given address.
+  Finally, the very critical patching of the powerdown routine.
+  The first number (here 37) is the module number of the powerdown routine
+  as identified by you. Then, a list of known CRC32 checksums follow.
+  If the sector to be patched here is unknown by its CRC32, it will refuse
+  to patch it and print out the non matching CRC32.
+
+  When you are ABSOLUTELY sure your hack will not overwrite anything crucial,
+  you can insert this CRC32 as first number in the list.
+
+10. Did you do the paranoia check of all addresses and offsets, do you
+  understand where things will go? If in doubt, make a dry run with the
+  patchSector function on an empty/unused sector, preferrably at the
+  end of your flash. Then analyze the dump again.
+
+Finally, you can try hacking your DPF with the hackit.py.
+Once it is hacked, it will again print out a non matching CRC32 if you
+run the hackit.py again. This CRC32 you insert as LAST number (mycrc)
+in the list:
+
+        (37,     [ original_crc, my_crc ] ,  "p_start_mine.ihx"), 
+
+Now you can test your hack and publish the profiles.py on success.
+
+----------------------------------------------------------------------------
+
+A few advices:
+
+REMEMBER: Never touch sector zero (address 0x000000 - 0x010000). Never ever.
+
+If you bricked your frame, don't throw it away YET. Maybe some day
+we'll discover how the bootloader works. And you could still use the
+display for tinkering. If you have any knowledge of the boot loader,
+speak up!
+
+Don't ask us to help you with the hacking. Try it yourself or use one of
+the DPFs that are known to work.
+It can take a few months to learn 8051 assembly from scratch,
+but don't give up, it will be a great learning experience and later
+help you to get a good job :-)
+
+Just read the source, duke.
+
+----------------------------------------------------------------------------
+Brought to you by:
+
+- hackfin, the evil fish, and others

@@ -19,11 +19,11 @@ void show_testpattern(void);
 
 static __code const char * __code xmenu_strings[] = {
 /* -- XSTR_LCD -- */
-#ifdef LCD_CONTROLLER_CUSTOM
+//#ifdef LCD_CONTROLLER_CUSTOM
 	"Unknown (custom)", 0,
-#else
-	STRING(_INTERNAL_TAG) " (compatible)", 0,
-#endif
+//#else
+//	STRING(_INTERNAL_TAG) " (compatible)", 0,
+//#endif
 
 /* -- XSTR_CREDITS -- */
 #if NUM_COLS_LARGE > 16
@@ -384,9 +384,9 @@ static void fill(short rgb565, unsigned int n)
 		.include "dpf.inc"
 		
 		mov	a, dph
-		lcall otp_lcd_write
+		lcall lcd_write
 		mov	a, dpl
-		lcall otp_lcd_write
+		lcall lcd_write
 		_endasm;
 	}
 }

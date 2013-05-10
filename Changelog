@@ -3,6 +3,61 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Fri, 10 May 2013
+v0.40 by superelchi
+       * General cleanup:
+         - Removed unnecessary files.
+	 - Makefile cleanup.
+	 - README cleanup.
+	 - Renamed display firmware files from fw_disp_* to fw_*.
+	 - Readded missing "reverse" folder.
+	 - Renamed folder "fw" to "tools".
+       * Compatibility fixes:
+         - Added check for correct sdcc version in src/Makefile.
+         - Added headerfile <stdint.h> to dpf.h.
+         - Compatibility fix in python/Makefile for non-debian linux.
+         - All python skripts now syntax compatible with python 3. But still need python 2.7 to run. :-(
+       * Partial windows support:
+         - identify.py and fulldump.py now work on windows (see tools/README.windows).
+       * identify.py changes:
+         - Flashdump now saved to folder tools instead of tools/identify.out.
+         - Flashdump filenames now include a date/time stamp.
+	 - Renamed temp folder from identify.out to lcd.tmp.
+	 - Dropped support for generic models.
+	 - Better firmware detection.
+	 - Signature expanded to include backlight and contrast type.
+	 - "-d" switch will build skeleton lcd files (dpfmodel.h/lcdblit.s/lcdinit.s/lcdsetor.s) in identify.out.
+       * Firmware:
+         - Dropped support for generic models.
+         - New resolution: 160x128.
+	 - NO_BATTERY_CHECK in src/Make.config is now uncommented by default.
+         - Menu-Setup-Backlight: value wraps around instead of stopping at lowest/highest value.
+         - Menu-Setup-Contrast: value wraps around instead of stopping at lowest/highest value.
+	 - Better Backlight & contrast handling.
+	 - Fixed error in init.c: some types did not wake up on Keypress after Poweroff (by "Menu"|"Off").
+       * Deleted all "generic" models:
+         - blue.
+	 - focal, focal_portrait.
+	 - pearl, pearl_portrait.
+	 - pink.
+	 - white.
+       * New models:
+	 - abeyerr_black_3 (thx joelbl).
+	 - august_dp150a.
+	 - coby_dp180 (thx johni).
+	 - dx104838_2 (thx j3r, mihre).
+	 - dx104838_3 (thx ralf001).
+	 - linkdelight_black_portrait_2 (thx Mr. P)
+	 - linkdelight_black_portrait_3 (thx prezes551)
+	 - veovision (thx ternyk).
+	 - xg4241 (thx marcusbrutus).
+	 - zipp_dp605 (thx CaptainCheeks).
+       * Changed models:
+	 - dx104838 brightness control fixed (only on/off supported by this modle).
+         - linkdelight_black portrait now supported.
+         - yallstock_black_portrait now supported.
+
+
 Mon, 28 Jan 2013
        by superelchi
        * New model:
@@ -14,7 +69,6 @@ Sun, 20 Jan 2013
 	 - abeyerr_black_2 (thx koonen).
        * New Work-In-Progress model:
          - linkdelight_black_portrait (thx Papa Oscar).	
-	
 
 Sat, 05 Jan 2013
        by superelchi

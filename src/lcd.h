@@ -28,143 +28,101 @@ extern struct blit __data g_blit ;
 extern
 unsigned char g_rgborder;
 
-// We have different command sets:
-// LCD_CMDSET_ST
-// LCD_CMDSET_OT
 
-/** LCD_* specs are the hardware properties of a LCD screen.
- * Assuming the LCD is oriented such that RGB pixel order applies.
- * Then the specified heights and widths do apply.
- * The RESOL_X and RESOL_Y values are the software resolutions, depending
- * on the screen orientation.
- */
+#define LCD_ORIENTATION_PORTRAIT  0
+#define LCD_ORIENTATION_LANDSCAPE 1
 
-#if defined(LCD_128x128)
-#	define LCD_WIDTH  128
-#	define LCD_HEIGHT 128
-#elif defined (LCD_128x144)
-#	define LCD_WIDTH  128L
-#	define LCD_HEIGHT 144L
-#elif defined (LCD_320x240)
-#	define LCD_WIDTH  240L
-#	define LCD_HEIGHT 320L
-#elif defined (LCD_240x320)	//same as 320x240, portrait/landscape set by DEFAULT_ORIENTATION
-#	define LCD_WIDTH  240L
-#	define LCD_HEIGHT 320L
-#endif
-
-#ifdef LCD_CONTROLLER_ILI9163B
-#include "ili9163.h"
-#	if DPFMODEL == pink
-#	define _INTERNAL_TAG sitronix
-#	else
-// Use same sitronix blitting routine:
-#	define ili9163_blit sitronix_blit
-#	define _INTERNAL_TAG ili9163
-#	endif
-#	define LCD_OFFSET_X   2
-#	define LCD_OFFSET_Y   3
-#	define END_INCLUSIVE
-#	define LCD_CMDSET_ST
-#endif
-
-#ifdef LCD_CONTROLLER_ST77XX
-#include "ili9163.h"
-// FIXME #include "st7637.h"
-#	define _INTERNAL_TAG st77xx
-#	define LCD_OFFSET_X   0
-#	define LCD_OFFSET_Y   0
-#	define END_INCLUSIVE
-#	define LCD_CMDSET_ST
-#endif
-
-#ifdef LCD_CONTROLLER_ILI9325
-#include "ili9320.h"
-#	define _INTERNAL_TAG ili9325
-#	define LCD_OFFSET_X   0
-#	define LCD_OFFSET_Y   0
-#	define END_INCLUSIVE
-#	define LCD_CMDSET_ILI
-#endif
-
-#ifdef LCD_CONTROLLER_OTM3225
-#include "otm3225.h"
-#	define _INTERNAL_TAG otm3225
-#	define LCD_OFFSET_X   0
-#	define LCD_OFFSET_Y   0
-#	define END_INCLUSIVE
-#	define LCD_CMDSET_OT
-#endif
-
-#ifdef LCD_CONTROLLER_CUSTOM
-#	define _INTERNAL_TAG custom
-#	define LCD_CMDSET_CUSTOM
+#if LCD_WIDTH > LCD_HEIGHT
+#	define LCD_ORIENTATION LCD_ORIENTATION_LANDSCAPE
+#else
+#	define LCD_ORIENTATION LCD_ORIENTATION_PORTRAIT
 #endif
 
 // Backlight
-#define MAX_BRIGHTNESS_VALUE     21	// max brightness value
-#ifdef LCD_DEFAULT_BRIGHTNESS_VALUE	// inital brightness value
-#	define DEFAULT_BRIGHTNESS_VALUE LCD_DEFAULT_BRIGHTNESS_VALUE
-#else
-#	define DEFAULT_BRIGHTNESS_VALUE MAX_BRIGHTNESS_VALUE
+
+#if !defined(LCD_BACKLIGHT_NONE) && !defined(LCD_BACKLIGHT_VALUE) && !defined(LCD_BACKLIGHT_TABLE) && !defined(LCD_BACKLIGHT_CUSTOM)
+	// "old style" (< 0.4) dpfmodel.h - translate to (hopefully) sensible 0.4 values
+#	ifdef LCD_BACKLIGHT_HIGH
+#	    define LCD_BACKLIGHT_TABLE
+#    else
+#	    define LCD_BACKLIGHT_VALUE
+#    endif
+#    define LCD_USER_ADJUSTABLE_BRIGHTNESS
 #endif
+
+#ifndef LCD_MAX_BRIGHTNESS_VALUE
+#	define LCD_MAX_BRIGHTNESS_VALUE     21	// max brightness value
+#endif
+#ifndef LCD_DEFAULT_BRIGHTNESS_VALUE	// inital brightness value
+#	define LCD_DEFAULT_BRIGHTNESS_VALUE LCD_MAX_BRIGHTNESS_VALUE
+#endif
+#ifndef LCD_TIMER1_PERIOD
+#	define LCD_TIMER1_PERIOD 0x00ff
+#endif
+
+#if !defined(LCD_TIMER1_PWM_NONE) && !defined(LCD_TIMER1_PWM_P23) && !defined(LCD_TIMER1_PWM_P40)
+#	define LCD_TIMER1_PWM_P23
+#endif
+
 void set_brightness(unsigned char brightness) __banked;
 
 // Contrast
-#ifdef LCD_DEFAULT_CONTRAST_VALUE
-#	define DEFAULT_CONTRAST_VALUE LCD_DEFAULT_CONTRAST_VALUE
-#else
-#	define DEFAULT_CONTRAST_VALUE 1		// not used if no default value defined
+
+#if !defined(LCD_CONTRAST_NONE) && !defined(LCD_CONTRAST_TABLE) && !defined(LCD_CONTRAST_CUSTOM)
+	// "old style" (< 0.4) dpfmodel.h - translate to (hopefully) sensible 0.4 values
+#	ifdef LCD_DEFAULT_CONTRAST_VALUE
+#	    define LCD_CONTRAST_CUSTOM
+#	    define LCD_MAX_CONTRAST_VALUE (custom_contrasttbl_len)
+#    else
+#	    define LCD_CONTRAST_NONE
+#	    define LCD_MAX_CONTRAST_VALUE 0
+#	    define LCD_DEFAULT_CONTRAST_VALUE 0
+#    endif
 #endif
+
+unsigned char get_maxcontrast() __banked;
 void set_contrast(unsigned char contrast) __banked;
 void lcd_set_contrast_by_table(unsigned char contrast);
 
+//
+// No longer used from version 0.4 up
 // This rotation is defined by the typical application. Up means: default.
 // Note: the USB connector location may vary.
 // This is the logical rotation of the screen. The *physical* rotation
 // (see RGB order) might be just reverted.
 
-#define ROT_UP       0   // USB connector left
-#define ROT_LEFT     1   // USB connector up
-#define ROT_DOWN     2   // USB connector right
-#define ROT_RIGHT    3   // USB connector down
+//#define ROT_UP       0   // USB connector left
+//#define ROT_LEFT     1   // USB connector up
+//#define ROT_DOWN     2   // USB connector right
+//#define ROT_RIGHT    3   // USB connector down
 
 // Now we have the pixel order: These values stand for the number of
 // clockwise rotations of the screen from the default (by user)
 // until pixels appear in RGB order:
-#define PIXELORDER(x) (((x) & 0x3) << 1)
-#define RGB_UP    0
-#define RGB_LEFT  1
-#define RGB_DOWN  2
-#define RGB_RIGHT 3
+//#define PIXELORDER(x) (((x) & 0x3) << 1)
+//#define RGB_UP    0
+//#define RGB_LEFT  1
+//#define RGB_DOWN  2
+//#define RGB_RIGHT 3
 
-#ifndef LCD_ORIENTATION_RGB
-#	define	LCD_ORIENTATION_RGB RGB_UP
-#endif
+//#ifndef LCD_ORIENTATION_RGB
+//#	define	LCD_ORIENTATION_RGB RGB_UP
+//#endif
 
-#define ROTCODE_UP     0xd0 | PIXELORDER(LCD_ORIENTATION_RGB)
-#define ROTCODE_LEFT   0x60 | PIXELORDER(LCD_ORIENTATION_RGB + 1)
-#define ROTCODE_DOWN   0x10 | PIXELORDER(LCD_ORIENTATION_RGB + 2)
-#define ROTCODE_RIGHT  0xa0 | PIXELORDER(LCD_ORIENTATION_RGB + 3)
+//#define ROTCODE_UP     0xd0 | PIXELORDER(LCD_ORIENTATION_RGB)
+//#define ROTCODE_LEFT   0x60 | PIXELORDER(LCD_ORIENTATION_RGB + 1)
+//#define ROTCODE_DOWN   0x10 | PIXELORDER(LCD_ORIENTATION_RGB + 2)
+//#define ROTCODE_RIGHT  0xa0 | PIXELORDER(LCD_ORIENTATION_RGB + 3)
 
-#define ST_ROTCODE(x)     (x & 0xf0)
-#define RGBORDER(x)       (x & 0x06)
+//#define ST_ROTCODE(x)     (x & 0xf0)
+//#define RGBORDER(x)       (x & 0x06)
 
+//#ifndef DEFAULT_ORIENTATION
+//#	define DEFAULT_ORIENTATION ROT_LEFT
+//#endif
 
-// Assign dimensions according to default rotation:
-
-#ifndef DEFAULT_ORIENTATION
-#	define DEFAULT_ORIENTATION ROT_LEFT
-#endif
-
-#if (DEFAULT_ORIENTATION == ROT_RIGHT) || (DEFAULT_ORIENTATION == ROT_LEFT)
-#	define RESOL_X LCD_HEIGHT
-#	define RESOL_Y LCD_WIDTH
-#else
-#	define RESOL_X LCD_WIDTH
-#	define RESOL_Y LCD_HEIGHT
-#endif
-
+#define RESOL_X LCD_WIDTH
+#define RESOL_Y LCD_HEIGHT
 
 // Trick to resolve defines
 #define CONCAT(x, y) x##_##y
@@ -174,8 +132,10 @@ void lcd_set_contrast_by_table(unsigned char contrast);
 #define MANGLE2(x, y, z) CONCAT2(x, y, z)
 
 // API
+#define _INTERNAL_TAG custom
+
 #if LCD_WIDTH != LCD_HEIGHT
-#	if (DEFAULT_ORIENTATION == ROT_RIGHT) || (DEFAULT_ORIENTATION == ROT_LEFT)
+#	if LCD_ORIENTATION == LCD_ORIENTATION_LANDSCAPE
 #		define disp_blit     MANGLE2(_INTERNAL_TAG, landscape, blit)
 #	else
 #		define disp_blit     MANGLE2(_INTERNAL_TAG, portrait, blit)
@@ -197,7 +157,6 @@ void lcd_ili_setorientation(unsigned char which);
 void lcd_init_by_table(__code unsigned char *table);
 void lcd_custom_setorientation(unsigned char which);
 void lcd_custom_init(void);
-void lcd_custom_setcontrast(unsigned char contrast);
 
 #ifdef END_INCLUSIVE
 #define END_OFFSET_X (LCD_OFFSET_X - 1)

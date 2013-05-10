@@ -181,7 +181,7 @@ void term_selfont(BYTE which) __banked
 #ifdef BUILD_DEVEL
         g_term.num_cols = NUM_COLS_SMALL;
         g_term.num_lines = NUM_LINES_SMALL;
-	which += g_rgborder;
+	//which += g_rgborder;	// rgborder no longer used from 0.4 up
 	g_chartbl_offs[1] = (TABLE_SIZE >> 8) * which;
 #else
     if (which == FONT_SMALL || which == FONT_SMALL_REVERSE)
@@ -190,7 +190,7 @@ void term_selfont(BYTE which) __banked
         g_term.num_cols = NUM_COLS_SMALL;
         g_term.num_lines = NUM_LINES_SMALL;
         set_color(DEV_SCREEN_COL); set_bgcolor(DEV_SCREEN_BGCOL);
-        which += g_rgborder;
+        //which += g_rgborder;	// rgborder no longer used from 0.4 up
         g_chartbl_offs[1] = (TABLE_SIZE >> 8) * which;
     }
     else {

@@ -66,9 +66,15 @@ _custom_landscape_blit::
 	ret	
 ;
 X12e6:	setb	LCD_A0
-X12e8:	lcall	otp_lcd_write
+X12e8:	lcall	lcd_write
 	mov	a,r0
-	ljmp	otp_lcd_write
+	ljmp	lcd_write
 ;
 X12ef:	clr	LCD_A0
 	sjmp	X12e8
+;
+; Call to ROM lcd write routine
+; Replace, if custom lcd write is required
+;
+lcd_write::
+	ljmp	otp_lcd_write

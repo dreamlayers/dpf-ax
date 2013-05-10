@@ -34,7 +34,7 @@ You can run the DPF firmware in various modes and options:
      with splashscreen, bigger font and a more user-friendly menu system.
 
 Typically, all firmware manipulation of the DPF is done by python scripts.
-These are found in the fw/ folder of the distribution. Most of them work
+These are found in the tools/ folder of the distribution. Most of them work
 in all modes, you just have to specify different parameters for the USB
 connection, once it's made:
 
@@ -119,22 +119,22 @@ Usage
      restore.py ../src/fw_devel_<your DPF type>.bin -f
    - or for 'disp' firmware:
      ./hiddetach
-     restore.py ../src/fw_disp_<your DPF type>.bin -f
+     restore.py ../src/fw_<your DPF type>.bin -f
 
 If your dpf is not supported, have a look at the picframe wiki at
 http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
 or you can try to contact me (superelchi) at sourceforge or forum.doozan.com.
 
 IMPORTANT: identify.py will put a copy of your dpf's firmware in the file
-"full.bin". It is strongly recommended to make a backup of this file, so
-you can re-flash the original firmware if something goes wrong.
+"tools/fulldump_TIMESTAMP.bin". It is strongly recommended to make a backup of 
+this file, so you can re-flash the original firmware if something goes wrong.
 Alternatively you can make a dump of the entire flash using the fulldump.py script.
 
 LET ME SAY IT AGAIN: make a backup of your dpf's original firmware
                      before messing around!
 
 If restore.py is not working (or you prefer windows :-o), the alternative
-firmware is also programmable with ProgSPI.exe (see openschemes.org.)
+firmware is also programmable with ProgSPI.exe (see tools/README.windows.)
 
 Building a specific firmware
 -----------------------------
@@ -153,8 +153,7 @@ DISCLAIMER: There is no guarantee that you will not brick your DPF.
 The Author(s) of this code take no responsibilities. You are completely on
 your own there!
 If you bricked your DPF: No worries, you can restore the old image using
-the restore.py script (experimental) or the ProgSPI.exe Windows tool
-found at openschemes.org.
+the restore.py script or the ProgSPI.exe Windows tool found at openschemes.org.
 
 ----------------------------------------------------------------------------
 
@@ -167,42 +166,24 @@ One exception: You may note that the source of some included libraries
 is not disclosed, due some copyright restrictions on parts of the code.
 Once it's rewritten, it can be opensourced later on.
 
-TODO:
-1. Windows support, fully featured lcd4linux support via generic DPF library
-   (I leave this to others. I hate Windows.)
-2. Replace flash firmware with improved opensource environment
-   [almost done]
-3. Rewrite lcd library
-   [partially done]
-----------------------------------------------------------------------------
-Notes about the lcd4linux patch:
-
-Some 128x128 DPFs support an 'Orientation' property, like in the example
-section from a lcd4linux config file:
-
-Display dpf {
-    Driver     'DPF'
-    Port       'usb0'
-    Font       '6x8'
-    Foreground 'ffffff'
-    Background '000000'
-    Basecolor  '000000'
-	Orientation 0          # Orientation value from 0-3
-	Backlight  backlight   # Backlight variable control
-}
-
-On the 320x240 frames, this Orientation field is not supported, unless you
-wish to mirror your image for some reason. Currently, it can not be switched
-at runtime. You'll need to recompile the firmware if you want to change
-the default orientation.
-
-Another implemented option as you can see, is the Backlight variable.
-You can use values from 0-7, 0 turns it off, 7 is maximum brightness.
-
 ----------------------------------------------------------------------------
 
 Find updates and documentation here:
 
-http://tech.section5.ch/news/?p=77
+http://sourceforge.net/projects/dpf-ax/
+or
+http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
+(might be outdated)
+or
+http://ax206howtos.wikia.com/wiki/Main_Page
+or
+http://forum.doozan.com/list.php?9
+
+For our german users, explanations can be found here:
+
+http://geekparadise.de/2011/04/digitaler-bilderrahmen-von-pearl-als-statusdisplay-fur-dockstar/
+(rather outdated)
+or
+http://www.vdr-portal.de/board18-vdr-hardware/board11-displays/109196-howto-pearl-dpf-easy-hacking/
 
 ----------------------------------------------------------------------------

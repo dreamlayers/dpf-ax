@@ -4,6 +4,7 @@
  *
  */
 
+#include <stdint.h>
 #include <usb.h>
 #include "usbuser.h"
 #include "spiflash.h"

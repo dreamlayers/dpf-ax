@@ -1,7 +1,7 @@
 #include "ax206.h"
 
 #include "dpf.h"
-#include "config.h" // DEFAULT_ORIENTATION
+#include "config.h"
 #include "global.h"
 #include "utils.h"
 #include "usb.h"
@@ -47,9 +47,9 @@ void fill(unsigned short rgb16)
 	rgb16;
 	_asm
 	mov	a, dph
-	lcall otp_lcd_write
+	lcall lcd_write
 	mov	a, dpl
-	lcall otp_lcd_write
+	lcall lcd_write
 	_endasm;
 }
 
@@ -160,11 +160,10 @@ void umain(void) __banked
 	// proper handlers yet. Otherwise, they'll really slow us down.
 	// ie &= ~(T0IE | T1IE | T2IE );
 
-	g_lcd.brightness = DEFAULT_BRIGHTNESS_VALUE;
-	g_lcd.orientation = DEFAULT_ORIENTATION;
+	g_lcd.brightness = LCD_DEFAULT_BRIGHTNESS_VALUE;
+	g_lcd.orientation = LCD_ORIENTATION;
 	// Initialize RTC, Clocks, LCD and ports:
 	init_all();
-
 	sleep(100);
 
 #ifdef BUILD_DEVEL
@@ -178,7 +177,10 @@ void umain(void) __banked
 	init_config();
 #endif
 	term_init();
-	disp_home(); print_splash(); lcd_backlight_on();
+	disp_home();
+	print_splash();
+	sleep(100);
+	lcd_backlight_on();
 #ifdef FLIX_MODE
 	g_refresh = 1;
 	g_debug = 1;
@@ -221,12 +223,12 @@ void umain(void) __banked
 				// TODO: Disable USB for power saving
 				// usb_exit();
 				pcon &= ~TMRCSEL;
-				pcon |= 1 << TMRCSEL_SHFT; // Select12 MHz
+				//use 24 MHz for compatibility with buildwin
+				//and easier brightness adjust
+				//pcon |= 1 << TMRCSEL_SHFT; // Select12 MHz
 				g_fakeled &= ~LED_USB;
 				g_usb_active = 0;
-#ifdef LCD_BACKLIGHT_HIGH
 				set_brightness(g_lcd.brightness);
-#endif
 			}
 
 		}
@@ -238,9 +240,7 @@ void umain(void) __banked
 			pcon |= 2 << TMRCSEL_SHFT; // Select48 MHz
 			g_fakeled |= LED_USB;
 			g_usb_active = 1;
-#ifdef LCD_BACKLIGHT_HIGH
 			set_brightness(g_lcd.brightness);
-#endif
 		}
 
 		// Refresh of some screen items, when g_refresh set, force

@@ -1,4 +1,4 @@
-.include 'dpf.inc'
+	.include 'dpf.inc'
 
 	.area BLIT (CODE)
 
@@ -14,7 +14,7 @@ _custom_portrait_blit::
 	lcall	X12b2
 	mov	a,_g_blit+x1+1
 	mov	r0,_g_blit+x1
-	lcall	X12b2
+	acall	X12b2
 	clr	a
 	mov	r0,#0x2b
 	acall	X12ae
@@ -35,20 +35,22 @@ X12ae:	clr	LCD_A0
 	sjmp	X12b4
 ;
 X12b2:	setb	LCD_A0
-X12b4:	acall	X131a
-	lcall	otp_lcd_write
+X12b4:	lcall	lcd_write
 	mov	a,r0
-	acall	X131a
-	ljmp	otp_lcd_write
+	ljmp	lcd_write
 ;
-X131a:	rrc	a
-	mov	p0.0,c
+;
+; Call to ROM lcd write routine
+; Replace, if custom lcd write is required
+;
+lcd_write::
 	rrc	a
-	mov	p0.2,c
+	mov	p0.0,c		; LCD_PWR
+	rrc	a
+	mov	p0.2,c		; Temp NTC
 	setb	c
 	rlc	a
-	mov	c,SPI_CS
+	mov	c,SPI_CS	; P2.0
 	rlc	a
 	mov	p2,a
-	ret	
-;
+	ljmp	otp_lcd_write

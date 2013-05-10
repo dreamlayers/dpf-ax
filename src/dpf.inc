@@ -18,7 +18,8 @@ LCD_LED	=	_P23
 SPI_CS	= _P20
 
 ; FUNCTIONS in OTP
-otp_lcd_write         = 0x0f25 ; The display write function
+otp_lcd_write         = 0x0f25 	; The display write function
+				; do NOT call directly -- use lcdblit#lcd_write!
 
 ; Offsets in struct blit
 ; DO NOT CHANGE unless you update struct blit and the LCD library accordingly

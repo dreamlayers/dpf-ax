@@ -65,9 +65,9 @@ void print_splash(void) __banked
 	print_padded(PAD_WIDTH "    by hackfin@section5.ch"); putsc("|\n|");
 	print_padded(PAD_WIDTH "       and superelchi"); puts("|\n");
 	rawputc(0x1a); print_padded(PAD_WIDTH "\022"); rawputc(0x03); putsc("\n\n");
-#ifndef LCD_CONTROLLER_CUSTOM
-	putsc("LCD: " STRING(_INTERNAL_TAG) " (compatible)\n");
-#endif
+//#ifndef LCD_CONTROLLER_CUSTOM
+//	putsc("LCD: " STRING(_INTERNAL_TAG) " (compatible)\n");
+//#endif
 	putsc("Detecting flash...");
 	flash_detect();
 	putsc("\n");

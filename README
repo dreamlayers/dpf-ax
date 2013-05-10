@@ -5,7 +5,8 @@ DPF remote display software distribution (dpf-ax)
 This is a free software package to:
 
 * Patch or reprogram digital picture frames (DPFs) based on the AX206 CPU
-* Make them display system information using lcd4linux
+* Make them display system information using lcd4linux, VDR (Video Disk Recorder)
+  and other linux based software.
 
 This is a chaotically growing README. You'll have to gather some information
 from here and there and probably use google, too. Sorry!
@@ -17,65 +18,61 @@ AX206 DPF firmware (also referred to as BSOH - blue screen of hack)
 
 Read all the firmware details in src/README or src/README.developer
 
+----------------------------------------------------------------------------
+Building
+----------------------------------------------------------------------------
+
+Verify that you have a decent development system (GCC, development libraries,
+subversion -- if you want to build lcd4linux) installed.
+  
+You can build different targets, depending on your needs.
+
+* The dpf access library, python modules and helpers:
+  > make
+
+* A special version of lcd4linux with dpf-ax support:
+  You need an internet connection. because lcd4linux is pulled from their server.
+  You might also have to install the package "pkg-config", or else the
+  configure procedure will likely fail.
+  > make lcd4linux
+
+* The firmware for all known frames:
+  Note: read src/README for more information about prerequisites for firmware building.
+  > make firmware
+
+* The full monty:
+  > make all
+
+----------------------------------------------------------------------------
+Windows support
+----------------------------------------------------------------------------
+
+There is no Windows driver for hacked frames. Period.
+
+But there is partial support for firmware detection and backup.
+See tools/README.windows.
 
 ----------------------------------------------------------------------------
 LCD4linux display notes
 ----------------------------------------------------------------------------
 Usage:
 
-* Verify that you have a decent development system (GCC, development
-  libraries, subversion -- if you want to build lcd4linux) installed.
-  You might also have to install the package "pkg-config", or else the
-  configure procedure will likely fail.
-
 * Configure lcd4linux: normally, the default settings will do. If you wish
   to use other drivers or cross compile, check build-dpf-lcd4linux.sh
   for configure options
 
-* Note: For lcd4linux, you may want to have some development libraries
-  installed, for example:
-    libgd2-noxpm-dev  -- to display images
-
-* Build the stuff using "make all". You need an internet connection. because 
-  lcd4linux is pulled from their server.
-
 * Try it:
   > cd lcd4linux; lcd4linux -f ../dpf.conf -F
-
-NOTE: The orientation for the Pearl type display was changed (Details, see
-Changelog) DO NOT INSTALL if you wish to keep your landscape orientation.
-Later, we'll make this configureable, if there turns out to be a good
-solution (there currently isn't).
-
-Also note: NO SUPPORT! NO WARRANTY! FRIENDS DON'T MAKE FRIENDS HACK THEIR
-DPF! LET ALONE NON-FRIENDS! (Bottomline: Don't ask me if I can hack your DPF).
-
-If you wish to hack your DPF, please check the sites listed below.
 
 ----------------------------------------------------------------------------
 Notes about the lcd4linux patch:
 
-The 128x128 DPFs all support an 'Orientation' property, like in the example
-section from a lcd4linux config file:
-
-Display dpf {
-    Driver     'DPF'
-    Port       'usb0'
-    Font       '6x8'
-    Foreground 'ffffff'
-    Background '000000'
-    Basecolor  '000000'
-	Orientation 0          # Orientation value from 0-3
-	Backlight  backlight   # Backlight variable control
-}
-
-On the 320x240 frames, this Orientation field is not supported, unless you
-wish to mirror your image for some reason. Currently, it can not be switched
-at runtime. You'll need to recompile the firmware if you want to change
-the default orientation.
+Support for 'Orientaion' property has been removed in version 0.4.
 
 Another implemented option as you can see, is the Backlight variable.
 You can use values from 0-7, 0 turns it off, 7 is maximum brightness.
+Note: Some frames only support off (0) and on (1-7).
+      See comments in tools/knowntypes.html.
 
 ----------------------------------------------------------------------------
 Troubleshooting
@@ -91,17 +88,24 @@ Features
 For features of this firmware, see Changelog
 
 ----------------------------------------------------------------------------
-Find updates and documentation here:
+Find updates, documentation and some help here:
 
-http://tech.section5.ch/news/?p=77
-
-or here:
-
+http://sourceforge.net/projects/dpf-ax/
+or
 http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
 (might be outdated)
+or
+http://ax206howtos.wikia.com/wiki/Main_Page
+or
+http://forum.doozan.com/list.php?9
 
-For our german users, a very good explanation is found here:
+For our german users, explanations can be found here:
 
 http://geekparadise.de/2011/04/digitaler-bilderrahmen-von-pearl-als-statusdisplay-fur-dockstar/
+(rather outdated)
+or
+http://www.vdr-portal.de/board18-vdr-hardware/board11-displays/109196-howto-pearl-dpf-easy-hacking/
+
 
 (c) 3/2012, hackfin
+    5/2013, superelchi

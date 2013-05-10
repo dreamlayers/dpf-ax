@@ -113,13 +113,13 @@ exit:	setb	SPI_CS
 ;
 clrline:
 	mov	a, _g_bgcol + 1
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	mov	a, _g_bgcol
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	mov	a, _g_bgcol + 1
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	mov	a, _g_bgcol
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	djnz	r2, clrline
 	ret
 ;
@@ -128,16 +128,16 @@ doline:
 	mov	r1, a
 bsl:	jnb	_SPIPND, .
 	xch	a, spibuf
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	jnb	_SPIPND, .
 	xch	a, spibuf
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	jnb	_SPIPND, .
 	xch	a, spibuf
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	jnb	_SPIPND, .
 	xch	a, spibuf
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	djnz	r1, bsl
 	mov	a, r6
 	mov	r2, a

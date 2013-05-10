@@ -1,10 +1,18 @@
 	.include 'dpf.inc'
 
 	.area BLIT (CODE)
+;
+; Call to ROM lcd write routine
+; Replace, if custom lcd write is required
+;
+lcd_write::
+	ljmp	otp_lcd_write
+
 
 ar0 = 0x00
 
 _custom_landscape_blit::
+
 	push	ar0
 	clr	a
 	mov	r0,#0x2
@@ -14,7 +22,7 @@ _custom_landscape_blit::
 	lcall	X12e0
 	clr	a
 	mov	r0,#0x3
-	lcall	X12dc
+	acall	X12dc
 	clr	a
 	mov	r0,_g_blit+x0
 	acall	X12e0

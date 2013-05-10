@@ -1,5 +1,6 @@
 //
 // Type: taobao
+// Comment: Also used by linkdelight.
 //
 // Status: supported
 // Credit: By superelchi (thx cuckoohello)
@@ -10,7 +11,8 @@
 // CRC: 0x83dc7e28, 0x693ec116
 //
 // 
-#define LCD_320x240
+#define LCD_WIDTH  320L
+#define LCD_HEIGHT 240L
 #define LCD_CONTROLLER_CUSTOM
 #define LCD_BACKLIGHT_HIGH
 #define LCD_DEFAULT_CONTRAST_VALUE 5

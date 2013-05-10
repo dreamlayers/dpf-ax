@@ -1,0 +1,142 @@
+----------------------------------------------------------------------------
+Some words of warning
+----------------------------------------------------------------------------
+
+These tools will help you detect your frames type and/or backup its original
+firmware.
+If you don't know what that means, then you probably shouldn't even try to use it.
+
+If you don't understand half of what's written here, see the previous paragraph.
+
+Do *NOT* do anything with this unless your are *REALLY* sure you understand what you're doing.
+
+It may void your warranty, leave you with a paperweight or eat your frame.
+
+If possible, use the Linux version of these tools!
+See http://sourceforge.net/projects/dpf-ax.
+
+Still here? Okay, you have been warned. Let's do it:
+
+----------------------------------------------------------------------------
+Prerequisites
+----------------------------------------------------------------------------
+
+1.
+The firmware detection & backup programs are written in Python, so you
+will need a Python 2 interpreter.
+NOTE: Python 2 is required. Python 3 WILL NOT WORK!
+
+Download it either from python.org (+ pythonwin extensions from sf):
+http://python.org/download/  (use newest Python 2.7 Windows or Windows X86-64 Installer)
+http://sourceforge.net/projects/pywin32/
+or (recommended)
+ActivePython Community Edition 2.7 (pythonwin extensions already included):
+http://www.activestate.com/activepython/downloads ((use newest Python 2.7 Windows x86 or Windows x64 Installer).
+
+2.
+A frame with the original Buildwin firmware. An already hacked frame will *NOT* work!
+
+3.
+Download the dpf-ax tools: dpf-ax_0.xx_windows.zip from
+http://sourceforge.net/projects/dpf-ax/files
+("xx" is the version, e. g. "dpf-ax_0.40_windows.zip" - always use the newest one)
+and extract the ZIP to, say, C:\.
+
+----------------------------------------------------------------------------
+Firmware detection
+----------------------------------------------------------------------------
+
+- Connect your frame and enable USB transfer
+  (Press "MENU" -> select "USB Connect", "Connect to PC" or whatever its called).
+- Wait until Windows shows the frame as a new CD-ROM drive.
+  Note: do *NOT* install and/or start the software DPFMate on this CD-ROM!
+- Open a Windows Command Prompt (START - Enter "cmd" in search box).
+- cd to the directory you extracted the ZIP to, e.g.:
+  $ cd c:\dpf-ax\fw
+
+- Detect your frames type & make backup of its firmware:
+  $ c:\Python27\python.exe identify.py e:
+                                       ^
+          Substitute with your CD-ROM drive letter
+  A backup of the frames firmware will be saved to "fulldump_win_TIMESTAMP.bin".
+
+- Detect type of a previously made dump:
+  $ c:\Python27\python.exe fulldump.py fulldump_win_TIMESTAMP.bin
+                                       ^
+          Substitute with filename of the dump
+
+If you installed Python to a different path, adjust it accordingly.
+
+Identify.py will tell you if your frame is supported.
+If yes --> continue with "Hacking the frame".
+If no  --> continue with "Unsupported frame".
+
+----------------------------------------------------------------------------
+Firmware backup only
+----------------------------------------------------------------------------
+
+- Connect your frame and enable USB transfer
+  (Press "MENU" -> select "USB Connect", "Connect to PC" or whatever its called).
+- Wait until Windows shows the frame as a new CD-ROM drive.
+  Note: do *NOT* install and/or start the software DPFMate on this CD-ROM!
+- Open a Windows Command Prompt (START - Enter "cmd" in search box).
+- cd to the directory you extracted the dpf-ax ZIP to, e.g.:
+  $ cd c:\dpf-ax\fw
+
+- Enter
+  $ c:\Python27\python.exe fulldump.py e:
+                                       ^
+          Substitute with your CD-ROM drive letter
+  A backup of the frames firmware will be saved to "fulldump_win_TIMESTAMP.bin".
+
+If you installed Python to a different path, adjust it accordingly.
+
+----------------------------------------------------------------------------
+Hacking the frame
+----------------------------------------------------------------------------
+
+To flash the modified fw under Windows you need a tool called "ProgSPI.exe"
+from Buildwins's SDK. Have a look at
+http://openschemes.com/2011/08/24/ax206-hardware-bootloader-well-that-was-easy/
+for more information.
+
+Download the firmware package "dpf-ax_0.xx_firmware_YYYMMDD.zip" from
+http://sourceforge.net/projects/dpf-ax/files
+("xx" is the version, "YYYYMMDD" is a timestamp. Use the one with the newest timestamp).
+Extract it and use the fw_TYPE.bin that matches the TYPE identify.py detected.
+
+Note: if ProgSPI.exe tells you something like
+"Can't find flash info, please add its info to flash library according to the flash ID"
+your flash chip is not in its the list of know devices.
+Go to http://forum.doozan.com/list.php?9 and search for "FlashLib.ini".
+Use the newest one you can find. If the message still appears, post a request
+in this forum (include ProgSPI's output) or - if you are *REALLY* sure what you are
+doing - add a new entry to FlashLib.ini by yourself.
+
+----------------------------------------------------------------------------
+Unsupported frame
+----------------------------------------------------------------------------
+
+If your frame is currently not supported by dpf-ax, post a request in
+http://forum.doozan.com/read.php?9,10026. Don't forget to include the
+dump of the original firmware.
+Or switch to a real OS (Linux), try to understand how dpf-ax works and add the
+frame by yourself. ;-)
+
+----------------------------------------------------------------------------
+Windows driver
+----------------------------------------------------------------------------
+
+There is no Windows driver for hacked frames. Period.
+
+----------------------------------------------------------------------------
+Notes
+----------------------------------------------------------------------------
+
+- Again: if possible, use the Linux version of these tools!
+  See http://sourceforge.net/projects/dpf-ax.
+- You need a Python 2 interpreter. Python 3 will not work.
+- Fulldump.py and identify.py are not able to detect the size of
+  your frames flash chip under Windows. So they will ALWAYS read 1 MB of
+  your frames flash (which is enough for type detection), even if
+  the flash size is greater than 1 MB.

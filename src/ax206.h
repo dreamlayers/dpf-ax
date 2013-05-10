@@ -377,7 +377,7 @@ sfr at 0xd8                  spicon;
 /* ADC buffer low */ 
 sfr at 0xdc                  adcbufl;
 
-/* Timer2 Control */ 
+/* Timer1 Control */ 
 sfr at 0xe1                  tmr1con;
 #	define T1POS2      _BIT_(7)     // PWM Out P4.0 Select
 #	define T1POS1      _BIT_(6)     // PWM Out P2.3 Select

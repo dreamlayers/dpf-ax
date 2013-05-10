@@ -15,14 +15,14 @@ RETCODE handle_setprop(__idata BYTE *b) __banked
 			// for backward compatibility:
 			// "old" brightness was 0..7, new is 0..21
 			brightness = b[9] * 3;
-			if (brightness >= MAX_BRIGHTNESS_VALUE)
-				brightness = MAX_BRIGHTNESS_VALUE;
+			if (brightness >= LCD_MAX_BRIGHTNESS_VALUE)
+				brightness = LCD_MAX_BRIGHTNESS_VALUE;
 			else if (brightness) brightness -= 2;
 			g_lcd.brightness = brightness;
 			if (g_lcd.brightness == 0) {
 				lcd_backlight_off();
 			} else {
-				lcd_backlight_on();
+				lcd_backlight_on(); // this will also set the brightness
 			}
 			break;
 		case PROPERTY_ORIENTATION:

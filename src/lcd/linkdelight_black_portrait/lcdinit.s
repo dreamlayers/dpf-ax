@@ -3,6 +3,10 @@
 	.area LCDAUX (CODE)
 
 _lcd_custom_init::
+;
+	mov	_uartcon,#0x0
+	orl	p1,#0x17
+;
 	mov	p3dir,#0x0
 	anl	p1dir,#0xe8
 	anl	p2dir,#0x1
@@ -27,11 +31,28 @@ X156a:	djnz	r7,X156a
 	djnz	r5,X1566
 	ret	
 ;
+; If custom backlight handling is needed, uncomment the following label
+; and set LCD_BACKLIGHT_CUSTOM in dpfmodel.h
 ;
-_lcd_custom_setcontrast::
-	ljmp	_lcd_set_contrast_by_table
+;_lcd_custom_setbacklight::
+
+;
+; If custom contrast handling is needed, uncomment the following label
+; and set LCD_CONTRAST_CUSTOM in dpfmodel.h
+;
+;_lcd_custom_setcontrast::
 
 	.area LCDAUX (CODE)
+
+
+;backlight_table::
+;	.db	If needed, put data for custom backlight handling here
+;_custom_backlighttbl_len::  .db  . - backlight_table
+
+
+;contrast_table::
+;	.db	If needed, put data for custom contrast handling here
+;_custom_contrasttbl_len::  .db  . - contrast_table
 
 _custom_contrasttbl::
   .db  0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10

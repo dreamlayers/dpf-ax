@@ -29,7 +29,9 @@ const MENUAREA XMenu g_setupmenu = {
 
 const MENUAREA MItem items[] = {
     { STR_SPLASH   , F_MENUSWITCH, MENU_SPLASH    , 0, 0, 0 },
+#if defined(LCD_USER_ADJUSTABLE_BRIGHTNESS)
     { "Backlight"  , F_MENUSWITCH, MENU_BACKLIGHT , 0, 0, 0  },
+#endif
 #if defined(LCD_USER_ADJUSTABLE_CONTRAST)
     { "Contrast"   , F_MENUSWITCH, MENU_CONTRAST  , 0, 0, 0  },
 #endif    

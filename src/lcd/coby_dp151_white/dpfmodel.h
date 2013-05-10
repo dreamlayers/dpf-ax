@@ -9,7 +9,8 @@
 // CRC: 0xd455d959, 0x1bb4578d
 //
 // 
-#define LCD_128x128
+#define LCD_WIDTH  128L
+#define LCD_HEIGHT 128L
 #define LCD_CONTROLLER_CUSTOM
 // No detectable Lcd_contrast in fw - do not use contrast settings
 //#define LCD_DEFAULT_CONTRAST_VALUE 8

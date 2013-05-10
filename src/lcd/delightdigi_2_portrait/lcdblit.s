@@ -1,6 +1,13 @@
 .include 'dpf.inc'
 
 	.area BLIT (CODE)
+;
+; Call to ROM lcd write routine
+; Replace, if custom lcd write is required
+;
+lcd_write::
+	ljmp	otp_lcd_write
+
 
 ar0 = 0x00
 

@@ -29,3 +29,9 @@ _custom_blit::
 	lcall	otp_lcd_write
 	setb	LCD_A0
 	ret
+;
+; Call to ROM lcd write routine
+; Replace, if custom lcd write is required
+;
+lcd_write::
+	ljmp	otp_lcd_write

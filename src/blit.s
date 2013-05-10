@@ -48,10 +48,10 @@ w4:	jnb	_SPIPND, w4
 repeat:
 w5:	jnb	_SPIPND, w5
 	xch	a, spibuf
-	lcall	otp_lcd_write
+	lcall	lcd_write
 w6:	jnb	_SPIPND, w6
 	xch	a, spibuf
-	lcall	otp_lcd_write
+	lcall	lcd_write
 
 	djnz	r7, repeat
 	setb	SPI_CS

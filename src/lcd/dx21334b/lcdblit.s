@@ -72,3 +72,9 @@ X12e8:	lcall	otp_lcd_write
 ;
 X12ef:	clr	LCD_A0
 	sjmp	X12e8
+;
+; Call to ROM lcd write routine
+; Replace, if custom lcd write is required
+;
+lcd_write::
+	ljmp	otp_lcd_write

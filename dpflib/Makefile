@@ -29,5 +29,7 @@ clean:
 	-rm -f $(DESTDIR)/fwload $(DESTDIR)/libdpf.a
 	-rm -f bload testusb
 
+distclean: clean
+
 install: all
 	cp fwload libdpf.a $(DESTDIR)

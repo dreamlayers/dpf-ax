@@ -1,90 +1,91 @@
-DISTVERSION = 0.3devel
+DISTVERSION := $(shell cat ./version)
 
 CURDIR = $(shell pwd)
 
 # Make sure this path is correct. Needs to point to dpf.h and libdpf.a
 DPFLIB = dpflib
+INC = include
 PYDPF = python
+SRC = src
+TOOLS = tools
 
 FILES = Makefile lcd4linux-svn1142-dpf.patch README Changelog
 
 ifndef DESTDIR
-DESTDIR = $(HOME)/src
+DESTDIR = $(CURDIR)/..
 endif
 
 default: $(DPFLIB)/libdpf.a
-	-[ -e src ] && (cd src; ./buildall.sh)
 	$(MAKE) -C $(PYDPF) install
 
-all: default lcd4linux/lcd4linux
+all: default firmware lcd4linux
+
+firmware:
+	-[ -e $(SRC) ] && (cd $(SRC); ./buildall.sh)
 
 $(DPFLIB)/libdpf.a:
 	$(MAKE) -C $(DPFLIB) install
 
-lcd4linux/lcd4linux: $(DPFLIB)/libdpf.a
+lcd4linux: $(DPFLIB)/libdpf.a
 	./build-dpf-lcd4linux.sh $(CURDIR)
 
-dist: installdist
-	tar cfz /tmp/dpfhack-$(DISTVERSION).tgz --numeric-owner -C $(DESTDIR) dpf
+dist-all: dist dist-firmware dist-windows
 
+dist: distclean
+	-rm -rf /tmp/dpf-ax
+	mkdir /tmp/dpf-ax
+	cp -r $(DPFLIB) /tmp/dpf-ax
+	cp -r $(TOOLS) /tmp/dpf-ax
+	cp -r $(INC) /tmp/dpf-ax
+	cp -r $(PYDPF) /tmp/dpf-ax
+	cp $(shell find . -maxdepth 1 -type f -printf "%f ") /tmp/dpf-ax
+	tar --create --gzip --numeric-owner\
+	 --file=$(DESTDIR)/dpf-ax_$(DISTVERSION).tgz\
+	 --directory=/tmp dpf-ax
+	-rm -rf /tmp/dpf-ax
 
-PYSCRIPTS += detect.py fulldump.py profiles.py hackit.py
-PYSCRIPTS += chartbl.py update.py restore.py
+dist-firmware: distclean
+	-rm -rf /tmp/dpf-ax
+	mkdir /tmp/dpf-ax
+	cp -r $(SRC) /tmp/dpf-ax
+	tar --create --gzip --exclude-vcs --numeric-owner\
+	 --file=$(DESTDIR)/dpf-ax_$(DISTVERSION)_firmware-src_$(shell date +"%Y%m%d").tgz\
+	 --directory=/tmp dpf-ax
+	(cd $(SRC); ./buildall.sh)
+	-rm -rf /tmp/dpf-ax
+	mkdir /tmp/dpf-ax
+	mkdir /tmp/dpf-ax/src
+	cp $(SRC)/fw_*.bin /tmp/dpf-ax/src
+	tar --create --gzip --exclude-vcs --numeric-owner\
+	 --file=$(DESTDIR)/dpf-ax_$(DISTVERSION)_firmware_$(shell date +"%Y%m%d").tgz\
+	 --directory=/tmp dpf-ax
+	(cd /tmp; zip -X -r -q $(DESTDIR)/dpf-ax_$(DISTVERSION)_firmware_$(shell date +"%Y%m%d").zip dpf-ax)
+	-rm -rf /tmp/dpf-ax
 
-LIBFILES += Makefile dpflib.c fwload.c rawusb.c scsi.c bootload.c
-LIBFILES += sglib.h dpf.h 
-
-SRCFILES = main.c menu.c ovldata.c
-SRCFILES += appload.c usbhandler.c usbaux.c usb_ep1.c lcd.c printex.c irq.c
-SRCFILES += init.c debug.c print.c flash.c properties.c
-SRCFILES += ax206ex.h ax206.h config.h dpf.h global.h lcd.h
-SRCFILES += lcduser.h print.h usb.h utils.h
-SRCFILES += ili9163.h ili9320.h otm3225.h # st7637.h
-SRCFILES += bootstrap.s blit.s irqh.s usbblit.s bankswitch.s
-SRCFILES += dpf.inc ax206.inc spiflash.inc
-SRCFILES += Makefile rules.mk
-SRCFILES += README README.developer
-
-
-FILES += fw/README unixdll.mk
-FILES += $(PYDPF)/Makefile $(PYDPF)/py_device.c
-FILES += include/usbuser.h include/spiflash.h
-FILES += $(LIBFILES:%=$(DPFLIB)/%)
-# No longer copy "hack" files
-# FILES += src/hack.inc src/dpf_int.inc
-# FILES += $(wildcard src/p_*.s) $(wildcard src/jmptbl*.s)
-FILES += src/font4x8.bin
-FILES += src/dpf.lib src/lcd.lib
-FILES += src/bootstrap.lnk src/compile.py src/crc.py
-
-FILES += $(SRCFILES:%=src/%)
-
-FILES += reverse/common.in reverse/dump.py reverse/Makefile reverse/README
-
-DPFINST = $(DESTDIR)/dpf
-
-installdist:
-	install -d $(DPFINST)
-	install -d $(DPFINST)/include
-	install -d $(DPFINST)/reverse
-	install -d $(DPFINST)/src
-	install -d $(DPFINST)/fw
-	install -d $(DPFINST)/dpflib
-	install -d $(DPFINST)/python
-	install -d $(DPFINST)/fw/hexfiles
-	install -m644 include/spiflash.h $(DPFINST)/include
-	cp -r fw/hexfiles $(DPFINST)/fw
-	install -m644 fw/font4x8.bin $(DPFINST)/fw
-	install -m755 $(PYSCRIPTS:%=fw/%) $(DPFINST)/fw
-	install -m755 build-dpf-lcd4linux.sh $(DPFINST)
-	for i in $(FILES); do \
-		install -m644 $$i $(DPFINST)/$$i; \
-	done
-	install -m600 dpf.conf $(DPFINST)
-	install -m600 dpfbig.conf $(DPFINST)
-	cd $(DPFINST)/fw; ln -sf ../Debug .
+dist-windows:
+	-rm -rf /tmp/dpf-ax
+	mkdir /tmp/dpf-ax
+	mkdir /tmp/dpf-ax/$(TOOLS)
+	cp $(TOOLS)/fulldump.py /tmp/dpf-ax/$(TOOLS)
+	cp $(TOOLS)/identify.py /tmp/dpf-ax/$(TOOLS)
+	cp $(TOOLS)/knowntypes.py /tmp/dpf-ax/$(TOOLS)
+	cp $(TOOLS)/readflash_win.py /tmp/dpf-ax/$(TOOLS)
+	cp $(TOOLS)/knowntypes.html /tmp/dpf-ax/$(TOOLS)
+	cp $(TOOLS)/README.windows /tmp/dpf-ax/$(TOOLS)
+	(cd /tmp; zip -X -l -r -q $(DESTDIR)/dpf-ax_$(DISTVERSION)_windows.zip dpf-ax)
+	-rm -rf /tmp/dpf-ax
 
 clean:
 	$(MAKE) -C $(DPFLIB) clean
 	$(MAKE) -C $(PYDPF) clean
-	-[ -e lcd4linux/Makefile ] && (cd lcd4linux; make distclean)
+	$(MAKE) -C $(TOOLS) clean
+	$(MAKE) -C $(SRC) clean
+	[ -e lcd4linux/Makefile ] && (cd lcd4linux; make distclean) || true
+
+distclean:
+	$(MAKE) -C $(DPFLIB) distclean
+	$(MAKE) -C $(PYDPF) clean
+	$(MAKE) -C $(TOOLS) distclean
+	$(MAKE) -C $(SRC) distclean
+	[ -e lcd4linux ] && (rm -r lcd4linux) || true
+

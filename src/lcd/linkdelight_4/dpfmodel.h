@@ -10,7 +10,8 @@
 // CRC: 0x66aebe1e, 0xc70ac3d2
 //
 // 
-#define LCD_320x240
+#define LCD_WIDTH  320L
+#define LCD_HEIGHT 240L
 #define LCD_CONTROLLER_CUSTOM
 #define LCD_BACKLIGHT_HIGH
 #define LCD_DEFAULT_BRIGHTNESS_VALUE 15

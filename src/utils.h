@@ -19,8 +19,8 @@ void sleep(unsigned short ticks) __banked;
 
 /** Initialize LCD screen */
 void lcd_init(void) __banked;
-#define lcd_backlight_on() timer1_config(g_lcd.brightness); _LCD_LED = nON;
-#define lcd_backlight_off() tmr1con = 0; _LCD_LED = nOFF;
+#define lcd_backlight_on() timer1_config(1);
+#define lcd_backlight_off() timer1_config(0);
 
 
 
@@ -141,7 +141,7 @@ char handle_getprop(__idata unsigned char *b) __banked;
 
 #define LCD_WRITECONST(x) \
 _asm mov a, _escape(HASH)x _endasm; \
-_asm lcall otp_lcdwrite _endasm;
+_asm lcall lcd_write _endasm;
 
 #define RUB_WATCHDOG() wdtcon |= WDTPND
 

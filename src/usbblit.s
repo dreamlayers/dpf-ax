@@ -86,9 +86,9 @@ next_pkt:
 	mov	usbadr, #FIFO1
 repeat32:
 	acall	usb_readbyte
-	lcall	otp_lcd_write	; write color byte 0
+	lcall	lcd_write	; write color byte 0
 	acall	usb_readbyte
-	lcall	otp_lcd_write	; write color byte 1
+	lcall	lcd_write	; write color byte 1
 	djnz	r7, repeat32
 	acall	usb_ack_rx	; finish packet rx
 
@@ -109,9 +109,9 @@ write_remainder:
 	mov	usbadr, #FIFO1
 repeat_n:
 	acall	usb_readbyte
-	lcall	otp_lcd_write	; write color byte 0
+	lcall	lcd_write	; write color byte 0
 	acall	usb_readbyte
-	lcall	otp_lcd_write	; write color byte 1
+	lcall	lcd_write	; write color byte 1
 	djnz	r5, repeat_n
 	acall	usb_ack_rx	; finish packet rx
 skip_remainder:

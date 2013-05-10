@@ -3,16 +3,48 @@
 	.area LCDAUX (CODE)
 
 _lcd_custom_init::
+	anl	p2dir,#0xf7	;start with backlight off
+	orl	p2,#0x08
+;
 	mov	dptr,#_custom_initseq
 	ljmp	_lcd_init_by_table
+
 ;
-; No detectable Lcd_Contrast routine - do not use contrast setting!
+; If custom backlight handling is needed, uncomment the following label
+; and set LCD_BACKLIGHT_CUSTOM in dpfmodel.h
+; r3 contains brightness value (0 .. LCD_MAX_BRIGHTNESS_VALUE)
+;
+_lcd_custom_setbacklight::
+	anl	p2dir,#0xf7
+	mov	a,r3
+	jnz	backlight_on
+	orl	p2,#0x08
+	ret
+backlight_on:
+	anl	p2,#0xf7
+	ret
+;
+;
+; If custom contrast handling is needed, uncomment the following label
+; and set LCD_CONTRAST_CUSTOM in dpfmodel.h
 ;
 ;_lcd_custom_setcontrast::
-;	ret
 
 	.area LCDAUX (CODE)
 
+
+;backlight_table::
+;	.db	If needed, put data for custom backlight handling here
+;_custom_backlighttbl_len::  .db  . - backlight_table
+
+
+;contrast_table::
+;	.db	If needed, put data for custom contrast handling here
+;_custom_contrasttbl_len::  .db  . - contrast_table
+
+;
+; NOTE from identify.py: not used
+;
 ;_custom_contrasttbl::
 ;  .db  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 ;_custom_contrasttbl_len::  .db  7
@@ -25,14 +57,17 @@ _lcd_custom_init::
 ;  .db  0x07
 ;_custom_contrasttbl2_offsets_len::  .db  1
 
-_custom_backlighttbl::
-  .db  0x32, 0x3c, 0x46, 0x50, 0x5a, 0x64, 0x6e, 0x78, 0x82, 0x8c
-  .db  0x96, 0xa0, 0xaa, 0xb4, 0xbe, 0xc8, 0xd2, 0xdc, 0xe6, 0xf0
-  .db  0xff
-_custom_backlighttbl_len::  .db  21
+;
+; NOTE from identify.py: not used
+;
+;_custom_backlighttbl::
+;  .db  0x32, 0x3c, 0x46, 0x50, 0x5a, 0x64, 0x6e, 0x78, 0x82, 0x8c
+;  .db  0x96, 0xa0, 0xaa, 0xb4, 0xbe, 0xc8, 0xd2, 0xdc, 0xe6, 0xf0
+;  .db  0xff
+;_custom_backlighttbl_len::  .db  21
 
-_custom_backlighttbl2::
-_custom_backlighttbl2_len::  .db  0
+;_custom_backlighttbl2::
+;_custom_backlighttbl2_len::  .db  0
 
 _custom_initseq::
   .db  0x00, 0xb0, 0x64, 0x11, 0xb0, 0x0a, 0x10, 0xb0, 0x64, 0x11

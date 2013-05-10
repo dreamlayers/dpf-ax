@@ -8,7 +8,8 @@ typedef unsigned long FlashAddr;
 
 /* OTP routines that we use: */
 
-#define otp_lcdwrite 0x0f25
+// do NOT call directly - use lcdblit#lcd_write!
+//#define otp_lcd_write 0x0f25
 
 /* Here is stuff that is used to interface with some of the
  * (not well designed) original firmware modules
@@ -74,6 +75,7 @@ __xdata unsigned char at (0x0100) g_dataram[0x100];
 #define BUT_DOWN   P31  // DOWN button
 #define BUT_UP     P32  // UP button
 
+// ?? may be also timer 1 pwm output
 #define AUDIO_EN   P40  // Audio I/O Voltage enable
 
 #define _FLA_PWR   _B_P01 // Flash VCC; 0 = on, 1 = off
@@ -82,7 +84,8 @@ __xdata unsigned char at (0x0100) g_dataram[0x100];
 #define _LCD_RD    _B_P12
 #define _LCD_A0    _B_P14
 #define _LCD_CS    _B_P21
-#define _LCD_LED   _B_P23 // LED, 0: on 1: off
+#define _LCD_LED   _B_P23 // LED, 0: on 1: off, or 0: off 1: on (depends on lcd)
+                          // also port for timer1 pwm signal, if backlight has pwm control
   
 // Negated GPIO functionality:
 #define nON  0

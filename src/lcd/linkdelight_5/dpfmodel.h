@@ -9,7 +9,8 @@
 // CRC: 0x7dafdaf2, 0xaf2470d2
 //
 // 
-#define LCD_320x240
+#define LCD_WIDTH  320L
+#define LCD_HEIGHT 240L
 #define LCD_CONTROLLER_CUSTOM
 #define LCD_BACKLIGHT_HIGH
 #define LCD_DEFAULT_CONTRAST_VALUE 4

@@ -39,3 +39,9 @@ X12b4:	lcall	otp_lcd_write
 	mov	a,r0
 	ljmp	otp_lcd_write
 
+;
+; Call to ROM lcd write routine
+; Replace, if custom lcd write is required
+;
+lcd_write::
+	ljmp	otp_lcd_write

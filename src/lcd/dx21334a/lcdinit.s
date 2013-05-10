@@ -3,33 +3,36 @@
 	.area LCDAUX (CODE)
 
 _lcd_custom_init::
-	mov	p3dir,#0x0
-	anl	p1dir,#0xe8
-	anl	p2dir,#0xfd
-	orl	wdtcon,#0x20
-	clr	LCD_CS
-	clr	LCD_RST
-	mov	a,#0x96
-	lcall	X154c
-	setb	LCD_RST
-	mov	a,#0x96
-	lcall	X154c
-;        
+	lcall	lcd_reset
+;
 	mov	dptr,#_custom_initseq
 	ljmp	_lcd_init_by_table
 
-X154c:	mov	r5,a
-X154d:	mov	r6,#0x18
-X154f:	mov	r7,#0xfa
-X1551:	djnz	r7,X1551
-	djnz	r6,X154f
-	djnz	r5,X154d
-	ret
+;
+; If custom backlight handling is needed, uncomment the following label
+; and set LCD_BACKLIGHT_CUSTOM in dpfmodel.h
+; r3 contains brightness value (0 .. LCD_MAX_BRIGHTNESS_VALUE)
+;
+;_lcd_custom_setbacklight::
 
-_lcd_custom_setcontrast::
-	ljmp	_lcd_set_contrast_by_table
+;
+; If custom contrast handling is needed, uncomment the following label
+; and set LCD_CONTRAST_CUSTOM in dpfmodel.h
+; r3 contains contrast value (1 .. LCD_MAX_CONTRAST_VALUE)
+;
+;_lcd_custom_setcontrast::
 
 	.area LCDAUX (CODE)
+
+
+;backlight_table::
+;	.db	If needed, put data for custom backlight handling here
+;_custom_backlighttbl_len::  .db  . - backlight_table
+
+
+;contrast_table::
+;	.db	If needed, put data for custom contrast handling here
+;_custom_contrasttbl_len::  .db  . - contrast_table
 
 _custom_contrasttbl::
   .db  0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10
@@ -46,13 +49,13 @@ _custom_contrasttbl2_offsets_len::  .db  1
 _custom_backlighttbl::
   .db  0x00, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12
   .db  0x13, 0x14, 0x15, 0x17, 0x1b, 0x1f, 0x23, 0x27, 0x2b, 0x2d
-  .db  0x3c, 0x3f
+  .db  0x31, 0x31
 _custom_backlighttbl_len::  .db  22
 
 _custom_backlighttbl2::
   .db  0x00, 0x03, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0a, 0x0b, 0x0b
   .db  0x0c, 0x0c, 0x0d, 0x0d, 0x0f, 0x11, 0x13, 0x15, 0x17, 0x18
-  .db  0x1c, 0x1d
+  .db  0x18, 0x18
 _custom_backlighttbl2_len::  .db  22
 
 _custom_initseq::

@@ -11,7 +11,8 @@
 // CRC: 0xbe1c4ae1, 0xd088e497
 //
 // 
-#define LCD_128x128
+#define LCD_WIDTH  128L
+#define LCD_HEIGHT 128L
 #define LCD_CONTROLLER_CUSTOM
 // Original fw has broken setcontrast routine - fixed in lcdinit.
 #define LCD_DEFAULT_CONTRAST_VALUE 4

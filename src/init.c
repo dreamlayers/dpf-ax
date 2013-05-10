@@ -23,18 +23,37 @@ void term_init(void) __banked
 }
 
 
-void timer1_config(BYTE brightness) __banked
+void timer1_config(BYTE on) __banked
 {
-	set_brightness(brightness);
-#ifndef LCD_BACKLIGHT_HIGH
-	// Clock-gen = RTC
-	tmr1con = (3 << 4) | T1POS1 | T1POEN | T1ON;
+#ifdef LCD_BACKLIGHT_NONE
+	// No backlight control at all??
+	on;
+	return;
 #else
-	// Clock-gen = sys-clock
-	tmr1con = T1POS1 | T1POEN | T1ON;
+	unsigned char con;
+
+#  ifdef LCD_TIMER1_PWM_P23
+	// pwn on P2.3 + sys-clock + enable
+	con = T1POS1 | T1POEN | T1ON;
+#  elif defined(LCD_TIMER1_PWM_P40)
+	// pwm on P4.0 + +sys-clock + enable
+	con = T1POS2 | T1POEN | T1ON;
+#  elif defined(LCD_TIMER1_PWM_NONE)
+	// no pwm output, timer stopped
+	con = 0;
+#  endif
+
+// See if we have a init value for the timer
+// If not, just start/stop the timer -- per/pwm set by _custom_backlighttbl/_custom_backlighttbl2
+#  ifdef LCD_TIMER1_PERIOD
+	// must be table or custom backlight control with fixed frequency
+	tmr1perl = ((unsigned int) LCD_TIMER1_PERIOD) & 0xFF;
+	tmr1perh = ((unsigned int) LCD_TIMER1_PERIOD) >> 8;
+#  endif
+	tmr1con = (on) ? con : 0;
+	// Call setbrightness for (re-)init of tmr1pwm (or whatever - if LCD_BACKLIGHT_CUSTOM)
+	set_brightness(on ? g_lcd.brightness : 0);
 #endif
-	tmr1cntl = 0;
-	tmr1cnth = 0;
 }
 
 void timer0_config()
@@ -103,26 +122,18 @@ void mdelay(BYTE x)
 	}
 }
 
-static const BYTE rot_index[4] = {
-	ROTCODE_UP, ROTCODE_LEFT, ROTCODE_DOWN, ROTCODE_RIGHT
-};
-
-BYTE g_rgborder = PIXELORDER(LCD_ORIENTATION_RGB);
+// No longer used from version 0.4 up.
+//static const BYTE rot_index[4] = {
+//	ROTCODE_UP, ROTCODE_LEFT, ROTCODE_DOWN, ROTCODE_RIGHT
+//};
+//BYTE g_rgborder = PIXELORDER(LCD_ORIENTATION_RGB);
 
 void lcd_orientation(BYTE which) __banked
 {
-	BYTE c;
-	c = rot_index[which];
-#if defined(LCD_CMDSET_OT)
-	lcd_ot_setorientation(which);
-#elif defined(LCD_CMDSET_ILI)
-	lcd_ili_setorientation(which);
-#elif defined(LCD_CMDSET_ST)
-	lcd_st_setrotation(c); // this wants the "rotcode"
-#else
+//	BYTE c;
+//	c = rot_index[which];
 	lcd_custom_setorientation(which);
-#endif
-	g_rgborder = RGBORDER(c);
+//	g_rgborder = RGBORDER(c);
 }
 
 
@@ -159,6 +170,11 @@ void config_ports(BYTE enable)
 		p1dir = FLA_MISO | MIC; // Inputs
 
 		p2 = ~BUZZER;
+#ifndef LCD_P23_ACTIVE_HIGH
+		p2 |= 0x08;	// backlight off --> P23 = 1
+#else
+		p2 &= 0xf7;	// backlight off --> P23 = 0
+#endif
 		p2up = LCD_CS | FLA_CS; // PU enable
 		p2dir = ~(BUZZER | LCD_LED | LCD_CS | FLA_CS); // Those are outputs
 
@@ -173,21 +189,31 @@ void config_ports(BYTE enable)
 		p1dir = FLA_MISO; // only input
 		p1 = MIC;
 
-		p2dir = ~(P27 | BUZZER | LCD_LED | LCD_CS | FLA_CS ); // Outputs
-#if DPFMODEL == pink
-		p2up  = ~(      BUZZER | LCD_LED | LCD_CS | FLA_CS ); // PU disable
-		p2   &= ~(      BUZZER           | LCD_CS | FLA_CS ); // ????
-		// Pulling FLA_CS active does not make sense
+#ifndef LCD_P23_ACTIVE_HIGH
+		p2 |= 0x08;	// backlight off --> P23 = 1
 #else
-		p2up  = ~(      BUZZER | LCD_LED | LCD_CS | FLA_CS ); // PU disable
+		p2 &= 0xf7;	// backlight off --> P23 = 0
 #endif
-
+		p2dir = ~(P27 | BUZZER | LCD_LED | LCD_CS | FLA_CS ); // Outputs
+//#if DPFMODEL == pink
+//		p2up  = ~(      BUZZER | LCD_LED | LCD_CS | FLA_CS ); // PU disable
+//		p2   &= ~(      BUZZER           | LCD_CS | FLA_CS ); // ????
+//		// Pulling FLA_CS active does not make sense
+//#else
+		p2up  = ~(      BUZZER | LCD_LED | LCD_CS | FLA_CS ); // PU disable
+//#endif
 		p3dir = ALL_OUTPUTS;
 		p3 = 0;
-		// Enable pullup:
+#if !defined(LCD_TIMER1_PWM_P40)
 		p4dir = ALL_INPUTS & ~AUDIO_EN;
 		p4 = ~AUDIO_EN;
+#endif
 	}
+
+#ifdef LCD_TIMER1_PWM_P40
+	p4dir = 0xFE;
+	p4 = 0x01;
+#endif
 }
 
 #ifdef BUILD_DEVEL
@@ -261,7 +287,7 @@ void init(BYTE mode)
 			adccon |= ADCGO; // kick on conversion
 		// no break!
 		case PWR_SLEEP:
-			//do not turn backlight here!
+			//do not turn on backlight here!
 			//lcd_backlight_on();
 	}
 
@@ -354,7 +380,7 @@ void turn_off(void) __banked
 	sleep(200);
 	g_button.evt = 0; // clear events so we don't right repeat this
 	//clrscreen(RGB565(0, 0, 70));
-	disp_home(); print_splash(); lcd_backlight_on();
+	disp_home(); print_splash(); sleep(100); lcd_backlight_on();
 	// g_refresh = 1; // force menu refresh
 }
 
@@ -371,12 +397,21 @@ void init_config() __banked
 	if (status == 0)
 	{
 		g_config.splash = DEFAULT_SPLASH;
-		g_config.brightness = DEFAULT_BRIGHTNESS_VALUE;
-		g_config.contrast = DEFAULT_CONTRAST_VALUE;
+#if !defined(LCD_BACKLIGHT_NONE)
+		g_config.brightness = LCD_DEFAULT_BRIGHTNESS_VALUE;
+#else
+		g_config.brightness = 1;
+#endif
+#if !defined(LCD_CONTRAST_NONE)
+		g_config.contrast = LCD_DEFAULT_CONTRAST_VALUE;
+#else
+		g_config.contrast = 1;
+#endif		
 		g_config.usbserial = 1;
 	}
 	g_lcd.brightness = g_config.brightness;
-	set_brightness(g_lcd.brightness);
+	// don't do this here - else backlight will be turned on!
+	//set_brightness(g_lcd.brightness);
 	set_contrast(g_config.contrast);
 	*p = (g_config.usbserial / 10) + '0';
 	*(p+2) = (g_config.usbserial % 10) + '0';

@@ -63,10 +63,10 @@ _blit_char4x8::
 repeat:
 	jnb	_SPIPND, .
 	xch	a, spibuf
-	lcall	otp_lcd_write
+	lcall	lcd_write
 	jnb	_SPIPND, .
 	xch	a, spibuf
-	lcall	otp_lcd_write
+	lcall	lcd_write
 
 	djnz	r7, repeat
 
@@ -128,10 +128,10 @@ showpixel:
         jc      b1
         mov     r0, #_g_bgcol + 1
 b1:     mov	a, @r0
-        lcall	otp_lcd_write
+        lcall	lcd_write
         dec     r0
         mov	a, @r0
-        lcall	otp_lcd_write
+        lcall	lcd_write
         ret
 
 ;__blit_splash::
@@ -155,16 +155,16 @@ b1:     mov	a, @r0
 ;	mov	r7, a		; length / 4 L
 ;bsl:	jnb	_SPIPND, bsl
 ;	xch	a, spibuf
-;	lcall	otp_lcd_write
+;	lcall	lcd_write
 ;bsw7:	jnb	_SPIPND, bsw7
 ;	xch	a, spibuf
-;	lcall	otp_lcd_write
+;	lcall	lcd_write
 ;bsw8:	jnb	_SPIPND, bsw8
 ;	xch	a, spibuf
-;	lcall	otp_lcd_write
+;	lcall	lcd_write
 ;bsw9:	jnb	_SPIPND, bsw9
 ;	xch	a, spibuf
-;	lcall	otp_lcd_write
+;	lcall	lcd_write
 ;	djnz	r7, bsl
 ;	djnz	r2, bsl
 ;
