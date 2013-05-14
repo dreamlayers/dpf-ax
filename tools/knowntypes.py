@@ -183,6 +183,15 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 3308761215]], 'Credit': ['By superelchi, thx ternyk'], 'Lcd_height': '128', 'Date': ['2013-02-13'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['veovision']},
 
 #
+# xg4241
+#
+# Does not use standard LcdInit. Direct lcd access (NOT using otp_lcd_write).
+# By superelchi (thx marcusbrutus)
+# 2013-03-17
+#
+{'Comment': ['Does not use standard LcdInit. Direct lcd access (NOT using otp_lcd_write).'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2280663442, 4014062118, 2, 2]], 'Url': ['http://dicksmith.com.au/product/XG4241/dick-smith-1-5-quot-digital-photo-frame-keyring'], 'Credit': ['By superelchi (thx marcusbrutus)'], 'Lcd_height': '128', 'Date': ['2013-03-17'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['xg4241']},
+
+#
 # zipp_dp605
 #
 # Sold in Australia by Big W / Woolworths.
@@ -242,11 +251,11 @@ KNOWN_TYPES = [
 #
 # linkdelight_black_portrait_3
 #
-# Variation of linkdelight_black_portrait
+# Another variation of linkdelight_black_portrait
 # By superelchi, thx prezes551
 # 2013-05-09
 #
-{'Comment': ['Variation of linkdelight_black_portrait'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1040606659, 2896831531, 1, 1]], 'Url': ['http://www.ebay.com/itm/230670117410'], 'Credit': ['By superelchi, thx prezes551'], 'Lcd_height': '320', 'Date': ['2013-05-09'], 'Lcd_width': '240', 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_black_portrait_3']},
+{'Comment': ['Another variation of linkdelight_black_portrait'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1040606659, 2896831531, 1, 1]], 'Url': ['http://www.ebay.com/itm/230670117410'], 'Credit': ['By superelchi, thx prezes551'], 'Lcd_height': '320', 'Date': ['2013-05-09'], 'Lcd_width': '240', 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_black_portrait_3']},
 
 #
 # yallstock_black_portrait
@@ -304,11 +313,29 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[4101150613, 3339371474]], 'Url': ['http://www.dealextreme.com/p/2-4-lcd-desktop-digital-photo-frame-and-calendar-27-picture-memory-storage-21334', 'http://www.ebay.de/itm/160792780280'], 'Credit': ['By superelchi'], 'Lcd_height': '240', 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['dx21334b']},
 
 #
+# focal_custom
+#
+# Replaces deprecated type focal
+# By superelchi, thx mihre
+# 2013-05-13
+#
+{'Comment': ['Replaces deprecated type focal'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'Credit': ['By superelchi, thx mihre'], 'CRC': [[390860985, 4226618260, 2, 1]], 'Lcd_height': '240', 'Date': ['2013-05-13'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['focal_custom']},
+
+#
+# focal_custom_2
+#
+# Replaces deprecated type focal
+# By superelchi
+# 2013-05-13
+#
+{'Comment': ['Replaces deprecated type focal'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'Credit': ['By superelchi'], 'CRC': [[390860985, 2754887347, 1, 1]], 'Lcd_height': '240', 'Date': ['2013-05-13'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['focal_custom_2']},
+
+#
 # linkdelight
 #
 # By superelchi
 #
-{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[390860985, 4226618260], [860617845, 806655299]], 'Url': ['http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&rd=1&item=260978964426&ssPageName=STRK:MEAFB:IT', 'http://www.ebay.de/itm/New-Mini-2-4-inch-Digital-Time-Day-Calendar-Alarm-Clock-Photo-Frame-POF16-/260883908884?pt=LH_DefaultDomain_0&hash=item3cbde48914#ht_4709wt_1046'], 'Credit': ['By superelchi'], 'Lcd_height': '240', 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['linkdelight']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[860617845, 806655299, 1, 1]], 'Url': ['http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&rd=1&item=260978964426&ssPageName=STRK:MEAFB:IT', 'http://www.ebay.de/itm/New-Mini-2-4-inch-Digital-Time-Day-Calendar-Alarm-Clock-Photo-Frame-POF16-/260883908884?pt=LH_DefaultDomain_0&hash=item3cbde48914#ht_4709wt_1046'], 'Credit': ['By superelchi'], 'Lcd_height': '240', 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['linkdelight']},
 
 #
 # linkdelight_2
@@ -371,19 +398,5 @@ KNOWN_TYPES = [
 # 2013-01-05
 #
 {'Comment': ['Also used by linkdelight.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2212265512, 1765720342]], 'Url': ['http://item.taobao.com/item.htm?id=10380777914'], 'Credit': ['By superelchi (thx cuckoohello)'], 'Lcd_height': '240', 'Date': ['2013-01-05'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['taobao']},
-
-
-#************** WIP: WORK IN PROGRESS ***********************
-
-###################### 128 x 128 ##############################
-
-#
-# xg4241
-#
-# Does not use standard LcdInit. Direct lcd access (NOT using otp_lcd_write).
-# By superelchi (thx marcusbrutus)
-# 2013-03-17
-#
-{'Comment': ['Does not use standard LcdInit. Direct lcd access (NOT using otp_lcd_write).'], 'Status': 'wip', 'ContrastSupport': 'Yes', 'CRC': [[2280663442, 4014062118, 2, 2]], 'Url': ['http://dicksmith.com.au/product/XG4241/dick-smith-1-5-quot-digital-photo-frame-keyring'], 'Credit': ['By superelchi (thx marcusbrutus)'], 'Lcd_height': '128', 'Date': ['2013-03-17'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['xg4241']},
 
 ]

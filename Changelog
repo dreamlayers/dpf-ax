@@ -3,6 +3,15 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Mon, 13 May 2013
+       by superelchi
+       * Makefile fixes:
+         - Changed grep expressions in src/Makefile fpr better compatibility.
+       * Changed model:
+         - linkdelight: removed incorrect signature (thx mihre).
+       * New models:
+	 - focal_custom, focal_custom_2 (thx mihre).
+
 Fri, 10 May 2013
 v0.40 by superelchi
        * General cleanup:

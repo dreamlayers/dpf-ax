@@ -31,9 +31,17 @@ endif
 #
 # Set controller type + display with / height
 #
-LCD_CONTROLLER:=$(shell cat lcd/$(TYPE)/dpfmodel.h | grep -Eo LCD_CONTROLLER_\\w+)
-RESX:=$(shell grep -Eo "LCD_WIDTH\s+[0-9]+" lcd/$(TYPE)/dpfmodel.h | sed -r "s/LCD_WIDTH\s+([0-9]+)/\1/")
-RESY:=$(shell grep -Eo "LCD_HEIGHT\s+[0-9]+" lcd/$(TYPE)/dpfmodel.h | sed -r "s/LCD_HEIGHT\s+([0-9]+)/\1/")
+LCD_CONTROLLER:=$(shell cat lcd/$(TYPE)/dpfmodel.h | grep -Eo "LCD_CONTROLLER_\w+")
+RESX:=$(shell grep -Eo "LCD_WIDTH.+[0-9]+" lcd/$(TYPE)/dpfmodel.h | sed -r "s/LCD_WIDTH\s+([0-9]+)/\1/")
+RESY:=$(shell grep -Eo "LCD_HEIGHT.+[0-9]+" lcd/$(TYPE)/dpfmodel.h | sed -r "s/LCD_HEIGHT\s+([0-9]+)/\1/")
+
+ifndef RESX 
+$(error Error reading LCD_WIDTH from $(TYPE)/dpfmodel.h)
+endif
+ifndef RESY 
+$(error Error reading LCD_HEIGHT from $(TYPE)/dpfmodel.h)
+endif
+
 
 #
 #
