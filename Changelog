@@ -3,6 +3,10 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Thu, 16 May 2013
+       by superelchi
+       * Small src/Makefile fix.
+
 Mon, 13 May 2013
        by superelchi
        * Makefile fixes:
