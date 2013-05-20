@@ -9,8 +9,6 @@ PYDPF = python
 SRC = src
 TOOLS = tools
 
-FILES = Makefile lcd4linux-svn1142-dpf.patch README Changelog
-
 ifndef DESTDIR
 DESTDIR = $(CURDIR)/..
 endif
@@ -26,8 +24,8 @@ firmware:
 $(DPFLIB)/libdpf.a:
 	$(MAKE) -C $(DPFLIB) install
 
-lcd4linux: $(DPFLIB)/libdpf.a
-	./build-dpf-lcd4linux.sh $(CURDIR)
+lcd4linux:
+	./build-dpf-lcd4linux.sh
 
 dist-all: dist dist-firmware dist-windows
 
@@ -40,7 +38,7 @@ dist: distclean
 	cp -r $(PYDPF) /tmp/dpf-ax
 	cp $(shell find . -maxdepth 1 -type f -printf "%f ") /tmp/dpf-ax
 	tar --create --gzip --numeric-owner\
-	 --file=$(DESTDIR)/dpf-ax_$(DISTVERSION).tgz\
+	 --file=$(DESTDIR)/dpf-ax_$(DISTVERSION)_$(shell date +"%Y%m%d").tgz\
 	 --directory=/tmp dpf-ax
 	-rm -rf /tmp/dpf-ax
 
@@ -72,7 +70,7 @@ dist-windows:
 	cp $(TOOLS)/readflash_win.py /tmp/dpf-ax/$(TOOLS)
 	cp $(TOOLS)/knowntypes.html /tmp/dpf-ax/$(TOOLS)
 	cp $(TOOLS)/README.windows /tmp/dpf-ax/$(TOOLS)
-	(cd /tmp; zip -X -l -r -q $(DESTDIR)/dpf-ax_$(DISTVERSION)_windows.zip dpf-ax)
+	(cd /tmp; zip -X -l -r -q $(DESTDIR)/dpf-ax_$(DISTVERSION)_windows_$(shell date +"%Y%m%d").zip dpf-ax)
 	-rm -rf /tmp/dpf-ax
 
 clean:
@@ -87,5 +85,5 @@ distclean:
 	$(MAKE) -C $(PYDPF) clean
 	$(MAKE) -C $(TOOLS) distclean
 	$(MAKE) -C $(SRC) distclean
-	[ -e lcd4linux ] && (rm -r lcd4linux) || true
+	[ -e lcd4linux ] && (rm -rf lcd4linux) || true
 

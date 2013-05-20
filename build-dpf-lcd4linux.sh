@@ -14,32 +14,29 @@ if [ $err ]; then
 	exit
 fi
 
-# Allow to pass on dpf distribution location, if not pwd:
-
-if [ -z $1 ]; then
-	DPFLIB_LOCATION=`pwd`
-else
-	DPFLIB_LOCATION=$1
-fi
-	
 if [ -e lcd4linux ]; then
 	echo "lcd4linux installed, not fetching"
 else
 	# Check out source from SVN
-	svn co -r1142 https://ssl.bulix.org/svn/lcd4linux/trunk lcd4linux
+	# Tested with revision 1197. Should work with future revisions.
+	#svn co -r1197 https://ssl.bulix.org/svn/lcd4linux/trunk lcd4linux
+	svn co https://ssl.bulix.org/svn/lcd4linux/trunk lcd4linux
 fi
 
 cd lcd4linux
 
 # Apply patch
 if [ -e drv_dpf.c ]; then
-	echo "Existing drv_dpf.c found, not patching"
+	grep -q dpf_ax drv_dpf.c
+	if [ -z $? ]; then
+		echo "Existing drv_dpf.c already patched."
+	else
+		patch < ../lcd4linux-svn1197-dpf_ax.patch
+	fi
 else
-	patch -p1 < ../lcd4linux-svn1142-dpf.patch
+	echo "No drv_dpf.c found - revision too old?."
+	exit -1
 fi
-
-export CPPFLAGS="-I$DPFLIB_LOCATION/dpflib -I$DPFLIB_LOCATION/include"
-export LDFLAGS=-L$DPFLIB_LOCATION/dpflib
 
 if [ -e Makefile ]; then
 	echo "Not configuring, Makefile found"

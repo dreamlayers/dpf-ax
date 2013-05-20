@@ -62,19 +62,23 @@ Usage:
   for configure options
 
 * Try it:
-  > cd lcd4linux; lcd4linux -f ../dpf.conf -F
+  > cd lcd4linux; ./lcd4linux -f ../dpf_128x128.conf -F
 
 ----------------------------------------------------------------------------
 Notes about the lcd4linux patch:
 
-Support for 'Orientaion' property has been removed in version 0.4.
+* The patch is self-contained. No addition files (like dpf.h, libdpf.a, ..)
+  are needed.
+* Includes scaletext patch (variable font size).
+* Two properties supported:
+  - Property 'Backlight': Set the dpfs backlight/brightness.
+    Values: 0-7 (0 = off, 7 = max).
+  - Property 'Orientation': Set the dpfs *LOGICAL* orientation.
+    Note: *PHYSICAL* orientation does not matter. Rotation is done in the driver.
+    Value (height != width): 0 = landscape, 1 = portrait, 2 = reverse landscape, 3 = reverse portrait.
+    Value (height == width): 0 = standard, 1 = rotate 90° CW, 2 = rotate 180°, 3 = rotate 90° CCW
 
-Another implemented option as you can see, is the Backlight variable.
-You can use values from 0-7, 0 turns it off, 7 is maximum brightness.
-Note: Some frames only support off (0) and on (1-7).
-      See comments in tools/knowntypes.html.
-
-----------------------------------------------------------------------------
+---------------------------------------------------------------------------
 Troubleshooting
 
 If the lcd4linux build process fails, you may want to start over without

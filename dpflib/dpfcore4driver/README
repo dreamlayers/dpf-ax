@@ -1,0 +1,24 @@
+
+----------------------------------------------------------------------------
+Linux driver support files
+----------------------------------------------------------------------------
+
+To make it easier to write a driver for dpf-ax, here are two files
+for use with/in drivers. These files are self-contained.
+No addition files (like dpf.h, libdpf.a, ..) are needed.
+
+They contain a "minimal" version of libdpf, including only the
+code necessary to access an *ALREADY HACKED* frame. No support for
+original firmware, bootloader mode and hacking/patching/flashing of fw!
+
+You can use these files in two ways:
+
+1. Include both files in your distribution "as is" and
+   #include "dpfcore4driver.h"
+   in your driver to use the code from dpfcore4driver.c.
+
+2. Copy contents from dpfcore4driver.h at the start, and from
+   dpfcore4driver.c at the end of your driver.
+   For an example of this, have a look at the lcd4linux driver/patch.
+
+(c) 5/2013, superelchi
