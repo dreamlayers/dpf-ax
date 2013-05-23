@@ -3,14 +3,19 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Thu, 23 May 2013
+v0.42 by superelchi
+       * Removed lcd4linux patch. Current Lcd4linux SVN revision has this patch already applied.
+       * tools/detect.py: added flash manufacturer Nantronics (thx Stanislav Brabec).
+
 Mon, 20 May 2013
 v0.41 by superelchi
       * New folder src/dpfcore4driver with linux driver support files.
-      * New lcd4linux patch that works with current svn
+      * New lcd4linux patch that works with current svn.
 	Features:
 	 - Driver is self-contained, no external dpf-ax libs/headers needed.
 	   Uses code from the new dpfcore4driver files.
-         - Include scaletext patch (variable font size).
+         - Includes scaletext patch (variable font size).
          - Support for Property 'Backlight': Values: 0-7 (0 = off, 7 = max).
          - Support for  Property 'Orientation':
              Values: 0 = landscape, 1 = portrait, 2 = reverse landscape, 3 = reverse portrait.

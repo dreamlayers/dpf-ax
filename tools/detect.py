@@ -42,6 +42,7 @@ g_vendors = {
         0xc2: ("Macronix", g_stm_types),
         0xbf: ("SST", g_sst_types),
         0xc8: ("Apple", g_stm_types),
+        0xd5: ("Nantronics", g_stm_types),
         0xef: ("Winbond", g_stm_types)
 }
 

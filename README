@@ -30,7 +30,7 @@ You can build different targets, depending on your needs.
 * The dpf access library, python modules and helpers:
   > make
 
-* A special version of lcd4linux with dpf-ax support:
+* The curren SVN version of lcd4linux with dpf-ax support:
   You need an internet connection. because lcd4linux is pulled from their server.
   You might also have to install the package "pkg-config", or else the
   configure procedure will likely fail.
@@ -59,18 +59,15 @@ Usage:
 
 * Configure lcd4linux: normally, the default settings will do. If you wish
   to use other drivers or cross compile, check build-dpf-lcd4linux.sh
-  for configure options
+  for configure options.
 
 * Try it:
   > cd lcd4linux; ./lcd4linux -f ../dpf_128x128.conf -F
 
 ----------------------------------------------------------------------------
-Notes about the lcd4linux patch:
+Notes about the lcd4linux dpf driver:
 
-* The patch is self-contained. No addition files (like dpf.h, libdpf.a, ..)
-  are needed.
-* Includes scaletext patch (variable font size).
-* Two properties supported:
+* Supported properties:
   - Property 'Backlight': Set the dpfs backlight/brightness.
     Values: 0-7 (0 = off, 7 = max).
   - Property 'Orientation': Set the dpfs *LOGICAL* orientation.
