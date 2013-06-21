@@ -17,3 +17,6 @@
 #define LCD_DEFAULT_BRIGHTNESS_VALUE 15
 // Contrast adjustable in menu
 #define LCD_USER_ADJUSTABLE_CONTRAST 1
+// Swap buttons
+#define LCD_LRBUTTON_SWAP
+

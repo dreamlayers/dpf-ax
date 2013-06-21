@@ -3,9 +3,19 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+
+Fre, 21 Jun 2013
+       by superelchi
+       * Changed model:
+         - abeyerr_black_3: added param to swap left/right button.
+       * New models:
+	 - delightdigi_3 (thx fling).
+         - dinodirect (thx kodi).
+	 - estation100 (thx galvan).
+
 Thu, 23 May 2013
 v0.42 by superelchi
-       * Removed lcd4linux patch. Current Lcd4linux SVN revision has this patch already applied.
+       * Removed lcd4linux patch. Current lcd4linux svn revision has this patch already applied.
        * tools/detect.py: added flash manufacturer Nantronics (thx Stanislav Brabec).
 
 Mon, 20 May 2013

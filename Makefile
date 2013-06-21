@@ -38,7 +38,7 @@ dist: distclean
 	cp -r $(PYDPF) /tmp/dpf-ax
 	cp $(shell find . -maxdepth 1 -type f -printf "%f ") /tmp/dpf-ax
 	tar --create --gzip --numeric-owner\
-	 --file=$(DESTDIR)/dpf-ax_$(DISTVERSION)_$(shell date +"%Y%m%d").tgz\
+	 --file=$(DESTDIR)/dpf-ax_$(shell date +"%Y%m%d").tgz\
 	 --directory=/tmp dpf-ax
 	-rm -rf /tmp/dpf-ax
 
@@ -47,17 +47,17 @@ dist-firmware: distclean
 	mkdir /tmp/dpf-ax
 	cp -r $(SRC) /tmp/dpf-ax
 	tar --create --gzip --exclude-vcs --numeric-owner\
-	 --file=$(DESTDIR)/dpf-ax_$(DISTVERSION)_firmware-src_$(shell date +"%Y%m%d").tgz\
+	 --file=$(DESTDIR)/dpf-ax_firmware-src_$(shell date +"%Y%m%d").tgz\
 	 --directory=/tmp dpf-ax
 	(cd $(SRC); ./buildall.sh)
 	-rm -rf /tmp/dpf-ax
 	mkdir /tmp/dpf-ax
 	mkdir /tmp/dpf-ax/src
 	cp $(SRC)/fw_*.bin /tmp/dpf-ax/src
-	tar --create --gzip --exclude-vcs --numeric-owner\
-	 --file=$(DESTDIR)/dpf-ax_$(DISTVERSION)_firmware_$(shell date +"%Y%m%d").tgz\
-	 --directory=/tmp dpf-ax
-	(cd /tmp; zip -X -r -q $(DESTDIR)/dpf-ax_$(DISTVERSION)_firmware_$(shell date +"%Y%m%d").zip dpf-ax)
+	#tar --create --gzip --exclude-vcs --numeric-owner\
+	# --file=$(DESTDIR)/dpf-ax_firmware_$(shell date +"%Y%m%d").tgz\
+	# --directory=/tmp dpf-ax
+	(cd /tmp; zip -X -r -q $(DESTDIR)/dpf-ax_firmware_$(shell date +"%Y%m%d").zip dpf-ax)
 	-rm -rf /tmp/dpf-ax
 
 dist-windows:
@@ -70,7 +70,7 @@ dist-windows:
 	cp $(TOOLS)/readflash_win.py /tmp/dpf-ax/$(TOOLS)
 	cp $(TOOLS)/knowntypes.html /tmp/dpf-ax/$(TOOLS)
 	cp $(TOOLS)/README.windows /tmp/dpf-ax/$(TOOLS)
-	(cd /tmp; zip -X -l -r -q $(DESTDIR)/dpf-ax_$(DISTVERSION)_windows_$(shell date +"%Y%m%d").zip dpf-ax)
+	(cd /tmp; zip -X -l -r -q $(DESTDIR)/dpf-ax_windows_$(shell date +"%Y%m%d").zip dpf-ax)
 	-rm -rf /tmp/dpf-ax
 
 clean:

@@ -783,6 +783,10 @@ def recognize_dpf(dump):
             else:
                 outf.write("#define LCD_CONTRAST_NONE                // NOTE from identify.py: have a look at poweroninit.d52!\n")
                 outf.write("//#define LCD_CONTRAST_TABLE\n//#define LCD_CONTRAST_CUSTOM\n")
+
+            outf.write("\n// NOTE: uncomment to swap the buttons for up/down menu navigation\n")
+            outf.write("//#define LCD_LRBUTTON_SWAP\n")
+                
             outf.close()
 
             # build skeleton lcdsetor.s

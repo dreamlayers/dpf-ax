@@ -107,6 +107,14 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[3562395993, 464803725]], 'Url': ['http://www.frys.com/product/5439059'], 'Credit': ['By superelchi, thx donashe'], 'Lcd_height': '128', 'Date': ['2012-05-14'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['coby_dp151_white']},
 
 #
+# delightdigi_3
+#
+# By superelchi, thx fling
+# 2013-06-18
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 3321933551, 1, 1]], 'Credit': ['By superelchi, thx fling'], 'Lcd_height': '128', 'Date': ['2013-06-18'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['delightdigi_3']},
+
+#
 # delightdigi_black
 #
 # From ebay seller delight-digi
@@ -141,6 +149,14 @@ KNOWN_TYPES = [
 # 2012-07-28
 #
 {'Comment': ['Nice enclosure: tumbler design.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 1730849026]], 'Url': ['http://www.ebay.com/itm/Hot-1-5-Digital-Photo-Frame-Picture-Album-16MB-New-Tumbler-03-/110842497224'], 'Credit': ['By superelchi (thx c.dent)'], 'Lcd_height': '128', 'Date': ['2012-07-28'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['eachdesk_tumbler']},
+
+#
+# estation100
+#
+# By superelchi, thx galvan
+# 2013-06-19
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1797375145, 652807694, 1, 1]], 'Url': ['http://www.ebay.com/itm/380532649879'], 'Credit': ['By superelchi, thx galvan'], 'Lcd_height': '128', 'Date': ['2013-06-19'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['estation100']},
 
 #
 # intertronic
@@ -265,6 +281,14 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[4077944897, 334688753, 1, 1]], 'Url': ['http://www.ebay.com/itm/400391394538'], 'Credit': ['By superelchi (thx dkrusko)'], 'Lcd_height': '320', 'Lcd_width': '240', 'ContrastMenuSupport': 'No', 'Type': ['yallstock_black_portrait']},
 
 ###################### 320 x 240 ##############################
+
+#
+# dinodirect
+#
+# By superelchi, thx kodi
+# 2013-05-31
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[390860985, 2045744741, 2, 1]], 'Url': ['http://www.dinodirect.com/2-4-LCD-16MB-Digital-Photo-Frame-White.html'], 'Credit': ['By superelchi, thx kodi'], 'Lcd_height': '240', 'Date': ['2013-05-31'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['dinodirect']},
 
 #
 # dx104500

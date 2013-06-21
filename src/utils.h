@@ -116,7 +116,7 @@ char handle_getprop(__idata unsigned char *b) __banked;
 
 // Button events:
 
-#ifdef BUTTON_SWAP    // Some have the button pins swapped
+#ifdef LCD_LRBUTTON_SWAP    // Some have the button pins swapped
 #define KEY_UP   0x02
 #define KEY_DOWN 0x04
 #else
