@@ -4,6 +4,25 @@ dpf-ax changelog
 	Find details in the git or svn logs.
 
 
+Mon, 28 Okt 2013
+       by superelchi
+       * Fixed bug in identify.py:
+         custom_tables sometimes not written to lcdinit.s.
+       * Added missing "executable" property for identify.py
+       * New models:
+	 - acme_3 (thx johni85).
+	 - acme_4 (thx nexus).
+	 - acme_5 (thx binary).
+	 - acme_6 (thx Pepe).
+	 - clas_ohlson_2 (thx josef).
+	 - coby_dp151_bw_2 (thx Deamon666).
+	 - dhgate (thx Rollkopf).
+	 - kaiser_baas_n1879 (thx John).
+         - neckermann (thx Anaeijon).
+	 - newfrog (thx LUISE).
+	 - tao_80013 (thx richard).
+	 - taobao_2 (thx elickson).
+
 Fre, 21 Jun 2013
        by superelchi
        * Changed model:

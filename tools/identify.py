@@ -101,6 +101,7 @@ scan_locate_stdlcdinit = [
 0x74, val, 0x12, val, val, 0xd2, 0x90, 0x74, val, 0x12, val, val, 0x7f
 ]
 ]
+
  
 scan_locate_initbl = [
 0x70, 0x01, 0x22, 0x90, val, val, 0xC0, 0xF0, 0xF5, 0xF0, 0xE4, 0x93, 0xC3, 0x25, 0x82, 0xC5, 0x82
@@ -147,6 +148,14 @@ scan_locate_Power_On_Init2 = [
 ]
 scan_locate_Power_On_Init3 = [
 0xc2, 0xbf, 0x75
+]
+scan_locate_Power_On_Init_backlight_high = [
+#                                                             Port_init       Timer0_Init     ADC_Batt_Ini    Lcd_init        ClrScr    orl p2,#0x08      anl p2dir,#0xf7   
+0xc2, 0xbf, 0x75, val, val, 0x75, val, val, 0xc2, 0x14, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x43, 0xa0, 0x08, 0x53, 0xeb, 0xf7
+]
+scan_locate_Power_On_Init_backlight_low = [
+#                                                             Port_init       Timer0_Init     ADC_Batt_Ini    Lcd_init        ClrScr    anl p2,#0xf7      anl p2dir,#0xf7   
+0xc2, 0xbf, 0x75, val, val, 0x75, val, val, 0xc2, 0x14, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x12, val, val, 0x53, 0xa0, 0xf7, 0x53, 0xeb, 0xf7
 ]
 
 # Stolen from dump.py, stolen from scantool:
@@ -368,7 +377,7 @@ TABLE_CONTRAST = 1
 TABLE_BACKLIGHT = 2
 TABLE_INIT = 3
 
-init_tables = []
+#init_tables = []
 
 def find_initbl(buf, module):
         global lcdinit_type
@@ -624,6 +633,8 @@ def recognize_dpf(dump):
         initbl_count = 0
         crc_initbl = 0
         crc_init = 0
+        global init_tables
+        init_tables_for_lcdinit = []
         for i in range(1, num_modules):
                 ct, ci = find_initbl(dump, i)
                 if ct != 0:
@@ -631,6 +642,8 @@ def recognize_dpf(dump):
                         initbl_count += 1
                 if ci != 0:
                         crc_init = ci
+                if len(init_tables) > 0:
+                    init_tables_for_lcdinit = init_tables
 
         if crc_initbl == 0:
                 crc_initbl = crc_init
@@ -844,10 +857,9 @@ def recognize_dpf(dump):
             outf.write("\n;contrast_table::\n;\t.db\tIf needed, put data for custom contrast handling here\n")
             outf.write(";_custom_contrasttbl_len::  .db  . - contrast_table\n\n")
 
-            global init_tables
             bcomment = False
             ccomment = False
-            for tbl in init_tables:
+            for tbl in init_tables_for_lcdinit:
                 s = ""
                 if tbl[0] == TABLE_BACKLIGHT and setbacklight_type != SCAN_TABLE:
                     if bcomment == False:

@@ -1,5 +1,4 @@
 // Type: dx104500
-// Comment: May crash on USB connect/disconnect
 //
 // Status: supported
 // Credit: By superelchi

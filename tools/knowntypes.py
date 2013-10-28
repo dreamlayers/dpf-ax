@@ -53,6 +53,30 @@ KNOWN_TYPES = [
 {'Comment': ['Unknown manufacturer'], 'Status': 'supported', 'ContrastSupport': 'No', 'Credit': ['By superelchi, thx ax206geek, norefall'], 'CRC': [[3992676317, 608883650]], 'Lcd_height': '128', 'Date': ['2012-10-10'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['acme_2']},
 
 #
+# acme_3
+#
+# By superelchi, thx johni85
+# 2013-07-08
+#
+{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[4202393500, 1505862832, 2, 0]], 'Credit': ['By superelchi, thx johni85'], 'Lcd_height': '128', 'Date': ['2013-07-08'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['acme_3']},
+
+#
+# acme_5
+#
+# By superelchi, thx binary
+# 2013-09-12
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1825083451, 616707654, 2, 2]], 'Credit': ['By superelchi, thx binary'], 'Lcd_height': '128', 'Date': ['2013-09-12'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['acme_5']},
+
+#
+# acme_6
+#
+# By superelchi, thx pepe
+# 2013-09-13
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[187369777, 2842286875, 2, 2]], 'Credit': ['By superelchi, thx pepe'], 'Lcd_height': '128', 'Date': ['2013-09-13'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['acme_6']},
+
+#
 # agk_violet
 #
 #
@@ -91,12 +115,28 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[640222753, 4127089957]], 'Url': ['http://www.clasohlson.com/fi/Avaimenper%C3%A4,-jossa-digitaalinen-valokuvakehys/Pr383925000'], 'Credit': ['By superelchi, thx BufferFramed'], 'Lcd_height': '128', 'Date': ['2012-12-05'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['clas_ohlson']},
 
 #
+# clas_ohlson_2
+#
+# By superelchi, thx josef
+# 2013-10-01
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2834891419, 2508033262, 1, 1]], 'Credit': ['By superelchi, thx josef'], 'Lcd_height': '128', 'Date': ['2013-10-01'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['clas_ohlson_2']},
+
+#
 # coby_dp151_bw
 #
 # By superelchi, thx mrlinux
 # 2012-07-24
 #
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[287174071, 805928632]], 'Url': ['http://www.ebay.com/itm/280828187564'], 'Credit': ['By superelchi, thx mrlinux'], 'Lcd_height': '128', 'Date': ['2012-07-24'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['coby_dp151_bw']},
+
+#
+# coby_dp151_bw_2
+#
+# By superelchi, thx Deamon666
+# 2013-08-18
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589761504, 3573247145, 2, 2]], 'Credit': ['By superelchi, thx Deamon666'], 'Lcd_height': '128', 'Date': ['2013-08-18'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['coby_dp151_bw_2']},
 
 #
 # coby_dp151_white
@@ -175,6 +215,24 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2726181921, 2701100526]], 'Url': ['http://www.jovisa.biz/images/egg%20dpf%20or%20copy.jpg'], 'Credit': ['By superelchi, thx djJack'], 'Lcd_height': '128', 'Date': ['2012-09-19'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['jovisa']},
 
 #
+# kaiser_baas_n1879
+#
+# From OfficeWorks (Perth Australia)
+# By superelchi, thx John
+# 2013-07-21
+#
+{'Comment': ['From OfficeWorks (Perth Australia) '], 'Status': 'supported', 'ContrastSupport': 'Yes', 'Credit': ['By superelchi, thx John'], 'CRC': [[3589264857, 4097396536, 1, 1]], 'Lcd_height': '128', 'Date': ['2013-07-21'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['kaiser_baas_n1879']},
+
+#
+# neckermann
+#
+# Gift from german seller neckermann.de (no longer available.)
+# By superelchi, thx Anaeijon
+# 2013-06-27
+#
+{'Comment': ['Gift from german seller neckermann.de (no longer available.)'], 'Status': 'supported', 'ContrastSupport': 'No', 'Credit': ['By superelchi, thx Anaeijon '], 'CRC': [[1825083451, 856513154, 2, 0]], 'Lcd_height': '128', 'Date': ['2013-06-27'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['neckermann']},
+
+#
 # sevendayshop_pebble
 #
 # By superelchi, thx daveg
@@ -189,6 +247,14 @@ KNOWN_TYPES = [
 # 2013-01-27
 #
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2726181921, 3709981863]], 'Url': ['http://www.amazon.fr/gp/product/B00AQV277C/'], 'Credit': ['By superelchi, thx glb'], 'Lcd_height': '128', 'Date': ['2013-01-27'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['sunluxy']},
+
+#
+# tao_80013
+#
+# By superelchi, thx richard
+# 2013-07-21
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[640222753, 4280902475, 2, 2]], 'Url': ['http://cpc.farnell.com/jsp/search/productdetail.jsp?sku=CS1967434'], 'Credit': ['By superelchi, thx richard'], 'Lcd_height': '128', 'Date': ['2013-07-21'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['tao_80013']},
 
 #
 # veovision
@@ -283,6 +349,24 @@ KNOWN_TYPES = [
 ###################### 320 x 240 ##############################
 
 #
+# acme_4
+#
+# unknown ebay seller.
+# By superelchi, thx nexus
+# 2013-09-05
+#
+{'Comment': ['unknown ebay seller.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'Credit': ['By superelchi, thx nexus'], 'CRC': [[817616278, 404446180, 1, 1]], 'Lcd_height': '240', 'Date': ['2013-09-05'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['acme_4']},
+
+#
+# dhgate
+#
+# 50 pieces/lot
+# By superelchi, thx Rollkopf
+# 2013-08-16
+#
+{'Comment': ['50 pieces/lot'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1317613437, 855243777, 1, 1]], 'Url': ['http://www.dhgate.com/product/2-4-inch-multifunctional-lcd-digital-photo/143997976.html'], 'Credit': ['By superelchi, thx Rollkopf'], 'Lcd_height': '240', 'Date': ['2013-08-16'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['dhgate']},
+
+#
 # dinodirect
 #
 # By superelchi, thx kodi
@@ -293,10 +377,9 @@ KNOWN_TYPES = [
 #
 # dx104500
 #
-# May crash on USB connect/disconnect
 # By superelchi
 #
-{'Comment': ['May crash on USB connect/disconnect'], 'Status': 'supported', 'ContrastSupport': 'No', 'Credit': ['By superelchi'], 'Url': ['http://www.dealextreme.com/p/stylish-a33-2-4-lcd-desktop-digital-photo-picture-frame-album-silver-16mb-104500'], 'CRC': [[3029278881, 3683529480, 2, 0]], 'Lcd_height': '240', 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['dx104500']},
+{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[3029278881, 3683529480, 2, 0]], 'Url': ['http://www.dealextreme.com/p/stylish-a33-2-4-lcd-desktop-digital-photo-picture-frame-album-silver-16mb-104500'], 'Credit': ['By superelchi'], 'Lcd_height': '240', 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['dx104500']},
 
 #
 # dx104838
@@ -397,6 +480,15 @@ KNOWN_TYPES = [
 {'Comment': ['Another variation of linkdelight'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'Credit': ['By superelchi'], 'Url': ['http://www.ebay.de/itm/ws/eBayISAPI.dll?ViewItem&item=110897096126'], 'CRC': [[2108676850, 2938400978]], 'Lcd_height': '240', 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['linkdelight_5']},
 
 #
+# newfrog
+#
+# No Brightness control. Only on/off supported.
+# By superelchi, thx LUISE
+# 2013-06-24
+#
+{'Comment': ['No Brightness control. Only on/off supported.'], 'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[2532357239, 2963443671, 0, 0]], 'Url': ['http://www.newfrog.com/p/2-4-inch-usb-digital-time-day-calendar-alarm-clock-photo-frame-viewer-pof16-new-25642.html'], 'Credit': ['By superelchi, thx LUISE'], 'Lcd_height': '240', 'Date': ['2013-06-24'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['newfrog']},
+
+#
 # pearl_custom
 #
 # Custom (flash-dump based) version of pearl
@@ -422,5 +514,13 @@ KNOWN_TYPES = [
 # 2013-01-05
 #
 {'Comment': ['Also used by linkdelight.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2212265512, 1765720342]], 'Url': ['http://item.taobao.com/item.htm?id=10380777914'], 'Credit': ['By superelchi (thx cuckoohello)'], 'Lcd_height': '240', 'Date': ['2013-01-05'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['taobao']},
+
+#
+# taobao_2
+#
+# By superelchi, thx elickson
+# 2013-09-24
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1722727966, 3336180541, 1, 1]], 'Url': ['http://item.taobao.com/item.htm?id=5827115943'], 'Credit': ['By superelchi, thx elickson'], 'Lcd_height': '240', 'Date': ['2013-09-24'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['taobao_2']},
 
 ]
