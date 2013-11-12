@@ -77,6 +77,14 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[187369777, 2842286875, 2, 2]], 'Credit': ['By superelchi, thx pepe'], 'Lcd_height': '128', 'Date': ['2013-09-13'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['acme_6']},
 
 #
+# acme_7
+#
+# By superelchi, thx gioagril
+# 2013-11-11
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3943643383, 436450420, 2, 2]], 'Credit': ['By superelchi, thx gioagril'], 'Lcd_height': '128', 'Date': ['2013-11-11'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['acme_7']},
+
+#
 # agk_violet
 #
 #

@@ -4,6 +4,11 @@ dpf-ax changelog
 	Find details in the git or svn logs.
 
 
+Thu, 12 Nov 2013
+       by superelchi
+       * New model:
+	 - acme_7 (thx gioagril).
+
 Mon, 28 Okt 2013
        by superelchi
        * Fixed bug in identify.py:
