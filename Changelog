@@ -4,11 +4,27 @@ dpf-ax changelog
 	Find details in the git or svn logs.
 
 
-Thu, 12 Nov 2013
+Fr, 26 Sep 2014
        by superelchi
        * New model:
 	 - acme_7 (thx gioagril).
-
+	 - acme_8 (thx kurczaczek).
+	 - bresser (thx gothbert).
+	 - coby_db_151_3 (thx maria).
+	 - keenox (thx nexus).
+	 - keenox_1026 (thx BmD_Online).
+	 - kgmedia_m16 (thx Szymon).
+	 - kodak_g240 (thx Michael).
+	 - leehoff (thx gothbert).
+	 - ramka_m16 (thx firefox).
+	 - swwex_mm004v5 (thx Magnetohh).
+	 - weltild (thx leonjoeann).
+	 - winplus (thx spooky2012).
+	 - yallstock_black_portrait_2 (thx oberseeler).
+	 - xp1000 (thx nonzhe).
+	 - xp1000_2 (thx dsqa).
+	 - zipp_dp506_2 (thx ajd4096).
+	
 Mon, 28 Okt 2013
        by superelchi
        * Fixed bug in identify.py:

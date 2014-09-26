@@ -27,6 +27,7 @@ verbose = 0
 
 JUMPTABLE_OFFSET_BUILDWIN = 0x80
 JUMPTABLE_OFFSET_COBY = 0x180
+JUMPTABLE_OFFSET_COBY2 = 0x100
 
 SCAN_NOTFOUND = 0
 SCAN_TABLE = 1
@@ -53,20 +54,24 @@ def isBuildwinFw(buf):
         version = (buf[0x50:0x58], buf[0x60: 0x70], buf[JUMPTABLE_OFFSET_BUILDWIN:JUMPTABLE_OFFSET_BUILDWIN+8], buf[JUMPTABLE_OFFSET_COBY:JUMPTABLE_OFFSET_COBY+8])
         if version[0] == "20120101":
                 return -1
+        if not version[0].isdigit():
+                version = (buf[0x60:0x68], buf[0x80: 0x90], buf[JUMPTABLE_OFFSET_BUILDWIN:JUMPTABLE_OFFSET_BUILDWIN+8], buf[JUMPTABLE_OFFSET_COBY:JUMPTABLE_OFFSET_COBY+8], buf[JUMPTABLE_OFFSET_COBY2:JUMPTABLE_OFFSET_COBY2+8])
         if version[0].isdigit():
                 if version[1][3] == " " and version[1][6] == " " and version[1][7:10].isdigit():
                         if version[2].startswith("ProcTbl"):
                                 jumptable_offset = JUMPTABLE_OFFSET_BUILDWIN
                         elif version[3].startswith("ProcTbl"):
                                 jumptable_offset = JUMPTABLE_OFFSET_COBY
+                        elif version[4].startswith("ProcTbl"):
+                                jumptable_offset = JUMPTABLE_OFFSET_COBY2
                         if jumptable_offset != 0:
                                 i = 1
                                 p = jumptable_offset + 8
 
-                                while buf[p:p+8] != "-EndTbl-" and i < 60:
+                                while buf[p:p+8] != "-EndTbl-" and i < 100:
                                         p += 8
                                         i += 1
-                                if i > 10 and i < 60:
+                                if i > 10 and i < 100:
                                         return i
         return 0
 
@@ -611,6 +616,8 @@ def recognize_dpf(dump):
                 mfg = "buildwin"
                 if jumptable_offset == JUMPTABLE_OFFSET_COBY:
                         mfg = "coby"
+                elif jumptable_offset == JUMPTABLE_OFFSET_COBY2:
+                        mfg = "coby2"
                 print("Found (%s, %dx%d px)." % (mfg, w, h))
         else:
                 print("Not found.")
