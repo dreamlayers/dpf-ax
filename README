@@ -19,7 +19,55 @@ AX206 DPF firmware (also referred to as BSOH - blue screen of hack)
 Read all the firmware details in src/README or src/README.developer
 
 ----------------------------------------------------------------------------
-Building
+Firmware detection & flashing
+----------------------------------------------------------------------------
+
+You need:
+
+- A proper Linux system with GCC, libusb-dev,
+  Python 2 (note: Python 3 will *NOT* work!) and python-dev.
+
+- The dpf-ax tools: dpf-ax_YYYYMMDD.tgz from http://sourceforge.net/projects/dpf-ax/files
+  ("YYYYMMDD" is a timestamp - always use the newest one)
+
+Usage
+------
+
+IMPORTANT: identify.py will put a copy of your dpf's firmware in the file
+"tools/fulldump_TIMESTAMP.bin". It is strongly recommended to make a backup of 
+this file, so you can re-flash the original firmware if something goes wrong.
+Alternatively you can make a dump of the entire flash using the fulldump.py script.
+
+LET ME SAY IT AGAIN: make a backup of your dpf's original firmware
+                     before messing around!
+
+1. Run 'make' to build the dpf access library, python modules and helpers.
+   If you get an error that "usb.h" could not be found: install libusb-dev.
+2. Connect your frame and enable USB transfer
+   (Press "MENU" -> select "USB Connect", "Connect to PC" or whatever its called).
+3. Wait a while and check dmesg for the /dev/sgX assignment (e,g. 'tail /var/log/syslog'.)
+   Look for line containing something like .. Attached scsi generic sg2 type 5 .. --> X=2 here ;)
+4. Go to the tools directory and run
+   './identify.py /dev/sgX' as root.
+   Replace 'X' with the number you found under 3.
+5. If your dpf is supported, download the firmware package "dpf-ax_firmware_YYYYMMDD.zip" from
+   http://sourceforge.net/projects/dpf-ax/files, extract it and use the fw_TYPE.bin
+   that matches the TYPE identify.py detected.
+6. Put your dpf in boot mode (press & hold MENU, press & release RESET, release MENU)
+   and run as root
+     ./hiddetach
+     ./restore.py ../src/fw_<your DPF type>.bin -f
+
+If your dpf is not supported, have a look at the picframe wiki at
+http://picframe.spritesserver.nl/wiki/index.php/DPF_with_AppoTech_AX206
+or you can try to contact me (superelchi) at sourceforge or post a request in
+http://forum.doozan.com/read.php?9,10026
+
+If restore.py is not working (or you prefer windows :-o), see tools/README.windows
+for instructions howt to do the detection & flashing.
+
+----------------------------------------------------------------------------
+Building options
 ----------------------------------------------------------------------------
 
 Verify that you have a decent development system (GCC, development libraries,

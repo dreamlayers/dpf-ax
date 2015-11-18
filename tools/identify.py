@@ -806,6 +806,9 @@ def recognize_dpf(dump):
 
             outf.write("\n// NOTE: uncomment to swap the buttons for up/down menu navigation\n")
             outf.write("//#define LCD_LRBUTTON_SWAP\n")
+
+            outf.write("\n// NOTE: uncomment to use alt buttons for up/down menu navigation\n")
+            outf.write("//#define LCD_LR_ALT_BUTTONS\n")
                 
             outf.close()
 

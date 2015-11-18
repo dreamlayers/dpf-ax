@@ -40,3 +40,9 @@
 //#define LCD_CONTRAST_NONE
 #define LCD_CONTRAST_TABLE
 //#define LCD_CONTRAST_CUSTOM
+
+// NOTE: uncomment to swap the buttons for up/down menu navigation
+//#define LCD_LRBUTTON_SWAP
+
+// NOTE: uncomment to use alt buttons for up/down menu navigation
+//#define LCD_LR_ALT_BUTTONS

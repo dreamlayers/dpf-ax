@@ -5,8 +5,6 @@
 // Credit: By superelchi, thx spooky2012
 // Date: 2014-05-07
 //
-// Url: http://www.amazon.com/Digital-Frame-Screen-Vent-Mount-Function/dp/B006G0CJW0
-//
 // The signature identify.py detected (OpenWin, Init, Backlight, Contrast)
 // CRC: 0x4e892f7d, 0x3fcfdb12, 1, 1
 //

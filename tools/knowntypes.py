@@ -85,6 +85,22 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3943643383, 436450420, 2, 2]], 'Credit': ['By superelchi, thx gioagril'], 'Lcd_height': '128', 'Date': ['2013-11-11'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['acme_7']},
 
 #
+# acme_8
+#
+# By superelchi, thx victorclaessen
+# 2015-01-06
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[741602581, 530453805, 1, 1]], 'Credit': ['By superelchi, thx victorclaessen'], 'Lcd_height': '128', 'Date': ['2015-01-06'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['acme_8']},
+
+#
+# acme_9
+#
+# By superelchi, thx pkrich.
+# 2015-04-08
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2019707014, 3446734372, 2, 2]], 'Credit': ['By superelchi, thx pkrich.'], 'Lcd_height': '128', 'Date': ['2015-04-08'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['acme_9']},
+
+#
 # agk_violet
 #
 #
@@ -97,6 +113,14 @@ KNOWN_TYPES = [
 # 2013-02-12
 #
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[640222753, 3948976512, 1, 1]], 'Url': ['http://www.amazon.de/dp/B001N96F3I/ref=pe_217221_31005211_dp_1'], 'Credit': ['By superelchi'], 'Lcd_height': '128', 'Date': ['2013-02-12'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['august_dp150a']},
+
+#
+# august_dp150l
+#
+# By superelchi, thx leonjoeann
+# 2015-01-25
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3229008242, 4127089957, 1, 1]], 'Credit': ['By superelchi, thx leonjoeann'], 'Lcd_height': '128', 'Date': ['2015-01-25'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['august_dp150l']},
 
 #
 # avlabs_avl969s
@@ -212,7 +236,7 @@ KNOWN_TYPES = [
 # By superelchi (thx c.dent)
 # 2012-07-28
 #
-{'Comment': ['Nice enclosure: tumbler design.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 1730849026]], 'Url': ['http://www.ebay.com/itm/Hot-1-5-Digital-Photo-Frame-Picture-Album-16MB-New-Tumbler-03-/110842497224'], 'Credit': ['By superelchi (thx c.dent)'], 'Lcd_height': '128', 'Date': ['2012-07-28'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['eachdesk_tumbler']},
+{'Comment': ['Nice enclosure: tumbler design.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 1730849026]], 'Url': ['http://www.ebay.com/itm/Hot-1-5-Digital-Photo-Frame-Picture-Album-16MB-New-Tumbler-03-/110842497224', 'https://www.weltbild.de/artikel/elektronik/digitales-fotoalbum-deluxe-mit-schluesselanhaenger-farbe_16956836-1'], 'Credit': ['By superelchi (thx c.dent)'], 'Lcd_height': '128', 'Date': ['2012-07-28'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['eachdesk_tumbler']},
 
 #
 # estation100
@@ -307,6 +331,22 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2726181921, 3709981863]], 'Url': ['http://www.amazon.fr/gp/product/B00AQV277C/'], 'Credit': ['By superelchi, thx glb'], 'Lcd_height': '128', 'Date': ['2013-01-27'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['sunluxy']},
 
 #
+# sweex_mm004v5_2
+#
+# By superelchi, thx free8bee
+# 2014-12-25
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3189525217, 584147790, 2, 2]], 'Credit': ['By superelchi, thx free8bee'], 'Lcd_height': '128', 'Date': ['2014-12-25'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['sweex_mm004v5_2']},
+
+#
+# sweex_mv004v4
+#
+# By superelchi, thx jon2099
+# 2015-02-26
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 4268180508, 1, 1]], 'Credit': ['By superelchi, thx jon2099'], 'Lcd_height': '128', 'Date': ['2015-02-26'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['sweex_mv004v4']},
+
+#
 # sweex_mv004v5
 #
 # By superelchi, thx Magnetohh
@@ -331,12 +371,28 @@ KNOWN_TYPES = [
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 3308761215]], 'Credit': ['By superelchi, thx ternyk'], 'Lcd_height': '128', 'Date': ['2013-02-13'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['veovision']},
 
 #
+# vivitar
+#
+# By superelchi, thx metallurge
+# 2015-07-05
+#
+{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[640222753, 756959522, 2, 0]], 'Credit': ['By superelchi, thx metallurge'], 'Lcd_height': '128', 'Date': ['2015-07-05'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['vivitar']},
+
+#
 # weltild
 #
 # By superelchi, thx leonjoeann
 # 2014-07-30
 #
 {'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2469228728, 400340726, 2, 2]], 'Credit': ['By superelchi, thx leonjoeann'], 'Lcd_height': '128', 'Date': ['2014-07-30'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['weltild']},
+
+#
+# wh_smith
+#
+# By superelchi, thx free8bee
+# 2014-12-25
+#
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[2280663442, 3485091384, 2, 2]], 'Credit': ['By superelchi, thx free8bee'], 'Lcd_height': '128', 'Date': ['2014-12-25'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['wh_smith']},
 
 #
 # xg4241
@@ -671,6 +727,6 @@ KNOWN_TYPES = [
 # By superelchi, thx spooky2012
 # 2014-05-07
 #
-{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1317613437, 1070586642, 1, 1]], 'Url': ['http://www.amazon.com/Digital-Frame-Screen-Vent-Mount-Function/dp/B006G0CJW0'], 'Credit': ['By superelchi, thx spooky2012'], 'Lcd_height': '240', 'Date': ['2014-05-07'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['winplus']},
+{'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1317613437, 1070586642, 1, 1]], 'Credit': ['By superelchi, thx spooky2012'], 'Lcd_height': '240', 'Date': ['2014-05-07'], 'Lcd_width': '320', 'ContrastMenuSupport': 'No', 'Type': ['winplus']},
 
 ]

@@ -3,6 +3,21 @@ dpf-ax changelog
 	by <hackfin@section5.ch>
 	Find details in the git or svn logs.
 
+Thu, 17 Nov 2015
+v0.43 by superelchi
+       * README cleanup
+       * Support for alt up / down buttons
+       * New config param LCD_LR_ALT_BUTTONS
+       * New model:
+         - acme_8 (thx victorclaessen).
+         - acme_9 (thx pkrich).
+         - august_sp150l (thx leonjoeann).
+         - fanray (thx maxipes).
+	 - sweex_mm004v5_2 (thx free8bee).
+	 - sweex_mv004v4 (thx jon2099).
+	 - vivitar (thx metallurge and parkerlreed for his help to get the buttons working).
+	 - wh_smith (thx free8bee).
+       * Removed Link for winplus - the dpf on this page is no longer compatible.
 
 Fr, 26 Sep 2014
        by superelchi

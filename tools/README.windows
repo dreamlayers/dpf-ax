@@ -37,10 +37,9 @@ http://www.activestate.com/activepython/downloads ((use newest Python 2.7 Window
 A frame with the original Buildwin firmware. An already hacked frame will *NOT* work!
 
 3.
-Download the dpf-ax tools: dpf-ax_0.xx_windows.zip from
-http://sourceforge.net/projects/dpf-ax/files
-("xx" is the version, e. g. "dpf-ax_0.40_windows.zip" - always use the newest one)
-and extract the ZIP to, say, C:\.
+Download dpf-ax_windows_YYYYMMDD.zip from http://sourceforge.net/projects/dpf-ax/files
+("YYYYMMDD" is a timestamp - always use the newest one)
+and extract the ZIPs to, say, C:\.
 
 ----------------------------------------------------------------------------
 Firmware detection
@@ -100,9 +99,9 @@ from Buildwins's SDK. Have a look at
 http://openschemes.com/2011/08/24/ax206-hardware-bootloader-well-that-was-easy/
 for more information.
 
-Download the firmware package "dpf-ax_0.xx_firmware_YYYMMDD.zip" from
+Download the firmware package "dpf-ax_firmware_YYYYMMDD.zip" from
 http://sourceforge.net/projects/dpf-ax/files
-("xx" is the version, "YYYYMMDD" is a timestamp. Use the one with the newest timestamp).
+("YYYYMMDD" is a timestamp - always use the newest one)
 Extract it and use the fw_TYPE.bin that matches the TYPE identify.py detected.
 
 Note: if ProgSPI.exe tells you something like

@@ -116,15 +116,23 @@ char handle_getprop(__idata unsigned char *b) __banked;
 
 // Button events:
 
-#ifdef LCD_LRBUTTON_SWAP    // Some have the button pins swapped
-#define KEY_UP   0x02
-#define KEY_DOWN 0x04
+#ifdef LCD_LR_ALT_BUTTONS	// Spme have different UP / DOWN pins
+#define KEY_UP_MASK   0x08	// P3.3 = alt UP Key
+#define KEY_DOWN_MASK 0x10 	// P3.4 = alt DOWN KeyKEY_P34_MASK
 #else
-#define KEY_UP   0x04
-#define KEY_DOWN 0x02
+#define KEY_UP_MASK   0x02	// P3.1 = UP Key
+#define KEY_DOWN_MASK 0x04 	// P3.2 = DOWN Key
 #endif
 
-#define KEY_MENU 0x40
+#ifdef LCD_LRBUTTON_SWAP    // Some have the button pins swapped
+#define KEY_UP   KEY_UP_MASK
+#define KEY_DOWN KEY_DOWN_MASK
+#else
+#define KEY_UP   KEY_DOWN_MASK
+#define KEY_DOWN KEY_UP_MASK
+#endif
+
+#define KEY_MENU 0x40		// P0.6 = MENU Key
 // User defined events:
 #define EVT_EDIT    0x20
 #define EVT_REFRESH 0x21
