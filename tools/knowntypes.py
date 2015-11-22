@@ -236,7 +236,7 @@ KNOWN_TYPES = [
 # By superelchi (thx c.dent)
 # 2012-07-28
 #
-{'Comment': ['Nice enclosure: tumbler design.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 1730849026]], 'Url': ['http://www.ebay.com/itm/Hot-1-5-Digital-Photo-Frame-Picture-Album-16MB-New-Tumbler-03-/110842497224', 'https://www.weltbild.de/artikel/elektronik/digitales-fotoalbum-deluxe-mit-schluesselanhaenger-farbe_16956836-1'], 'Credit': ['By superelchi (thx c.dent)'], 'Lcd_height': '128', 'Date': ['2012-07-28'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['eachdesk_tumbler']},
+{'Comment': ['Nice enclosure: tumbler design.'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[3589264857, 1730849026]], 'Url': ['http://www.ebay.com/itm/Hot-1-5-Digital-Photo-Frame-Picture-Album-16MB-New-Tumbler-03-/110842497224'], 'Credit': ['By superelchi (thx c.dent)'], 'Lcd_height': '128', 'Date': ['2012-07-28'], 'Lcd_width': '128', 'ContrastMenuSupport': 'Yes', 'Type': ['eachdesk_tumbler']},
 
 #
 # estation100
@@ -373,10 +373,10 @@ KNOWN_TYPES = [
 #
 # vivitar
 #
-# By superelchi, thx metallurge
+# By superelchi, thx metallurge and parkerlreed for his help to get the buttons working
 # 2015-07-05
 #
-{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[640222753, 756959522, 2, 0]], 'Credit': ['By superelchi, thx metallurge'], 'Lcd_height': '128', 'Date': ['2015-07-05'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['vivitar']},
+{'Status': 'supported', 'ContrastSupport': 'No', 'CRC': [[640222753, 756959522, 2, 0]], 'Credit': ['By superelchi, thx metallurge and parkerlreed for his help to get the buttons working'], 'Lcd_height': '128', 'Date': ['2015-07-05'], 'Lcd_width': '128', 'ContrastMenuSupport': 'No', 'Type': ['vivitar']},
 
 #
 # weltild
@@ -468,6 +468,15 @@ KNOWN_TYPES = [
 # 2012-09-28
 #
 {'Comment': ['Portrait mode, different enclosure, battery powered'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[472729229, 1980929741, 1, 1]], 'Url': ['http://www.ebay.com/itm/280736717264'], 'Credit': ['By superelchi, thx dms'], 'Lcd_height': '320', 'Date': ['2012-09-28'], 'Lcd_width': '240', 'ContrastMenuSupport': 'No', 'Type': ['delightdigi_2_portrait']},
+
+#
+# fanray
+#
+# From Alibaba - Fanray Type FR-024SA-8 (AM)
+# By superelchi, thx maxipes
+# 2015-11-16
+#
+{'Comment': ['From Alibaba - Fanray Type FR-024SA-8 (AM)'], 'Status': 'supported', 'ContrastSupport': 'Yes', 'CRC': [[1345150332, 3304277511, 2, 1]], 'Url': ['http://www.alibaba.com/product-detail/2-4-inch-TFT-nice-gift_506523246.html?spm=a2700.7724857.29.46.QLp7IF'], 'Credit': ['By superelchi, thx maxipes'], 'Lcd_height': '320', 'Date': ['2015-11-16'], 'Lcd_width': '240', 'ContrastMenuSupport': 'No', 'Type': ['fanray']},
 
 #
 # linkdelight_black_portrait
