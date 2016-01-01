@@ -5,7 +5,14 @@
  */
 
 #include <stdint.h>
+#if defined(_WIN32)
+// Use header from libusb-win32.
+// Windows has a different native usb.h which must not be used.
+#include <lusb0_usb.h>
+#else
+// This will also work in Cygwin with libusb-devel package.
 #include <usb.h>
+#endif
 #include "usbuser.h"
 #include "spiflash.h"
 

@@ -3,19 +3,72 @@
  *
  */
 
+#ifndef __linux__
+#define WITH_SG3
+#endif
+
+#if defined(WITH_SG3) && (defined(_WIN32) || defined(__CYGWIN__))
+#define SG_LIB_WIN32
+#endif
+
 #include "sglib.h"
 #include "usbuser.h" // our user defined flash commands
 #include "dpf.h"
 
+#include <stdio.h>
+#include <string.h>
+#ifdef WITH_SG3
+#include <scsi/sg_lib.h>
+#include <scsi/sg_pt.h>
+#define INQUIRY 0x12
+#ifdef DEBUG
+#define SG3_VERBOSE 100
+#else
+#define SG3_VERBOSE 0
+#endif
+#else
 #include <scsi/scsi.h>
 #include <scsi/sg.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#endif
 
+#ifdef WITH_SG3
+/* Based on sg_raw.c from sg3_utils-1.40 */
+int do_scsi(int fd, unsigned char *cmd, int cmdlen, char out,
+	unsigned char *data, unsigned long block_len)
+{
+	unsigned char sensebuf[32];
+	struct sg_pt_base *ptvp = NULL;
+	int ret;
 
+	ptvp = construct_scsi_pt_obj();
+	if (ptvp == NULL) return -1;
+
+	set_scsi_pt_cdb(ptvp, cmd, cmdlen);
+	set_scsi_pt_sense(ptvp, sensebuf, sizeof(sensebuf));
+
+	if (data != NULL) {
+		if (out) {
+			set_scsi_pt_data_out(ptvp, data, block_len);
+		} else {
+			set_scsi_pt_data_in(ptvp, data, block_len);
+		}
+	}
+
+	ret = do_scsi_pt(ptvp, fd, 5, SG3_VERBOSE);
+
+	if (ret != 0 ||
+		get_scsi_pt_result_category(ptvp) != SCSI_PT_RESULT_GOOD) {
+		ret = -1;
+	}
+
+	destruct_scsi_pt_obj(ptvp);
+
+	return ret;
+}
+#else
 int do_scsi(int fd, unsigned char *cmd, int cmdlen, char out,
 	unsigned char *data, unsigned long block_len)
 {
@@ -45,7 +98,7 @@ int do_scsi(int fd, unsigned char *cmd, int cmdlen, char out,
 	if (error < 0) perror("calling SCSI ioctl()");
 	return error;
 }
-
+#endif // !WITH_SG3
 
 int wrap_scsi(DPFContext *h, unsigned char *cmd, int cmdlen, char out,
 	unsigned char *data, unsigned long block_len)
@@ -96,17 +149,42 @@ int sgdev_open(const char *portname, int *fd)
 
 	static unsigned char inqbuf[INQ_REPLY_LEN + 2];
 
+#ifdef WITH_SG3
+	*fd = scsi_pt_open_device(portname, 0, SG3_VERBOSE);
+#ifdef SG_LIB_WIN32
+	/* Without this, DeviceIoControl() returns ERROR_INVALID_PARAMETER (87)
+	 * for 64 KB flash dumping transfers. */
+	scsi_pt_win32_direct(1);
+#endif
+#else
 	*fd = open(portname, O_RDONLY | O_NONBLOCK );
+#endif
+
+	if (*fd < 0) {
+		fprintf(stderr, "SCSI device opening failed\n");
+		return DEVERR_OPEN;
+	}
+
 	error = do_scsi(*fd, inquiry, sizeof(inquiry), DIR_IN, inqbuf,
 		INQ_REPLY_LEN);
 	
 	if (error < 0) {
 		fprintf(stderr, "SCSI inquiry failed\n");
-		close(*fd); error = DEVERR_OPEN;
+#ifdef WITH_SG3
+		scsi_pt_close_device(*fd);
+#else
+		close(*fd);
+#endif
+		error = DEVERR_OPEN;
 	} else 
 	if (memcmp(idstring1, &inqbuf[8], sizeof(idstring1) - 1) != 0 &&
 	    memcmp(idstring2, &inqbuf[8], sizeof(idstring2) - 1) != 0) {
-		close(*fd); error = DEVERR_OPEN;
+#ifdef WITH_SG3
+		scsi_pt_close_device(*fd);
+#else
+		close(*fd);
+#endif
+		error = DEVERR_OPEN;
 		fprintf(stderr, "Not a photo frame. Refuse to open device.\n");
 	}
 	return error;

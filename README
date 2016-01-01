@@ -100,6 +100,13 @@ There is no Windows driver for hacked frames. Period.
 But there is partial support for firmware detection and backup.
 See tools/README.windows.
 
+There is experimental Cygwin support. You need python and libusb-devel Cygwin
+packages. Compile and install sg3_utils yourself because no Cygwin pacage is
+available. To access DPF when it appears as a drive, run as Administrator
+and specify the drive letter. To access DPF in bootloader mode, install
+libusb-win32 filter driver for that USB device. There is no need to run
+as Administrator for bootloader mode.
+
 ----------------------------------------------------------------------------
 LCD4linux display notes
 ----------------------------------------------------------------------------

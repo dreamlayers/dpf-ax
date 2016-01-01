@@ -60,6 +60,12 @@ else
 	INSTALLNAME = $(LIBNAME)
 endif
 
+ifneq (, $(findstring CYGWIN, $(PLATFORM)))
+	INSTALLFULLNAME := $(INSTALLNAME).dll
+else
+	INSTALLFULLNAME := lib$(INSTALLNAME).so
+endif
+
 ############################################################################
 # RULES
 #
@@ -96,7 +102,7 @@ libclean:
 
 installdll:: $(DLL)
 	[ -e $(DLLINSTALLDIR) ] || mkdir $(DLLINSTALLDIR)
-	cp $(DLL) $(DLLINSTALLDIR)/lib$(INSTALLNAME).so
+	cp $(DLL) $(DLLINSTALLDIR)/$(INSTALLFULLNAME)
 
 clean::
 	rm -f $(DLLOBJS)

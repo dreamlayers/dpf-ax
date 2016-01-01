@@ -31,7 +31,11 @@ ifndef PLATFORM
 PLATFORM=$(shell "uname")
 endif
 
-ifeq (Linux, $(PLATFORM))
+ifneq (Linux, $(PLATFORM))
+CLIENTLIB += -lsgutils2
+endif
+
+ifneq (mingw32, $(PLATFORM))
 	PYTHON=$(shell pyversions -d 2>/dev/null)
 ifeq ("", "$(PYTHON)")
 	# pyversions replacement for non-debian linux
@@ -44,7 +48,6 @@ else
 
 	PYTHONSRC = $(HOME)/src/EXTERN/Python26
 
-ifeq (mingw32, $(PLATFORM))
 	include $(DEVLIB)/msdll.mk
 	PYTHONINCLUDES = -I$(PYTHONSRC)/include
 	CFLAGS += -DDLL_EXPORTS
@@ -52,7 +55,6 @@ ifeq (mingw32, $(PLATFORM))
 	DLLDEPS += $(CLIENTLIB) -lws2_32
 	DLLTOOL = i586-mingw32msvc-dlltool
 	DLLWRAP = i586-mingw32msvc-dllwrap
-endif
 endif
 
 PYVERS:=$(shell echo $(PYTHON) | grep -Eo "[0-9]\.")
