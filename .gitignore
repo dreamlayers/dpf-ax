@@ -1,0 +1,11 @@
+*.o
+*.pyc
+/Debug
+/Release
+/python/Debug
+/python/Release
+/dpflib/bload
+/dpflib/bload.exe
+libdpf.a
+fwload
+fwload.exe
