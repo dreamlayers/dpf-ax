@@ -39,7 +39,7 @@ ifneq (mingw32, $(PLATFORM))
 	PYTHON=$(shell pyversions -d 2>/dev/null)
 ifeq ("", "$(PYTHON)")
 	# pyversions replacement for non-debian linux
-	PYTHON=$(shell python -V 2>&1 | sed -re 's/.*ython ([0-9]\.[0-9])(\.[0-9]+)*/python\1/g')
+	PYTHON=$(shell python2 -V 2>&1 | sed -re 's/.*ython ([0-9]\.[0-9])(\.[0-9]+)*/python\1/g')
 endif
 	include $(DEVLIB)/unixdll.mk
 	DLLDEPS = $(CLIENTLIB) -l$(PYTHON)
