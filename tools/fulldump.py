@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # Script to extract flash
 #
 # <hackfin@section5.ch>

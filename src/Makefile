@@ -185,7 +185,7 @@ include rules.mk
 # This actually compiles the whole habash. Also creates a .bin for the
 # full firmware.
 fw_$(DEVEL_)$(TYPE).ihx: main.ihx
-	python compile.py $< $@ $(FW_ADDR) $(LOAD_ADDR) \
+	python2 compile.py $< $@ $(FW_ADDR) $(LOAD_ADDR) \
 		$(JMPTBL_OFFS) $(CODE_OFFS) $(RESX) $(RESY) $(SPLASH_FILE) > output.log
 
 current.ihx: fw_$(DEVEL_)$(TYPE).ihx 
@@ -239,7 +239,7 @@ endif
 	@$(LD) -f $(TMPLNK) -n > /dev/null
 
 #font4x8.bin: font4x8.pnm
-#	python chartbl.py font4x8
+#	python2 chartbl.py font4x8
 
 
 %.ihx: %.rel
@@ -289,6 +289,6 @@ Debug/dpf.so: $(wildcard $(DPFLIB)/*.c) $(PYDPF)/py_device.c
 
 download: Debug/dpf.so 
 #	sudo libhid-detach-device 1908:3318
-	cd ../tools ; sudo ./hiddetach ; sudo python restore.py ../src/current.bin -f
+	cd ../tools ; sudo ./hiddetach ; sudo python2 restore.py ../src/current.bin -f
 
 
