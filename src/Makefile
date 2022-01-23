@@ -275,7 +275,7 @@ clean: libclean
 	rm -f current.bin
 	rm -f userconfig.h config.inc
 
-Debug/dpf.so: $(wildcard $(DPFLIB)/*.c) $(PYDPF)/py_device.c
+Debug/dpf.so: $(wildcard $(DPFLIB)/*.c) $(PYDPF)/py_dpf.c
 	$(MAKE) -C $(DPFLIB) install
 	$(MAKE) -C $(PYDPF) install
 

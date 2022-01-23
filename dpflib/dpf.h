@@ -179,8 +179,6 @@ int patch_sector(DPFHANDLE h,
 int dpfcpy(ADDR dst, unsigned char *src, unsigned short n);
 
 // int clr_screen(DPFHANDLE h, const unsigned char *col);
-int write_screen(DPFHANDLE h, const unsigned char *buf, unsigned int len);
-
 
 // Some internal address offsets. They may change, but so far all types
 // seem to have the same

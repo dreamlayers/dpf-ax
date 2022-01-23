@@ -14,7 +14,7 @@ LIBNAME = dpf
 DLLCSRCS =
 COMMONSRCDIR = $(DEVLIB)/python
 DLLINSTALLDIR = ../$(CONFIG)
-DLLCOMMONSRCS = py_device.c
+DLLCOMMONSRCS = py_dpf.c
 DEBUGOPTS = -g
 
 ifdef DEBUG
@@ -36,10 +36,9 @@ CLIENTLIB += -lsgutils2
 endif
 
 ifneq (mingw32, $(PLATFORM))
-	PYTHON=$(shell pyversions -d 2>/dev/null)
 ifeq ("", "$(PYTHON)")
 	# pyversions replacement for non-debian linux
-	PYTHON=$(shell python2 -V 2>&1 | sed -re 's/.*ython ([0-9]\.[0-9])(\.[0-9]+)*/python\1/g')
+	PYTHON=$(shell python3 -V 2>&1 | sed -re 's/.*ython ([0-9]\.[0-9])(\.[0-9]+)*/python\1/g')
 endif
 	include $(DEVLIB)/unixdll.mk
 	DLLDEPS = $(CLIENTLIB) -l$(PYTHON)
@@ -55,11 +54,6 @@ else
 	DLLDEPS += $(CLIENTLIB) -lws2_32
 	DLLTOOL = i586-mingw32msvc-dlltool
 	DLLWRAP = i586-mingw32msvc-dllwrap
-endif
-
-PYVERS:=$(shell echo $(PYTHON) | grep -Eo "[0-9]\.")
-ifeq ($(PYVERS), 3.)
-$(error Python3 not supported - use python2)
 endif
 
 INCLUDES = -I$(DEVLIB)/include -I$(DEVLIB)/dpflib
