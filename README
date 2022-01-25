@@ -25,7 +25,7 @@ Firmware detection & flashing
 You need:
 
 - A proper Linux system with GCC, libusb-dev,
-  Python 2 (note: Python 3 will *NOT* work!) and python-dev.
+  Python 3 and python3-dev.
 
 - The dpf-ax tools: dpf-ax_YYYYMMDD.tgz from http://sourceforge.net/projects/dpf-ax/files
   ("YYYYMMDD" is a timestamp - always use the newest one)

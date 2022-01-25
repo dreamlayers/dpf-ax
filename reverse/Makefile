@@ -71,6 +71,6 @@ images: $(IMAGES)
 dump:
 	PWD=`pwd`; BASE=`basename $$PWD`; \
 	echo $$BASE; \
-	python2 ../dump.py $$BASE full_image.bin
+	python3 ../dump.py $$BASE full_image.bin
 
 .PHONY: dump

@@ -285,6 +285,6 @@ Debug/dpf.so: $(wildcard $(DPFLIB)/*.c) $(PYDPF)/py_dpf.c
 
 download: Debug/dpf.so 
 #	sudo libhid-detach-device 1908:3318
-	cd ../tools ; sudo ./hiddetach ; sudo python2 restore.py ../src/current.bin -f
+	cd ../tools ; sudo ./hiddetach ; sudo python3 restore.py ../src/current.bin -f
 
 

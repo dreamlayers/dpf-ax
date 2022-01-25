@@ -55,6 +55,6 @@ rm -f ffmpeg.log
 
 echo "Splashfile saved to ${name}.$2x$3.rgb"
 if [ $# -ge 4 ] ; then
-    python2 splash2flash.py "${name}.$2x$3.rgb" $2 $3 "usb0"
+    python3 splash2flash.py "${name}.$2x$3.rgb" $2 $3 "usb0"
 fi
 
