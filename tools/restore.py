@@ -1,5 +1,6 @@
 #!/usr/bin/python
 #
+
 import struct
 import sys
 sys.path.append("../Debug")
@@ -10,7 +11,7 @@ import time
 SECTOR_SIZE = 0x10000
 
 def flash_restore(d, data):
-        sectors = (len(data) + SECTOR_SIZE - 1) / SECTOR_SIZE
+        sectors = int((len(data) + SECTOR_SIZE - 1) / SECTOR_SIZE)
         d.eraseFlash() # erase full flash
         # for i in range(sectors):
                 # print "Erasing sector %d..." % i
@@ -29,7 +30,7 @@ try:
 except:
         file = "../reverse/silver2/full_image.bin"
 
-f = open(file, "r")
+f = open(file, "rb")
 data = f.read()
 
 size = detect.detect_flash(d)

@@ -12,7 +12,7 @@ if len(sys.argv) != 5:
         print("Usage: %s <rgb-file> <width> <height> <device>" % sys.argv[0])
         sys.exit(1)
 
-splashbin = open(sys.argv[1], "r")
+splashbin = open(sys.argv[1], "rb")
 splash = splashbin.read()
 splashbin.close()
 
@@ -25,13 +25,13 @@ if resy > 511 or resy & 0x01:
         print("Image height must be < 512 and even!")
         sys.exit(1)
 if len(splash) != (resx * resy * 2):
-        print("Length of imagefile does not match given image with/height!")
+        print("Length of imagefile does not match given image width/height!")
         sys.exit(1)
         
 print("Sending splashfile %s to flash..." % sys.argv[1])
 d = dpf.open(sys.argv[4])
 data = d.readFlash(0x00, 0x80)
-if data[0x50:0x58] != "20120101" or int(data[0x73:0x75]) < 0x03 or data[0x77] != "1":
+if data[0x50:0x58] != b"20120101" or int(data[0x73:0x75]) < 0x03 or data[0x77:0x78] != b"1":
         print("Wrong firmware!")
         d.close()
         sys.exit(1)
@@ -44,7 +44,7 @@ data = l + splash
 
 print("offset: 0x%x" % offset)
 
-sectors = (len(data) + SECTOR_SIZE - 1) / SECTOR_SIZE
+sectors = int((len(data) + SECTOR_SIZE - 1) / SECTOR_SIZE)
 for i in range(sectors):
         sector = offset + (i * SECTOR_SIZE)
         print("Erasing sector at 0x%06x..." % sector)

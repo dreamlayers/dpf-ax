@@ -225,7 +225,7 @@ class ProcEntry:
 
 def extract_code(data, fname):
 	out = data
-	outf = open(fname, "w")
+	outf = open(fname, "wb")
 	outf.write(out)
 	outf.close()
 
@@ -250,7 +250,7 @@ def exists(file):
 def generate_ctl(which, prefix, record, entries):
 	fname = "%s%02d.in" % (prefix, which)
 	if exists(fname):
-		print "%s exists, not creating" % fname
+		print("%s exists, not creating" % fname)
 		return
 
 	outf = open(fname, "w")
@@ -284,7 +284,7 @@ def build_tab(data, start, end):
 	
 	return l
 
-val = lambda x: ord(x)
+val = lambda x: x
 
 # Some codes to scan for:
 
@@ -311,7 +311,7 @@ class Scanner:
 			if type(self.scansequence[n]) == type(val):
 				args.append(val(data[p]))
 				n += 1
-			elif chr(self.scansequence[n]) == data[p]:
+			elif self.scansequence[n] == data[p]:
 				n += 1
 			else:
 				n = 0
@@ -355,7 +355,7 @@ def analyze_bootblock(data):
 	s = struct.unpack(">H", data[5:7])[0] # start code in flash
 	reloc = struct.unpack(">H", data[2:4])[0] # relocation
 
-	print hex(reloc), hex(s)
+	print(hex(reloc), hex(s))
 
 	rec.start = reloc - s - 0x800
 	rec.offset = s
@@ -381,15 +381,15 @@ def write_rawimage(d, fname):
 try:
 	# Choose here which DPF to dump:
 	dpf = g_dpfs[sys.argv[1]]
-	f = open(sys.argv[2], "r")
+	f = open(sys.argv[2], "rb")
 except (KeyError, IndexError):
-	print "Usage: %s <frameid>" % sys.argv[0]
-	print "where frameid is one of:"
+	print("Usage: %s <frameid>" % sys.argv[0])
+	print("where frameid is one of:")
 	for i in g_dpfs.keys():
-		print "  ", i
-	print "No DPF specified given, running basic dump"
+		print("  ", i)
+	print("No DPF specified given, running basic dump")
 	dpf = g_dpfs['default']
-	f = open("full_image.bin", "r")
+	f = open("full_image.bin", "rb")
 	
 
 data = f.read()
@@ -433,11 +433,11 @@ for i in dpf[3]:
 		offs[1] = foffs + ord(d[6]) + (ord(d[7]) << 8)
 
 		p = (c0 + j * 8 + 7, offs[0], sz[0], offs[1], sz[1])
-		print "! %04x dyn_%04x[%d], dyn_%04x[%d]" % p
+		print("! %04x dyn_%04x[%d], dyn_%04x[%d]" % p)
 		labels[c1 + offs[0]] = "dyn_%04x" % offs[0]
 		labels[c1 + offs[1]] = "dyn_%04x" % offs[1]
 	for j in labels.keys():
-		print "l %04x %s" % (j, labels[j])
+		print("l %04x %s" % (j, labels[j]))
 
 format = ">HHBH"
 s = struct.unpack(format, data[:7])
@@ -445,7 +445,7 @@ imem_loadaddr, code_startaddr, dummy, startcode = s
 
 l = build_tab(data, 0x188, startcode)
 
-print 80 * "-"
+print(80 * "-")
 
 start = l[0].offset
 d = data[0:start]
@@ -457,7 +457,7 @@ index = 1
 for i in l:
 	size = i.end - i.start
 	d = data[i.offset: i.offset + size]
-	print "[dump%d] %04x  %04x %08x (%d)" % (index, i.start, i.end, i.offset, size)
+	print("[dump%d] %04x  %04x %08x (%d)" % (index, i.start, i.end, i.offset, size))
 	extract_code(d, "dump%02d.bin" % index)
 	entries = analyze(d, i.start + 0x800)
 	generate_ctl(index, "dump", i, entries)

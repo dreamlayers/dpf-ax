@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-from __future__ import print_function
+
 import struct
 import sys
 import time
@@ -52,30 +52,30 @@ def get_module(buf, n):
 def isBuildwinFw(buf):
         global jumptable_offset
         version = (buf[0x50:0x58], buf[0x60: 0x70], buf[JUMPTABLE_OFFSET_BUILDWIN:JUMPTABLE_OFFSET_BUILDWIN+8], buf[JUMPTABLE_OFFSET_COBY:JUMPTABLE_OFFSET_COBY+8])
-        if version[0] == "20120101":
+        if version[0] == b"20120101":
                 return -1
         if not version[0].isdigit():
                 version = (buf[0x60:0x68], buf[0x80: 0x90], buf[JUMPTABLE_OFFSET_BUILDWIN:JUMPTABLE_OFFSET_BUILDWIN+8], buf[JUMPTABLE_OFFSET_COBY:JUMPTABLE_OFFSET_COBY+8], buf[JUMPTABLE_OFFSET_COBY2:JUMPTABLE_OFFSET_COBY2+8])
         if version[0].isdigit():
-                if version[1][3] == " " and version[1][6] == " " and version[1][7:10].isdigit():
-                        if version[2].startswith("ProcTbl"):
+                if version[1][3] == 32 and version[1][6] == 32 and version[1][7:10].isdigit():
+                        if version[2].startswith(b"ProcTbl"):
                                 jumptable_offset = JUMPTABLE_OFFSET_BUILDWIN
-                        elif version[3].startswith("ProcTbl"):
+                        elif version[3].startswith(b"ProcTbl"):
                                 jumptable_offset = JUMPTABLE_OFFSET_COBY
-                        elif version[4].startswith("ProcTbl"):
+                        elif version[4].startswith(b"ProcTbl"):
                                 jumptable_offset = JUMPTABLE_OFFSET_COBY2
                         if jumptable_offset != 0:
                                 i = 1
                                 p = jumptable_offset + 8
 
-                                while buf[p:p+8] != "-EndTbl-" and i < 100:
+                                while buf[p:p+8] != b"-EndTbl-" and i < 100:
                                         p += 8
                                         i += 1
                                 if i > 10 and i < 100:
                                         return i
         return 0
 
-val = lambda x: ord(x)
+val = lambda x: x
 
 scan_locate_displaysize = [
 0xE4, 0xF5, val, 0xF5, val, 0xF5, val, 0xF5, val,
@@ -177,7 +177,7 @@ class Scanner:
                         if type(self.scansequence[n]) == type(val):
                                 self.args.append(val(self.data[p]))
                                 n += 1
-                        elif chr(self.scansequence[n]) == self.data[p]:
+                        elif self.scansequence[n] == self.data[p]:
                                 n += 1
                         else:
                                 n = 0
@@ -194,7 +194,7 @@ class Scanner:
 def add_offs(context, args, p):
         e, offset = context
         e.append(p)
-        for i in range(len(args) / 2):
+        for i in range(int(len(args) / 2)):
                 off = args[i*2] << 8 | args[i*2 + 1]
                 e.append(off)
 
@@ -416,7 +416,7 @@ def find_initbl(buf, module):
                 p1 = p
                 for c in t:
                     if type(c) != type(val):
-                        if c != struct.unpack("B", data[p1])[0]:
+                        if c != struct.unpack("B", data[p1:p1+1])[0]:
                             foundStdInit = False
                             break;
                     p1 += 1
@@ -481,7 +481,7 @@ def find_initbl(buf, module):
         if len(initbloffs) == 2:
             try:
                 p = initbloffs[1] - start
-                i = struct.unpack("B", data[p])[0]
+                i = struct.unpack("B", data[p:p+1])[0]
                 if verbose:
                         if lcdinit_type == SCAN_NOTFOUND:
                                 print()
@@ -489,33 +489,33 @@ def find_initbl(buf, module):
                         print("LcdScheduleTbl  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i))
                         #init_tables.append(["_custom_scheduletbl", data[p+1:p+i+1]])
                 p += i + 1
-                i = struct.unpack("B", data[p])[0]
-                lcdcontrasttbl_paracount = struct.unpack("B", data[p+1])[0]
+                i = struct.unpack("B", data[p:p+1])[0]
+                lcdcontrasttbl_paracount = struct.unpack("B", data[p+1:p+2])[0]
                 if verbose:
                         print("LcdContrastTbl  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i))
-                        l = struct.unpack("B", data[p+2])[0]
+                        l = struct.unpack("B", data[p+2:p+3])[0]
                         init_tables.append([TABLE_CONTRAST, "_custom_contrasttbl", data[p+3:p+l+3]])
                         global contrast_table_len
                         contrast_table_len = l
                 p += i + 1
-                i = struct.unpack("B", data[p])[0]
+                i = struct.unpack("B", data[p:p+1])[0]
                 if verbose:
                         print("LcdContrastTb2  at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i))
                         ctbl2_offs = []
                         for j in range(lcdcontrasttbl_paracount):
                                 ctbl2_offs.append(struct.pack("B", struct.unpack("<H", data[p+j+1 : p+j+3])[0] - p - start - 2))
                         ctbl2 = data[p+len(ctbl2_offs)*2+2:p+i+1];
-                        ctbl2 += '\xFF';
+                        ctbl2 += b'\xFF';
                         init_tables.append([TABLE_CONTRAST, "_custom_contrasttbl2", ctbl2])
                         init_tables.append([TABLE_CONTRAST, "_custom_contrasttbl2_offsets", ctbl2_offs])
                 p += i + 1
-                i = struct.unpack("B", data[p])[0]
+                i = struct.unpack("B", data[p:p+1])[0]
                 if verbose:
                           print("LcdBacklightTbl at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i))
                           init_tables.append([TABLE_BACKLIGHT, "_custom_backlighttbl", data[p+1:p+i+1]])
                 p += i + 1
                 j = i
-                i = struct.unpack("B", data[p])[0]
+                i = struct.unpack("B", data[p:p+1])[0]
                 if (i == j):            # seems to have two LcdBackLightTbls...
                         if verbose:
                                 print("LcdBacklightTb2 at 0x%04x (0x%06x), len 0x%02x" % (p + start, p + flashaddr, i))
@@ -533,7 +533,7 @@ def find_initbl(buf, module):
                     lcdinitbl = data[p:p+l]
                     if verbose:
                         print("LcdIniTbl       at 0x%04x (0x%06x), len 0x%02x," % (p + start, p + flashaddr, l), end=' ')
-                        init_tables.append([TABLE_INIT, "_custom_initseq", data[p:p+l] + "\xFF"])
+                        init_tables.append([TABLE_INIT, "_custom_initseq", data[p:p+l] + b"\xFF"])
                     crc_tbl = binascii.crc32(lcdinitbl) & 0xffffffff
                     if verbose:
                                 print("CRC = 0x%x" % crc_tbl)
@@ -889,7 +889,10 @@ def recognize_dpf(dump):
                                 outf.write("\n%s\t.db\t" % s)
                         else:
                                 outf.write(", ")
-                        outf.write("0x%02x" % struct.unpack("B", tbl[2][i])[0])
+                        if isinstance(tbl[2][i], bytes):
+                            outf.write("0x%02x" % struct.unpack("B", tbl[2][i:i+1][0])[0])
+                        else:
+                            outf.write("0x%02x" % struct.unpack("B", tbl[2][i:i+1])[0])
                 outf.write("\n%s%s_len::  .db  %d" % (s, tbl[1], len(tbl[2])))
                 outf.write("\n\n")
 

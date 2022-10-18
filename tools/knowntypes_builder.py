@@ -3,11 +3,10 @@
 # Simple knowntypes.py builder
 #
 
-from __future__ import print_function
 import sys
 import os
 import re
-import cgi
+import html
 
 LCD_SOURCE = "../src/lcd"
 
@@ -210,7 +209,7 @@ kt.write('<tr><th>Type</th><th>Size (w x h)</th><th>Contrast Support</th><th>Lin
 for typedict in alltypes:
         if typedict['Status'] == 'supported':
                 kt.write('<tr>')
-                kt.write('<td>%s</td>' % cgi.escape(typedict['Type'][0]))
+                kt.write('<td>%s</td>' % html.escape(typedict['Type'][0]))
                 kt.write('<td>%s x %s</td>' % (typedict['Lcd_width'], typedict['Lcd_height']))
                 kt.write('<td>')
                 if typedict['ContrastSupport'] == 'Yes':
@@ -224,12 +223,12 @@ for typedict in alltypes:
                 kt.write('<td>')
                 if 'Url' in typedict:
                         for s in typedict['Url']:
-                                kt.write('<a href="%s">Link</a>\n' % cgi.escape(s))
+                                kt.write('<a href="%s">Link</a>\n' % html.escape(s))
                 kt.write('</td>')
                 kt.write('<td>')
                 if 'Comment' in typedict:
                         for s in typedict['Comment']:
-                                kt.write('%s\n' % cgi.escape(s))
+                                kt.write('%s\n' % html.escape(s))
                 kt.write('</td>')
                 kt.write('</tr>')
 kt.write('</table>')
