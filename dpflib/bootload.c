@@ -6,6 +6,7 @@
 
 #include "dpf.h"
 #include "usbuser.h" // our user defined flash commands
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>

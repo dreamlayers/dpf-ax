@@ -36,19 +36,34 @@ int handle_error(char *txt)
 	return -1;
 }
 
-void usb_flush(usb_dev_handle *dev)
+void usb_flush(libusb_device_handle *dev)
 {
-	char buf[20];
-	usb_bulk_read(dev, ENDPT_IN, buf, 3, 1000);
+	unsigned char buf[20];
+	libusb_bulk_transfer(dev, ENDPT_IN, buf, 3, NULL, 1000);
 }
 
-int check_known_device(struct usb_device *d)
+int usb_bulkwrite(libusb_device_handle *dev, int ep, const unsigned char *buf, int len, int timeout) {
+	int transferred;
+	int error = libusb_bulk_transfer(dev, ep, (unsigned char *) buf, len, &transferred, timeout);
+	return (error < 0) ? error : transferred;
+}
+
+int usb_bulkread(libusb_device_handle *dev, int ep, unsigned char *buf, int len, int timeout) {
+	int transferred;
+	int error = libusb_bulk_transfer(dev, ep, buf, len, &transferred, timeout);
+	return (error < 0) ? error : transferred;
+}
+
+int check_known_device(libusb_device *d)
 {
 	struct known_device *dev = g_known_devices;
+	struct libusb_device_descriptor desc;
+
+	libusb_get_device_descriptor(d, &desc);
 
 	while (dev->desc) {
-		if ((d->descriptor.idVendor == dev->vid) &&
-			(d->descriptor.idProduct == dev->pid)) { 
+		if ((desc.idVendor == dev->vid) &&
+			(desc.idProduct == dev->pid)) {
 				fprintf(stderr, "Found %s\n", dev->desc);
 				return 1;
 		}
@@ -57,36 +72,42 @@ int check_known_device(struct usb_device *d)
 	return 0;
 }
 
-static struct usb_device *find_dev(int index)
+static libusb_device *find_dev(int index)
 {
-	struct usb_bus *b;
-	struct usb_device *d;
+	libusb_device **devices;
+	libusb_device *device = NULL;
 	int enumeration = 0;
 
-	b = usb_get_busses();
+	if (libusb_get_device_list(NULL, &devices) < 1)
+		goto bail;
 
-	while (b) {
-		d = b->devices;
-		while (d) {
-			if (check_known_device(d)) {
-				if (enumeration == index) return d;
-				else enumeration++;
+	for (int i = 0; devices[i] != NULL; i++) {
+		libusb_device *dev = devices[i];
+
+		if (check_known_device(dev)) {
+			if (enumeration == index) {
+				device = libusb_ref_device(dev);
+				break;
 			}
+			++enumeration;
+		}
 
 #ifdef DEBUG
-			printf("enum: %d index: %d\n", enumeration, index);
-			printf("%04x %04x\n",
-				   d->descriptor.idVendor,
-				   d->descriptor.idProduct);
+		struct libusb_device_descriptor desc;
+		libusb_get_device_descriptor(dev, &desc);
+		printf("enum: %d index: %d\n", enumeration, index);
+		printf("%04x %04x\n",
+			   desc.idVendor,
+			   desc.idProduct);
 #endif
-			d = d->next;
-		}
-		b = b->next;
 	}
-	return NULL;
+
+	libusb_free_device_list(devices, 1);
+bail:
+	return device;
 }
 
-char g_buf[] = {
+unsigned char g_buf[] = {
 	0x55, 0x53, 0x42, 0x43, // dCBWSignature
 	0xde, 0xad, 0xbe, 0xef, // dCBWTag
 	0x00, 0x80, 0x00, 0x00, // dCBWLength
@@ -101,7 +122,7 @@ char g_buf[] = {
 	0x00, 0x00, 0x00, 0x00,
 };
 
-int emulate_scsi(usb_dev_handle *dev, unsigned char *cmd, int cmdlen, char out,
+int emulate_scsi(libusb_device_handle *dev, unsigned char *cmd, int cmdlen, char out,
 	unsigned char *data, unsigned long block_len)
 {
 	int len;
@@ -116,12 +137,12 @@ int emulate_scsi(usb_dev_handle *dev, unsigned char *cmd, int cmdlen, char out,
 	g_buf[10] = block_len >> 16;
 	g_buf[11] = block_len >> 24;
 
-	ret = usb_bulk_write(dev, ENDPT_OUT, g_buf, sizeof(g_buf), 1000);
+	ret = usb_bulkwrite(dev, ENDPT_OUT, g_buf, sizeof(g_buf), 1000);
 	if (ret < 0) return ret;
 
 	if (out == DIR_OUT) {
 		if (data) {
-			ret = usb_bulk_write(dev, ENDPT_OUT, (const char* )data,
+			ret = usb_bulkwrite(dev, ENDPT_OUT, data,
 					block_len, 3000);
 			if (ret != block_len) {
 				perror("bulk write");
@@ -129,7 +150,7 @@ int emulate_scsi(usb_dev_handle *dev, unsigned char *cmd, int cmdlen, char out,
 			}
 		}
 	} else if (data) {
-		ret = usb_bulk_read(dev, ENDPT_IN, (char *) data, block_len, 4000);
+		ret = usb_bulkread(dev, ENDPT_IN, data, block_len, 4000);
 		if (ret != block_len) {
 			perror("bulk data read");
 		}
@@ -138,7 +159,7 @@ int emulate_scsi(usb_dev_handle *dev, unsigned char *cmd, int cmdlen, char out,
 	len = sizeof(ansbuf);
 	int retry = 0;
 	do {
-		ret = usb_bulk_read(dev, ENDPT_IN, (char *) ansbuf, len, 5000);
+		ret = usb_bulkread(dev, ENDPT_IN, ansbuf, len, 5000);
 		if (ret != len) {
 			perror("bulk ACK read");
 			ret = DEVERR_TIMEOUT;
@@ -152,14 +173,13 @@ int emulate_scsi(usb_dev_handle *dev, unsigned char *cmd, int cmdlen, char out,
 	return ansbuf[12];
 }
 
-int dpf_usb_open(int index, usb_dev_handle **u)
+int dpf_usb_open(int index, libusb_device_handle **u)
 {
-	struct usb_device *d;
-	usb_dev_handle *usb_dev;
+	libusb_device *d;
+	libusb_device_handle *usb_dev;
+	struct libusb_device_descriptor desc;
 
-	usb_init();
-	usb_find_busses();
-	usb_find_devices();
+	libusb_init(NULL);
 
 	d = find_dev(index);
 	if (!d) {
@@ -167,12 +187,11 @@ int dpf_usb_open(int index, usb_dev_handle **u)
 		return -1;
 	}
 
-	usb_dev = usb_open(d);
-	if (usb_dev == NULL) {
+	if (libusb_open(d, &usb_dev) != 0) {
 		handle_error("Failed to open usb device!");
 		return -1;
 	}
-	if (usb_claim_interface(usb_dev, 0) < 0) {
+	if (libusb_claim_interface(usb_dev, 0) < 0) {
 		handle_error("Failed to claim usb device!");
 		printf("Possibly you have to detach the device from hid.\n");
 		printf("Use hiddetach from the fw folder: 'sudo fw/hiddetach'\n");
@@ -181,18 +200,24 @@ int dpf_usb_open(int index, usb_dev_handle **u)
 	}
 	*u = usb_dev;
 
-	if (d->descriptor.idProduct == 0x3318)
+	libusb_get_device_descriptor(d, &desc);
+
+	if (desc.idProduct == 0x3318)
 		return MODE_USBHID;
 	else
 		return MODE_USB;
 }
 
-int usb_rawwrite(usb_dev_handle *dev, const unsigned char *buf, int len)
+int usb_rawwrite(libusb_device_handle *dev, const unsigned char *buf, int len)
 {
-	return usb_interrupt_write(dev, ENDPT_OUT, (char *) buf, len, 1000);
+	int transferred;
+	int error = libusb_interrupt_transfer(dev, ENDPT_OUT, (unsigned char*) buf, len, &transferred, 1000);
+	return (error < 0) ? error : transferred;
 }
 
-int usb_rawread(usb_dev_handle *dev, unsigned char *buf, int len)
+int usb_rawread(libusb_device_handle *dev, unsigned char *buf, int len)
 {
-	return usb_interrupt_read(dev, ENDPT_IN, (char *) buf, len, 4000);
+	int transferred;
+	int error = libusb_interrupt_transfer(dev, ENDPT_IN, buf, len, &transferred, 1000);
+	return (error < 0) ? error : transferred;
 }

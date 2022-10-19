@@ -21,7 +21,7 @@ ifdef DEBUG
 	DEBUGOPTS += -DDEBUG
 endif
 
-CLIENTLIB = -L$(DEVLIB)/dpflib -ldpf -lusb
+CLIENTLIB := -L$(DEVLIB)/dpflib -ldpf $(shell pkg-config --libs libusb-1.0)
 
 ############################################################################
 
@@ -51,7 +51,7 @@ ifeq (mingw32, $(PLATFORM))
 endif
 endif
 
-INCLUDES = -I$(DEVLIB)/include -I$(DEVLIB)/dpflib
+INCLUDES := -I$(DEVLIB)/include -I$(DEVLIB)/dpflib $(shell pkg-config --cflags libusb-1.0)
 INCLUDES += $(PYTHONINCLUDES)
 
 CFLAGS +=  -DMODULENAME=$(MODULENAME)

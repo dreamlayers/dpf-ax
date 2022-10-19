@@ -14,6 +14,7 @@
 #include "dpf.h"
 
 #include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
@@ -54,7 +55,7 @@ int dpf_open(const char *dev, DPFHANDLE *h)
 	int error = 0;
 	DPFContext *dpf;
 	int i;
-	usb_dev_handle *u;
+	libusb_device_handle *u;
 
 	int fd;
 
@@ -115,8 +116,8 @@ void dpf_close(DPFContext *h)
 			close(h->dev.fd);
 			break;
 		case MODE_USB:
-			usb_release_interface(h->dev.udev, 0);
-			usb_close(h->dev.udev);
+			libusb_release_interface(h->dev.udev, 0);
+			libusb_close(h->dev.udev);
 			break;
 	}
 	free(h);

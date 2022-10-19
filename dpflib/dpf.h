@@ -5,7 +5,7 @@
  */
 
 #include <stdint.h>
-#include <usb.h>
+#include <libusb.h>
 #include "usbuser.h"
 #include "spiflash.h"
 
@@ -53,7 +53,7 @@ struct dpf_context {
 	unsigned char mode;
 	unsigned char flags;
 	union {
-		usb_dev_handle *udev;
+		libusb_device_handle *udev;
 		int fd;
 	} dev;
 	AccessMethods methods;
@@ -111,16 +111,16 @@ int dpf_setproperty(DPFHANDLE h, int token, const DPFValue *value);
 
 /* USB raw */
 
-int emulate_scsi(usb_dev_handle *d, unsigned char *cmd, int cmdlen, char out,
+int emulate_scsi(libusb_device_handle *d, unsigned char *cmd, int cmdlen, char out,
 	unsigned char *data, unsigned long block_len);
 
 const char *dev_errstr(int err);
 
 // Private stuff:
-int dpf_usb_open(int index, usb_dev_handle **u);
+int dpf_usb_open(int index, libusb_device_handle **u);
 int sgdev_open(const char *portname, int *fd);
-int usb_rawread(usb_dev_handle *dev, unsigned char *buf, int len);
-int usb_rawwrite(usb_dev_handle *dev, const unsigned char *buf, int len);
+int usb_rawread(libusb_device_handle *dev, unsigned char *buf, int len);
+int usb_rawwrite(libusb_device_handle *dev, const unsigned char *buf, int len);
 int probe(DPFHANDLE h);
 
 ////////////////////////////////////////////////////////////////////////////
