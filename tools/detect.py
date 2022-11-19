@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 # Simple detection module for AX206 based DPF hardware
 # (c) 2011 <hackfin@section5.ch>
 #
