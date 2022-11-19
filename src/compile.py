@@ -41,7 +41,7 @@ class BootHeader:
                 self.key = 0xabba
                 self.sector = sector_addr
                 self.nbanks = NBANKS
-                self.table_tag = "ProcTblX" # Do not change length      
+                self.table_tag = b"ProcTblX" # Do not change length
 
         def jmpentry(self, i):
                 start, end, offset, mode = i
@@ -85,7 +85,7 @@ class BootHeader:
                 self.jumptable = jumpt
 
         def genhdr(self):
-                a = ""
+                a = b""
 
                 a += struct.pack(">HH", self.xdata, self.start)
                 v = self.flash_start
@@ -110,7 +110,7 @@ class BootHeader:
                 a = self.genhdr()
                 a += struct.pack(">H", self.crc2)
 
-                a += 14 * '\0'
+                a += 14 * b'\0'
                 a += struct.pack(">H", 0x55aa) # Terminator magic
 
                 # Some infos about us...
@@ -120,36 +120,36 @@ class BootHeader:
                 a += struct.pack("<H", self.resx)       # LCD Width
                 a += struct.pack("<H", self.resy)       # LCD Height
 
-                a += '\xD8'                                                     # Erase 64K Conmmand
-                a += '\0'                                                       # Byte prg flag
-                a += '\02'                                                      # Word prg flag
-                a += '\0'                                                       # Enable write status register
+                a += b'\xD8'                                                     # Erase 64K Conmmand
+                a += b'\0'                                                       # Byte prg flag
+                a += b'\02'                                                      # Word prg flag
+                a += b'\0'                                                       # Enable write status register
                 a += struct.pack("BBB", 0, 0, 0x20)     #Flash capacity
 
 
-                a += 4 * '\0'
-                a += 14 * '\xFF'
-                a += "DPFv1.0hackfin\xFF\xFF"
-                a += "20120101\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
-                a += "Jan 01 2012\xFF\xFF\xFF\xFF\xFF"
+                a += 4 * b'\0'
+                a += 14 * b'\xFF'
+                a += b"DPFv1.0hackfin\xFF\xFF"
+                a += b"20120101\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+                a += b"Jan 01 2012\xFF\xFF\xFF\xFF\xFF"
                 if (fw_disp):
                         # 03 - fw version 0.3, 01 - disp fw
-                        a += "12:03:01\0\0\x55\x4F\xEF\x51\x06\x5E"
+                        a += b"12:03:01\0\0\x55\x4F\xEF\x51\x06\x5E"
                 else:
                         # 03 - fw version 0.3, 00 - devel fw
-                        a += "12:03:00\0\0\x55\x4F\xEF\x51\x06\x5E"
+                        a += b"12:03:00\0\0\x55\x4F\xEF\x51\x06\x5E"
 
                 # Following stuff to keep ProgSPI happy
 
-                a += "ProcTbl5"
+                a += b"ProcTbl5"
                 v = 0x1200
                 for i in range(53):
                         a += struct.pack(">H", 0x0b30)
                         a += struct.pack(">H", 0x0c30)
                         a += struct.pack("BBB", v >> 16, (v >> 8) & 0xff, v & 0xff)
-                        a += '\0'
+                        a += b'\0'
                         v += 0x100
-                a += "-EndTbl-\xff\xff\xff\xff\xff\xff\xff\xff"
+                a += b"-EndTbl-\xff\xff\xff\xff\xff\xff\xff\xff"
 
                 # ##END## ProgSPI stuff
 
@@ -207,7 +207,7 @@ def merge_segments(index):
 
 
         vals = list(groups.values())
-        vals.sort(lambda x, y: cmp(x[0], y[0]))
+        vals.sort()
         for i in range(len(vals) - 1):
                 if overlap(vals[i], vals[i+1]):
                         print("Module ranges:")
@@ -265,7 +265,7 @@ for i in list(index.keys()):
 
 index = merge_segments(index)
 
-buf = ""
+buf = b""
 
 # Output bootstrap:
 
@@ -315,16 +315,16 @@ out.tofile(outhex, "hex")
 outbin = outhex.split(".")
 outbin = ".".join(outbin[:-1]) + ".bin"
 sys.stderr.write("Write BIN file '%s'\n" % outbin)
-fontbin = open("res/font4x8.bin", "r")
+fontbin = open("res/font4x8.bin", "rb")
 chartable = fontbin.read()
 fontbin.close()
 out.puts(0x10000, chartable)
 if (len(sys.argv) > 9):
-        fontbin = open("res/font9x16.bin", "r")
+        fontbin = open("res/font9x16.bin", "rb")
         chartable = fontbin.read()
         fontbin.close()
         out.puts(0x20000, chartable)
-        splashbin = open(sys.argv[9], "r")
+        splashbin = open(sys.argv[9], "rb")
         splash = splashbin.read()
         splashbin.close()
         if len(splash) != (resx * resy * 2):

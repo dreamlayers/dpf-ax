@@ -32,7 +32,7 @@ table = (
 def compute(data):
         """ Compute correct enough :grin: CRC16 CCITT for using in BF2142 auth token """
         crc = 0
-        for byte in (ord(part) for part in data):
+        for byte in data:
                 ushort = (crc << 8) & 0xff00
                 crc = ((ushort) ^ table[((crc >> 8) ^ (0xff & byte))])
         return crc

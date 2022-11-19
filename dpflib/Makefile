@@ -1,17 +1,16 @@
 OBJS = dpflib.o rawusb.o scsi.o bootload.o
 
+CFLAGS  := -Wall -fPIC -I../include -g $(shell pkg-config --cflags libusb-1.0)
+LDFLAGS := -ldpf $(shell pkg-config --libs libusb-1.0)
+# CFLAGS += -DDEBUG
+
 ifndef PLATFORM
 PLATFORM=$(shell "uname")
 endif
 
-ifeq (Linux, $(PLATFORM))
-LIBS=-lusb
-else
-LIBS=-lusb -lsgutils2
+ifneq (Linux, $(PLATFORM))
+LDFLAGS := $(LDFLAGS) -lsgutils2
 endif
-
-CFLAGS = -Wall -fPIC -I../include -g
-# CFLAGS += -DDEBUG
 
 ifndef DESTDIR
 	DESTDIR = ..
@@ -20,16 +19,16 @@ endif
 all: libdpf.a fwload bload
 
 fwload: fwload.o libdpf.a
-	$(CC) -o $@ fwload.o -L. -ldpf $(LIBS)
+	$(CC) -o $@ fwload.o -L. $(LDFLAGS)
 
 bload.o: bootload.c
 	$(CC) -c -o $@ $(CFLAGS) -DTEST $<
 
 bload: bload.o
-	$(CC) -o $@ $< -L. -ldpf $(LIBS)
+	$(CC) -o $@ $< -L. $(LDFLAGS)
 
 testusb: testusb.o libdpf.a
-	$(CC) -o $@ testusb.o -L. -ldpf $(LIBS)
+	$(CC) -o $@ testusb.o -L. $(LDFLAGS)
 
 libdpf.a: $(OBJS)
 	ar ruv $@ $(OBJS)
