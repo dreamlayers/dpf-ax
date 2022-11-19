@@ -36,7 +36,7 @@ CLIENTLIB += -lsgutils2
 endif
 
 ifneq (mingw32, $(PLATFORM))
-	PYTHON=$(shell python -V 2>&1 | sed -re 's/.*ython ([0-9]\.[0-9])(\.[0-9]+)*/python\1/g')
+	PYTHON=$(shell python -V 2>&1 | sed -re 's/.*ython ([0-9]\.[0-9]+).*$$/python\1/g')
 	include $(DEVLIB)/unixdll.mk
 	DLLDEPS = $(CLIENTLIB) -l$(PYTHON)
 	PYTHONINCLUDES = -I/usr/include/$(PYTHON)
