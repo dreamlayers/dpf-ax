@@ -82,10 +82,10 @@ SDCC_INCLUDE := $(shell pwd)
 
 CC = sdcc
 SDCC_VERSION:=$(shell sdcc -v | grep -Eo "[0-9]\.[0-9]\.[0-9]" | cut -c1)
-ifeq ($(SDCC_VERSION), 3)
+ifeq ($(shell [ $(SDCC_VERSION) -gt 2 ] && echo true),true)
 AS = sdas8051
 LD = sdld
-$(error sdcc 3.x not supported - use sdcc 2.9x or cc1111)
+$(error sdcc 3.x and later is not supported - use sdcc 2.9x or cc1111)
 else
 AS = asx8051
 LD = aslink
